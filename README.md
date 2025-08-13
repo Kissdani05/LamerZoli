@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gokart Klub – Projekt dokumentáció
 
-## Getting Started
+## Környezeti változók
 
-First, run the development server:
+Az alkalmazás működéséhez a következő környezeti változók szükségesek a `.env.local` fájlban:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+NEXT_PUBLIC_SUPABASE_URL=...      # Supabase projekt URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=... # Supabase anon kulcs
+SUPABASE_SERVICE_ROLE_KEY=...     # Service role kulcs (admin funkciókhoz)
+ADMIN_PASSWORD=...                # Admin jelszó (vagy hash)
+SITE_URL=...                      # Publikus weboldal URL
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Supabase adatbázis
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Táblák
+- **registrations**: name, email, consent, created_at
+- **site_settings**: id=1, next_race_at, next_race_desc, next_race_image_path, updated_at, updated_by
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Storage bucket
+- **images**: public read, write csak service role, mappastruktúra: `next-race/`
 
-## Learn More
+## Admin használat
+- Bejelentkezés: `/admin/login` oldalon, jelszóval
+- Sikeres belépés után admin cookie kerül beállításra
+- Admin oldalon szerkeszthető a következő verseny dátuma, leírása, kép
+- Kép feltöltés: Supabase Storage-ba, elérési út automatikusan mentésre kerül
 
-To learn more about Next.js, take a look at the following resources:
+## SEO & minőség
+- Főoldal meta adatok, Open Graph/Twitter képek, JSON-LD schema
+- robots.txt: `/admin` tiltva az indexelésből
+- sitemap.xml: csak főoldal
+- Minden fontos képen alt szöveg
+- Mobil Lighthouse: Performance, SEO, Best Practices, A11y ≥ 95
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## További infó
+- Supabase projekt URL: [https://app.supabase.com/project/](https://app.supabase.com/project/)
+- Service role hozzáférés: csak adminoknak, biztonságosan tárold!
+- Ajánlott képméret: 1200x630px (Open Graph)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ha kérdésed van, vagy új mezőket/feature-t szeretnél, jelezz bátran!
