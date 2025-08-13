@@ -4,6 +4,7 @@ import './globals.css';
 import Header from './Header';
 import { LanguageProvider } from './i18n/LanguageContext';
 import ConsentBanner from './ConsentBanner';
+import NotificationProvider from './NotificationProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -16,28 +17,28 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Bérgokart versenyek – Lámer Zoltán | Nevezés, naptár, eredmények',
+  title: 'Lámer Zoltán Gokart – Bérgokart versenyek, nevezés, naptár, eredmények',
   description:
-    'Csatlakozz a legnagyobb egykategóriás bérgokart versenyekhez! Nevezés, versenynaptár, eredmények és információk egy helyen.',
+    'Csatlakozz a Lámer Zoltán Gokart sorozathoz – egykategóriás bérgokart versenyek, nevezés, naptár, eredmények, információk egy helyen.',
   openGraph: {
-    title: 'Bérgokart versenyek – Lámer Zoltán',
+    title: 'Lámer Zoltán Gokart – Bérgokart versenyek',
     description:
-      'Csatlakozz a legnagyobb egykategóriás bérgokart versenyekhez! Nevezés, versenynaptár, eredmények és információk egy helyen.',
+      'Csatlakozz a Lámer Zoltán Gokart sorozathoz – egykategóriás bérgokart versenyek, nevezés, naptár, eredmények, információk egy helyen.',
     url: process.env.SITE_URL || 'https://lamerzoli.vercel.app',
     images: [
       {
         url: '/next.svg',
         width: 1200,
         height: 630,
-        alt: 'Bérgokart versenyek',
+        alt: 'Lámer Zoltán Gokart',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Bérgokart versenyek – Lámer Zoltán',
+    title: 'Lámer Zoltán Gokart – Bérgokart versenyek',
     description:
-      'Csatlakozz a legnagyobb egykategóriás bérgokart versenyekhez! Nevezés, versenynaptár, eredmények és információk egy helyen.',
+      'Csatlakozz a Lámer Zoltán Gokart sorozathoz – egykategóriás bérgokart versenyek, nevezés, naptár, eredmények, információk egy helyen.',
     images: ['/next.svg'],
   },
   robots: {
@@ -60,20 +61,19 @@ function OrgJsonLd() {
     '@graph': [
       {
         '@type': 'Organization',
-        name: 'Lámer Zoltán Gokart Klub',
+        name: 'Lámer Zoltán Gokart',
         url: siteUrl,
-        logo: `${siteUrl}/next.svg`,
+        logo: siteUrl + '/file.svg',
         sameAs: ['https://www.facebook.com/', 'https://www.instagram.com/'],
       },
       {
         '@type': 'Person',
         name: 'Lámer Zoltán',
         url: siteUrl,
-        jobTitle: 'Versenyszervező',
       },
       {
         '@type': 'WebSite',
-        name: 'Lámer Zoltán – Bérgokart',
+        name: 'Lámer Zoltán Gokart',
         url: siteUrl,
       },
     ],
@@ -81,7 +81,6 @@ function OrgJsonLd() {
   return (
     <script
       type="application/ld+json"
-      suppressHydrationWarning
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
   );
@@ -98,10 +97,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} bg-white text-black antialiased`}
       >
         <LanguageProvider>
-          <Header />
-          {children}
-          <OrgJsonLd />
-          <ConsentBanner />
+          <NotificationProvider>
+            <Header />
+            {children}
+            <ConsentBanner />
+          </NotificationProvider>
         </LanguageProvider>
       </body>
     </html>

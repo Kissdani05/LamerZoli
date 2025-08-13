@@ -23,9 +23,6 @@ export default function Header() {
           <Link href="/calendar" className="nav-link">
             {t('nav_calendar')}
           </Link>
-          <Link href="/registration" className="nav-link">
-            {t('nav_registration')}
-          </Link>
           <Link href="/rules" className="nav-link">
             {t('nav_rules')}
           </Link>
@@ -43,6 +40,11 @@ export default function Header() {
           </Link>
         </nav>
         <div className="flex items-center gap-3">
+          <img
+            src="/file.svg"
+            alt="Lámer Zoltán Gokart"
+            className="h-8 w-8 rounded-full border border-primary"
+          />
           <select
             aria-label={t('language_selector')}
             className="select text-sm"
@@ -52,9 +54,6 @@ export default function Header() {
             <option value="hu">HU</option>
             <option value="en">EN</option>
           </select>
-          <Link href="/admin/login" className="nav-link">
-            {t('admin')}
-          </Link>
         </div>
       </div>
     </header>

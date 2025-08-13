@@ -117,3 +117,72 @@ img, svg, video { max-width: 100%; height: auto; }
   .btn, .card { transition: none !important; }
   .card:hover { transform: none; }
 }
+
+/* Accessibility: High contrast utility */
+.a11y-high-contrast {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+:focus-visible {
+  outline: 3px solid var(--brand-2);
+  outline-offset: 2px;
+}
+
+/* Improve nav-link contrast */
+.nav-link {
+  color: #fff;
+  background: rgba(34,211,238,0.12);
+}
+.nav-link:hover {
+  background: var(--brand-2);
+  color: #0a0a0b;
+}
+
+/* Improve button contrast */
+.btn-primary {
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  color: #0a0a0b;
+  border: 2px solid var(--brand-2);
+}
+.btn-outline {
+  border: 2px solid var(--brand-2);
+  color: #fff;
+}
+.btn-outline:hover {
+  background: var(--brand-2);
+  color: #0a0a0b;
+}
+
+/* Improve input contrast */
+.input, .select, .textarea {
+  background: #18181b;
+  color: #fff;
+  border: 2px solid var(--brand-2);
+}
+.input:focus, .select:focus, .textarea:focus {
+  border-color: var(--brand-2);
+  box-shadow: 0 0 0 4px rgba(34,211,238,0.25);
+}
+
+/* Improve badge contrast */
+.badge-primary {
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  color: #0a0a0b;
+  border: 2px solid var(--brand-2);
+}
+.badge-muted {
+  background: #18181b;
+  color: #fff;
+  border: 2px solid var(--brand-2);
+}

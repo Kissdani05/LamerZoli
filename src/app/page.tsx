@@ -30,6 +30,15 @@ interface FeaturedRace {
   max_participants: number | null;
   description?: string | null;
   image_url?: string | null;
+  address?: string | null;
+  layout?: string | null;
+  format?: string | null;
+  fee?: string | null;
+  weight_rule?: string | null;
+  deposit?: string | null;
+  deadline?: string | null;
+  rain_rule?: string | null;
+  media_rule?: string | null;
 }
 
 interface RegistrationData {
@@ -183,9 +192,10 @@ export default function Home() {
       <section id="hero" className="section">
         <div className="container flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
           <div className="flex flex-col items-start md:w-1/2 w-full">
-            <h1 className="mb-4">Bérgokart versenyek – Lámer Zoltán</h1>
+            <h1 className="mb-4">Lámer Zoltán Gokart – Bérgokart versenyek</h1>
             <p className="text-lg text-gray-700 mb-6">
-              Magyarország legnagyobb egykategóriás bérgokart sorozata. Nevezés pár kattintással.
+              Évente 300+ induló, 8+ forduló, 4 pálya – az egyik legnagyobb egykategóriás bérgokart
+              sorozat. Nevezés pár kattintással.
             </p>
             <div className="flex flex-wrap gap-3">
               <button className="btn btn-primary" onClick={() => setShowModal(true)}>
@@ -194,7 +204,7 @@ export default function Home() {
               <a href="#race" className="btn btn-outline">
                 Következő verseny
               </a>
-              <a href="#faq" className="btn btn-ghost">
+              <a href="#faq" className="nav-link">
                 GYIK
               </a>
             </div>
@@ -208,7 +218,7 @@ export default function Home() {
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="badge badge-primary">Biztonságos fizetés</span>
-                <span className="badge badge-muted">500+ nevezés</span>
+                <span className="badge badge-muted">Több száz nevezés/év</span>
                 <span className="badge badge-muted">Top pályák</span>
                 <span className="badge badge-muted">Professzionális időmérés</span>
               </div>
@@ -238,13 +248,52 @@ export default function Home() {
               </span>
             </p>
             <p>
+              Pálya: <span className="font-semibold">{featuredRace?.location || 'Hamarosan…'}</span>
+            </p>
+            <p>
+              Cím: <span className="font-semibold">{featuredRace?.address || 'Hamarosan…'}</span>
+            </p>
+            <p>
+              Vonalvezetés:{' '}
+              <span className="font-semibold">{featuredRace?.layout || 'Hamarosan…'}</span>
+            </p>
+            <p>
+              Futamformátum:{' '}
+              <span className="font-semibold">{featuredRace?.format || 'Hamarosan…'}</span>
+            </p>
+            <p>
+              Nevezési díj:{' '}
+              <span className="font-semibold">{featuredRace?.fee || 'Hamarosan…'}</span>
+            </p>
+            <p>
+              Limit:{' '}
+              <span className="font-semibold">
+                {featuredRace?.max_participants || 'Hamarosan…'}
+              </span>
+            </p>
+            <p>
+              Súlykompenzáció:{' '}
+              <span className="font-semibold">{featuredRace?.weight_rule || 'Hamarosan…'}</span>
+            </p>
+            <p>
+              Kaució/fizetés:{' '}
+              <span className="font-semibold">{featuredRace?.deposit || 'Hamarosan…'}</span>
+            </p>
+            <p>
+              Nevezési határidő:{' '}
+              <span className="font-semibold">{featuredRace?.deadline || 'Hamarosan…'}</span>
+            </p>
+            <p>
+              Esőszabály:{' '}
+              <span className="font-semibold">{featuredRace?.rain_rule || 'Hamarosan…'}</span>
+            </p>
+            <p>
+              Fotó/videó:{' '}
+              <span className="font-semibold">{featuredRace?.media_rule || 'Hamarosan…'}</span>
+            </p>
+            <p>
               Leírás: <span className="font-semibold">{race.next_race_desc || 'Hamarosan…'}</span>
             </p>
-            {featuredRace && (
-              <p>
-                Helyszín: <span className="font-semibold">{featuredRace.location}</span>
-              </p>
-            )}
             {race.next_race_image_path && (
               <div className="w-full h-64 relative mt-4">
                 <Image
@@ -286,16 +335,19 @@ export default function Home() {
           <h2 className="mb-4">Pályák</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="card">
-              <h3 className="mb-1">G1 Kart Center</h3>
-              <p>Beltéri technikás pálya.</p>
+              <h3 className="mb-1">Hungaroring Kart Center</h3>
+              <p>
+                Gyors, külső aszfaltcsík, technikás középső szektorral. Minimum: 150 cm
+                (pályaszabálytól függően).
+              </p>
             </div>
             <div className="card">
-              <h3 className="mb-1">Hungaroring Kart Center</h3>
-              <p>Kültéri gyors pálya.</p>
+              <h3 className="mb-1">G1 Kart Center</h3>
+              <p>Beltéri, technikás pálya, modern időmérő rendszer.</p>
             </div>
             <div className="card">
               <h3 className="mb-1">Kecskemét Gokart</h3>
-              <p>Vegyes karakterű aszfaltcsík.</p>
+              <p>Vegyes karakterű aszfaltcsík, családias hangulat.</p>
             </div>
           </div>
         </div>
@@ -328,6 +380,58 @@ export default function Home() {
             <blockquote className="card text-sm">
               „Visszatérő vendég vagyok, minden futam élmény.” – Gábor
             </blockquote>
+          </div>
+        </div>
+      </section>
+
+      {/* Vélemények, értékelések */}
+      <section className="section border-t" aria-labelledby="reviews-title">
+        <div className="container">
+          <h2 id="reviews-title" className="mb-4">
+            Versenyzői vélemények és értékelések
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="card" tabIndex={0} aria-label="5 csillag, Bence, 2025. június">
+              <div className="flex items-center gap-2 mb-2">
+                <span aria-label="5 csillag" role="img">
+                  ★★★★★
+                </span>
+                <span className="text-sm text-gray-400">2025. június</span>
+              </div>
+              <blockquote className="text-sm mb-2">
+                „Szuper hangulat és profi lebonyolítás.”
+              </blockquote>
+              <div className="text-xs text-gray-500">– Bence</div>
+            </div>
+            <div className="card" tabIndex={0} aria-label="4 csillag, Anna, 2025. május">
+              <div className="flex items-center gap-2 mb-2">
+                <span aria-label="4 csillag" role="img">
+                  ★★★★☆
+                </span>
+                <span className="text-sm text-gray-400">2025. május</span>
+              </div>
+              <blockquote className="text-sm mb-2">
+                „Igazi versenyélmény amatőröknek is.”
+              </blockquote>
+              <div className="text-xs text-gray-500">– Anna</div>
+            </div>
+            <div className="card" tabIndex={0} aria-label="5 csillag, Gábor, 2025. április">
+              <div className="flex items-center gap-2 mb-2">
+                <span aria-label="5 csillag" role="img">
+                  ★★★★★
+                </span>
+                <span className="text-sm text-gray-400">2025. április</span>
+              </div>
+              <blockquote className="text-sm mb-2">
+                „Visszatérő vendég vagyok, minden futam élmény.”
+              </blockquote>
+              <div className="text-xs text-gray-500">– Gábor</div>
+            </div>
+          </div>
+          <div className="mt-6 text-center">
+            <a href="/blog" className="btn btn-outline">
+              További élménybeszámolók
+            </a>
           </div>
         </div>
       </section>
@@ -406,7 +510,7 @@ export default function Home() {
       </section>
 
       <footer className="py-8 text-center text-gray-500">
-        &copy; {new Date().getFullYear()} Gokart Klub
+        &copy; {new Date().getFullYear()} Lámer Zoltán Gokart
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="ml-4 px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-sm"
