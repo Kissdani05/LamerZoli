@@ -3,8 +3,15 @@ import { NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export async function DELETE(_req: Request, context: { params: { id: string } }) {
-  const id = context.params?.id;
+function getIdFromUrl(req: Request): string | null {
+  const url = new URL(req.url);
+  const parts = url.pathname.split('/');
+  // Find the [id] segment (last part)
+  return parts[parts.length - 1] || null;
+}
+
+export async function DELETE(req: Request) {
+  const id = getIdFromUrl(req);
   if (!id) {
     return NextResponse.json({ error: 'Missing id' }, { status: 400 });
   }
@@ -43,8 +50,8 @@ export async function DELETE(_req: Request, context: { params: { id: string } })
   return NextResponse.json({ success: true });
 }
 
-export async function PATCH(req: Request, context: { params: { id: string } }) {
-  const id = context.params?.id;
+export async function PATCH(req: Request) {
+  const id = getIdFromUrl(req);
   if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
   const body = await req.json().catch(() => ({}));
   if (!body || typeof body !== 'object' || Object.keys(body).length === 0) {
