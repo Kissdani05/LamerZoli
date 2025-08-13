@@ -1,0 +1,10 @@
+export default function Robots() {
+  return new Response(
+    `User-agent: *\nDisallow: /admin\nAllow: /`,
+    {
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    }
+  );
+}
