@@ -12,6 +12,15 @@ const dict: Dict = {
   nav_faq: { hu: 'GYIK', en: 'FAQ' },
   admin: { hu: 'Admin', en: 'Admin' },
   language_selector: { hu: 'Nyelvválasztó', en: 'Language selector' },
+  // New header links
+  nav_about: { hu: 'Rólunk', en: 'About' },
+  nav_calendar: { hu: 'Naptár', en: 'Calendar' },
+  nav_registration: { hu: 'Regisztráció', en: 'Registration' },
+  nav_rules: { hu: 'Szabályok', en: 'Rules' },
+  nav_tracks: { hu: 'Pályák', en: 'Tracks' },
+  nav_gallery: { hu: 'Galéria', en: 'Gallery' },
+  nav_blog: { hu: 'Blog', en: 'Blog' },
+  nav_contact: { hu: 'Kapcsolat', en: 'Contact' },
 
   hero_title: { hu: 'Lámer Zoltán', en: 'Lámer Zoltán' },
   hero_subtitle1: { hu: 'Bérgokart bajnokságok', en: 'Rental kart championships' },

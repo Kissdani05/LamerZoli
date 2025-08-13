@@ -1,6 +1,7 @@
 export default function Robots() {
+  const base = process.env.SITE_URL || 'https://lamerzoli.vercel.app';
   return new Response(
-    `User-agent: *\nDisallow: /admin\nAllow: /`,
+    `User-agent: *\nDisallow: /admin\nAllow: /\nSitemap: ${base}/sitemap.xml`,
     {
       headers: {
         "Content-Type": "text/plain",

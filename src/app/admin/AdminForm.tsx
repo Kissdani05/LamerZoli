@@ -59,6 +59,7 @@ export default function AdminForm() {
   const [registrationCount, setRegistrationCount] = useState(0);
   const [featuredRaceId, setFeaturedRaceId] = useState('');
   const [featuredRace, setFeaturedRace] = useState<FeaturedRace | null>(null);
+  const [savingFeatured, setSavingFeatured] = useState(false);
   // Per-cell inline editing state
   const [cellEditing, setCellEditing] = useState<CellEditingState>({});
   const [cellDrafts, setCellDrafts] = useState<CellDraftsState>({});
@@ -159,21 +160,24 @@ export default function AdminForm() {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
-    // Compose ISO string from DatePicker value
     const composedDateTime = dateTime ? dateTime.toISOString() : form.date;
-    const { error } = await supabase.from('races').insert([
-      {
-        name: form.name,
-        location: form.location,
-        date: composedDateTime,
-        max_participants: Number(form.max_participants),
-        image_url: form.image_url,
-        description: form.description,
-      },
-    ]);
-    if (error) {
-      setMessage(t('save_error') + ': ' + error.message);
-    } else {
+    try {
+      const res = await fetch('/api/races', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          location: form.location,
+          date: composedDateTime,
+          max_participants: Number(form.max_participants),
+          image_url: form.image_url,
+          description: form.description,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error || `HTTP ${res.status}`);
+      }
       setMessage(t('save_success'));
       setForm({
         name: '',
@@ -184,8 +188,37 @@ export default function AdminForm() {
         description: '',
       });
       setDateTime(null);
+    } catch (e) {
+      const err = e as Error;
+      setMessage(t('save_error') + ': ' + err.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  }
+
+  async function saveFeaturedRace() {
+    if (!featuredRaceId) {
+      alert(t('choose_featured_race'));
+      return;
+    }
+    setSavingFeatured(true);
+    try {
+      const res = await fetch('/api/site-settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ featured_race_id: featuredRaceId }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error || `HTTP ${res.status}`);
+      }
+      alert(t('featured_race_saved'));
+    } catch (e) {
+      const err = e as Error;
+      alert(t('featured_race_save_error') + ': ' + err.message);
+    } finally {
+      setSavingFeatured(false);
+    }
   }
 
   async function handleDeleteRegistration(id: string) {
@@ -338,13 +371,12 @@ export default function AdminForm() {
 
   return (
     <>
-      {/* Verseny kiválasztó */}
       <label className="font-semibold" htmlFor="raceSelect">
         {t('select_race')}
       </label>
       <select
         id="raceSelect"
-        className="border rounded px-3 py-2 bg-white text-black mb-4"
+        className="select mb-4 max-w-xs"
         value={selectedRaceId}
         onChange={(e) => setSelectedRaceId(e.target.value)}
       >
@@ -355,13 +387,13 @@ export default function AdminForm() {
           </option>
         ))}
       </select>
-      {/* Weboldalon látszódó verseny kiválasztó */}
+
       <label className="font-semibold" htmlFor="featuredRaceSelect">
         {t('select_featured_race')}
       </label>
       <select
         id="featuredRaceSelect"
-        className="border rounded px-3 py-2 bg-white text-black mb-4"
+        className="select mb-2 max-w-xs"
         value={featuredRaceId}
         onChange={(e) => setFeaturedRaceId(e.target.value)}
       >
@@ -372,24 +404,29 @@ export default function AdminForm() {
           </option>
         ))}
       </select>
-      {/* Nevezők száma */}
+      <div className="mb-4">
+        <button className="btn btn-outline" onClick={saveFeaturedRace} disabled={savingFeatured}>
+          {savingFeatured ? t('save') + '...' : t('save_featured_race')}
+        </button>
+      </div>
+
       {selectedRaceId && (
         <div className="mb-4">
           {t('registrations_count')}: <span className="font-bold">{registrationCount}</span>
         </div>
       )}
-      {/* Nevezők táblázata */}
+
       {selectedRaceId && (
         <div className="overflow-x-auto mb-8">
-          <table className="min-w-full border text-black">
+          <table className="table">
             <thead>
               <tr>
-                <th className="border px-2 py-1">{t('name')}</th>
-                <th className="border px-2 py-1">{t('email')}</th>
-                <th className="border px-2 py-1">{t('phone')}</th>
-                <th className="border px-2 py-1">{t('weight')}</th>
-                <th className="border px-2 py-1">{t('race')}</th>
-                <th className="border px-2 py-1">{t('actions')}</th>
+                <th>{t('name')}</th>
+                <th>{t('email')}</th>
+                <th>{t('phone')}</th>
+                <th>{t('weight')}</th>
+                <th>{t('race')}</th>
+                <th>{t('actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -626,9 +663,9 @@ export default function AdminForm() {
           </table>
         </div>
       )}
-      {/* Kiemelt verseny a weboldalon */}
+
       {featuredRace && (
-        <div className="bg-white border rounded p-6 mb-8 text-black w-full max-w-xl">
+        <div className="card mb-8 w-full max-w-xl">
           <h2 className="text-2xl font-bold mb-2">{t('featured_race_admin_title')}</h2>
           <p>
             <span className="font-semibold">{t('name')}:</span> {featuredRace.name}
@@ -661,7 +698,7 @@ export default function AdminForm() {
           )}
         </div>
       )}
-      {/* Admin űrlap */}
+
       <form className="flex flex-col gap-4 w-full max-w-md" onSubmit={handleSave}>
         <label className="font-semibold" htmlFor="name">
           {t('race_name_label')}
@@ -672,9 +709,10 @@ export default function AdminForm() {
           id="name"
           value={form.name}
           onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-          className="border rounded px-3 py-2 bg-white text-black"
+          className="input"
           required
         />
+
         <label className="font-semibold" htmlFor="location">
           {t('location')}
         </label>
@@ -684,13 +722,14 @@ export default function AdminForm() {
           id="location"
           value={form.location}
           onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
-          className="border rounded px-3 py-2 bg-white text-black"
+          className="input"
           required
         />
+
         <label className="font-semibold" htmlFor="date">
           {t('time')}
         </label>
-        <div className="border rounded bg-white text-black px-2 py-2">
+        <div className="input p-0">
           <DatePicker
             selected={dateTime}
             onChange={(d) => setDateTime(d)}
@@ -703,6 +742,7 @@ export default function AdminForm() {
             popperClassName="text-black"
           />
         </div>
+
         <label className="font-semibold" htmlFor="max_participants">
           {t('max_capacity_label')}
         </label>
@@ -712,10 +752,11 @@ export default function AdminForm() {
           id="max_participants"
           value={form.max_participants}
           onChange={(e) => setForm((f) => ({ ...f, max_participants: e.target.value }))}
-          className="border rounded px-3 py-2 bg-white text-black"
+          className="input"
           required
           min={1}
         />
+
         <label className="font-semibold" htmlFor="image_url">
           {t('image')}
         </label>
@@ -724,8 +765,9 @@ export default function AdminForm() {
           accept="image/*"
           ref={fileInputRef}
           onChange={handleImageUpload}
-          className="border rounded px-3 py-2 bg-white text-black"
+          className="input"
         />
+
         {form.image_url && (
           <div className="w-full h-48 relative mt-2">
             <Image
@@ -738,6 +780,7 @@ export default function AdminForm() {
             />
           </div>
         )}
+
         <label className="font-semibold" htmlFor="description">
           {t('description')}
         </label>
@@ -746,17 +789,14 @@ export default function AdminForm() {
           id="description"
           value={form.description}
           onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-          className="border rounded px-3 py-2 bg-white text-black"
+          className="textarea"
           required
         />
-        <button
-          type="submit"
-          className="bg-black text-white rounded px-4 py-2 font-bold"
-          disabled={loading || !form.image_url}
-        >
+
+        <button type="submit" className="btn btn-primary" disabled={loading || !form.image_url}>
           {loading ? t('save') + '...' : t('save')}
         </button>
-        {message && <p className="mt-4 text-green-600">{message}</p>}
+        {message && <p className="mt-2 text-green-600">{message}</p>}
       </form>
     </>
   );

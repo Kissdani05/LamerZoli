@@ -5,21 +5,13 @@ import RegistrationModal from './RegistrationModal';
 import { useI18n } from './i18n/LanguageContext';
 import Image from 'next/image';
 
-function SportsEventSchema({ date, desc, image }: { date: string; desc: string; image: string }) {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'SportsEvent',
-    name: 'Gokart verseny',
-    startDate: date,
-    description: desc,
-    image: image,
-    location: {
-      '@type': 'Place',
-      name: 'Gokart pálya',
-    },
-  };
+function JsonLd({ data }: { data: object }) {
   return (
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+    <script
+      type="application/ld+json"
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
   );
 }
 
@@ -51,9 +43,16 @@ interface RegistrationData {
 
 export default function Home() {
   const { t } = useI18n();
-  const [race, setRace] = useState<NextRaceSettings>({ next_race_at: '', next_race_desc: '', next_race_image_path: '' });
+  const [race, setRace] = useState<NextRaceSettings>({
+    next_race_at: '',
+    next_race_desc: '',
+    next_race_image_path: '',
+  });
   const [showModal, setShowModal] = useState(false);
   const [featuredRace, setFeaturedRace] = useState<FeaturedRace | null>(null);
+
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://lamerzoli.vercel.app';
 
   useEffect(() => {
     async function fetchRace() {
@@ -71,7 +70,11 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchFeaturedRace() {
-      const settingsRes = await supabase.from('site_settings').select('featured_race_id').eq('id', 1).single();
+      const settingsRes = await supabase
+        .from('site_settings')
+        .select('featured_race_id')
+        .eq('id', 1)
+        .single();
       const featuredId = settingsRes.data?.featured_race_id as string | undefined;
       if (featuredId) {
         const { data } = await supabase.from('races').select('*').eq('id', featuredId).single();
@@ -84,116 +87,332 @@ export default function Home() {
   }, []);
 
   async function handleRegistration(data: RegistrationData) {
-    const { error } = await supabase.from('registrations').insert([
-      {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        weight: data.weight,
-        race_id: data.race,
-        race_name: data.race_name,
-      },
-    ]);
-    if (error) {
-      alert(t('error_occurred') + ': ' + error.message);
-    } else {
+    try {
+      const res = await fetch('/api/registrations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          weight: data.weight,
+          race_id: data.race,
+          race_name: data.race_name,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error || `HTTP ${res.status}`);
+      }
       alert(t('registration_success'));
+    } catch (e) {
+      const err = e as Error;
+      alert(t('error_occurred') + ': ' + err.message);
     }
   }
 
+  const eventJsonLd = race.next_race_at
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        name: featuredRace?.name || 'Gokart verseny',
+        startDate: race.next_race_at,
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        eventStatus: 'https://schema.org/EventScheduled',
+        image: [race.next_race_image_path || `${siteUrl}/next.svg`],
+        description: race.next_race_desc,
+        organizer: {
+          '@type': 'Organization',
+          name: 'Lámer Zoltán Gokart Klub',
+          url: siteUrl,
+        },
+        location: {
+          '@type': 'Place',
+          name: featuredRace?.location || 'Gokart pálya',
+          address: {
+            '@type': 'PostalAddress',
+            addressCountry: 'HU',
+          },
+        },
+      }
+    : null;
+
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Hogyan tudok nevezni?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Töltsd ki a nevezési űrlapot, majd kattints a Nevezés gombra.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Hol találom a versenynaptárt?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'A Naptár oldalon megtalálod az összes közelgő eseményt és részleteit.',
+        },
+      },
+    ],
+  };
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Főoldal',
+        item: siteUrl,
+      },
+    ],
+  };
+
   return (
     <>
-      <SportsEventSchema date={race.next_race_at} desc={race.next_race_desc} image={race.next_race_image_path} />
-      <section id="hero" className="py-16 flex flex-col md:flex-row items-center justify-center gap-12">
-        <div className="flex flex-col items-start md:w-1/2 w-full">
-          <h1 className="text-5xl font-bold mb-4">{t('hero_title')}</h1>
-          <h2 className="text-3xl font-semibold mb-2">{t('hero_subtitle1')}</h2>
-          <h3 className="text-xl font-medium mb-6">{t('hero_subtitle2')}</h3>
-          <button
-            className="bg-black text-white font-bold rounded px-6 py-3 mb-4 hover:bg-gray-800"
-            onClick={() => setShowModal(true)}
-          >
-            {t('btn_register')}
-          </button>
-        </div>
-        <div className="md:w-1/2 w-full flex justify-center items-center">
-          {/* Image placeholder */}
+      {eventJsonLd && <JsonLd data={eventJsonLd} />}
+      <JsonLd data={faqJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
+
+      {/* Hero */}
+      <section id="hero" className="section">
+        <div className="container flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
+          <div className="flex flex-col items-start md:w-1/2 w-full">
+            <h1 className="mb-4">Bérgokart versenyek – Lámer Zoltán</h1>
+            <p className="text-lg text-gray-700 mb-6">
+              Magyarország legnagyobb egykategóriás bérgokart sorozata. Nevezés pár kattintással.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+                Nevezés most
+              </button>
+              <a href="#race" className="btn btn-outline">
+                Következő verseny
+              </a>
+              <a href="#faq" className="btn btn-ghost">
+                GYIK
+              </a>
+            </div>
+            <div className="mt-6 w-full">
+              <p className="text-sm text-gray-600 mb-2">Partnereink</p>
+              <div className="flex flex-wrap items-center gap-6 opacity-80">
+                <Image src="/vercel.svg" alt="Partner logo" width={96} height={24} />
+                <Image src="/next.svg" alt="Partner logo" width={96} height={24} />
+                <Image src="/globe.svg" alt="Partner logo" width={96} height={24} />
+                <Image src="/window.svg" alt="Partner logo" width={96} height={24} />
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="badge badge-primary">Biztonságos fizetés</span>
+                <span className="badge badge-muted">500+ nevezés</span>
+                <span className="badge badge-muted">Top pályák</span>
+                <span className="badge badge-muted">Professzionális időmérés</span>
+              </div>
+            </div>
+          </div>
+          <div className="md:w-1/2 w-full flex justify-center items-center">
+            {/* Optional hero image placeholder */}
+          </div>
         </div>
       </section>
-      <RegistrationModal open={showModal} onClose={() => setShowModal(false)} onSubmit={handleRegistration} />
 
-      <section id="race" className="py-16 flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-bold mb-4">{t('next_race')}</h2>
-        <div className="bg-white rounded border shadow p-4 w-full max-w-md">
-          <p>{t('date')}: <span className="font-semibold">{race.next_race_at ? new Date(race.next_race_at).toLocaleString() : t('soon')}</span></p>
-          <p>{t('description')}: <span className="font-semibold">{race.next_race_desc || t('soon')}</span></p>
-          {race.next_race_image_path && (
-            <div className="w-full h-48 relative mt-4">
-              <Image
-                src={race.next_race_image_path}
-                alt={t('image')}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                unoptimized
-                priority
-              />
-            </div>
-          )}
-        </div>
-        {featuredRace && (
-          <div className="bg-white border rounded p-6 mt-8 text-black w-full max-w-xl">
-            <h3 className="text-xl font-bold mb-2">{t('featured_race_title')}</h3>
-            <p><span className="font-semibold">{t('name')}:</span> {featuredRace.name}</p>
-            <p><span className="font-semibold">{t('location')}:</span> {featuredRace.location}</p>
-            <p><span className="font-semibold">{t('time')}:</span> {featuredRace.date ? new Date(featuredRace.date).toLocaleString() : ''}</p>
-            <p><span className="font-semibold">{t('capacity')}:</span> {featuredRace.max_participants}</p>
-            <p><span className="font-semibold">{t('description')}:</span> {featuredRace.description || ''}</p>
-            {featuredRace.image_url && (
-              <div className="w-full h-48 relative mt-4">
+      <RegistrationModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleRegistration}
+      />
+
+      {/* Következő verseny */}
+      <section id="race" className="section">
+        <div className="container flex flex-col items-center">
+          <h2 className="mb-4">Következő verseny</h2>
+          <div className="card w-full max-w-2xl">
+            <p>
+              Dátum:{' '}
+              <span className="font-semibold">
+                {race.next_race_at ? new Date(race.next_race_at).toLocaleString() : 'Hamarosan…'}
+              </span>
+            </p>
+            <p>
+              Leírás: <span className="font-semibold">{race.next_race_desc || 'Hamarosan…'}</span>
+            </p>
+            {featuredRace && (
+              <p>
+                Helyszín: <span className="font-semibold">{featuredRace.location}</span>
+              </p>
+            )}
+            {race.next_race_image_path && (
+              <div className="w-full h-64 relative mt-4">
                 <Image
-                  src={featuredRace.image_url}
-                  alt={t('image')}
+                  src={race.next_race_image_path}
+                  alt="Következő verseny"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                   unoptimized
+                  priority
                 />
               </div>
             )}
           </div>
-        )}
+        </div>
       </section>
 
-      <section id="results" className="py-16 flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-bold mb-4">{t('results')}</h2>
-        <ul className="list-disc pl-6 text-left w-full max-w-md">
-          <li>2025. 07. 20. – {t('first_place')}: Kovács Péter</li>
-          <li>2025. 06. 15. – {t('first_place')}: Kiss Dániel</li>
-          <li>2025. 05. 10. – {t('first_place')}: Nagy Zoltán</li>
-          <li>{t('more_results_soon')}</li>
-        </ul>
+      {/* Értékajánlatok */}
+      <section className="section border-t">
+        <div className="container grid md:grid-cols-3 gap-6">
+          <div className="card">
+            <h3 className="mb-2">Egyenlő feltételek</h3>
+            <p>Egységes technika, a vezetési tudás dönt.</p>
+          </div>
+          <div className="card">
+            <h3 className="mb-2">Professzionális szervezés</h3>
+            <p>Időmérés, szabályok, sportszerű környezet.</p>
+          </div>
+          <div className="card">
+            <h3 className="mb-2">Közösség</h3>
+            <p>Barátságos hangulat, visszajáró pilóták.</p>
+          </div>
+        </div>
       </section>
 
-      <section id="faq" className="py-16 flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-bold mb-4">{t('faq')}</h2>
-        <ul className="list-disc pl-6 text-left w-full max-w-md">
-          <li><strong>{t('faq_q1')}</strong><br />{t('faq_a1')}</li>
-          <li><strong>{t('faq_q2')}</strong><br />{t('faq_a2')}</li>
-          <li><strong>{t('faq_q3')}</strong><br />{t('faq_a3')}</li>
-          <li><strong>{t('faq_q4')}</strong><br />{t('faq_a4')}</li>
-          <li><strong>{t('faq_q5')}</strong><br />{t('faq_a5')}</li>
-        </ul>
+      {/* Pályák */}
+      <section className="section border-t">
+        <div className="container">
+          <h2 className="mb-4">Pályák</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="card">
+              <h3 className="mb-1">G1 Kart Center</h3>
+              <p>Beltéri technikás pálya.</p>
+            </div>
+            <div className="card">
+              <h3 className="mb-1">Hungaroring Kart Center</h3>
+              <p>Kültéri gyors pálya.</p>
+            </div>
+            <div className="card">
+              <h3 className="mb-1">Kecskemét Gokart</h3>
+              <p>Vegyes karakterű aszfaltcsík.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Hogyan működik */}
+      <section className="section border-t">
+        <div className="container">
+          <h2 className="mb-4">Hogyan működik a nevezés?</h2>
+          <ol className="list-decimal pl-5 space-y-2">
+            <li>Kattints a Nevezés gombra.</li>
+            <li>Töltsd ki az adataidat.</li>
+            <li>Erősítsd meg e-mailben.</li>
+            <li>Találkozunk a pályán!</li>
+          </ol>
+        </div>
+      </section>
+
+      {/* Vélemények */}
+      <section className="section border-t">
+        <div className="container">
+          <h2 className="mb-4">Vélemények</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <blockquote className="card text-sm">
+              „Szuper hangulat és profi lebonyolítás.” – Bence
+            </blockquote>
+            <blockquote className="card text-sm">
+              „Igazi versenyélmény amatőröknek is.” – Anna
+            </blockquote>
+            <blockquote className="card text-sm">
+              „Visszatérő vendég vagyok, minden futam élmény.” – Gábor
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      {/* GYIK */}
+      <section id="faq" className="section border-t">
+        <div className="container">
+          <h2 className="mb-4">GYIK</h2>
+          <ul className="list-disc pl-6 max-w-3xl">
+            <li>
+              <strong>Mikor lesz a következő verseny?</strong>
+              <br />A főoldalon megtalálod a pontos dátumot.
+            </li>
+            <li>
+              <strong>Hogyan tudok regisztrálni?</strong>
+              <br />
+              Kattints a Nevezés gombra és töltsd ki az űrlapot.
+            </li>
+            <li>
+              <strong>Vannak súlycsoportok?</strong>
+              <br />
+              Egykategóriás sorozat vagyunk, kiegyensúlyozott kartokkal.
+            </li>
+            <li>
+              <strong>Hol találom az eredményeket?</strong>
+              <br />
+              Az Eredmények oldalon.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      {/* Hírlevél és közösség */}
+      <section className="section border-t">
+        <div className="container">
+          <h2 className="mb-4">Hírlevél</h2>
+          <p className="mb-3">Iratkozz fel, hogy elsőként értesülj az új futamokról.</p>
+          <form className="flex gap-2 max-w-xl">
+            <input type="email" placeholder="Email címed" className="input" aria-label="Email" />
+            <button type="button" className="btn btn-primary">
+              Feliratkozás
+            </button>
+          </form>
+          <div className="flex items-center gap-6 mt-6">
+            <a
+              href="https://www.facebook.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              Facebook csoport
+            </a>
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              Instagram
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Kapcsolat */}
+      <section className="section border-t">
+        <div className="container">
+          <h2 className="mb-2">Kapcsolat</h2>
+          <p>
+            Email:{' '}
+            <a className="underline" href="mailto:info@example.com">
+              info@example.com
+            </a>
+          </p>
+        </div>
       </section>
 
       <footer className="py-8 text-center text-gray-500">
-        &copy; {new Date().getFullYear()} {t('footer_copyright')}
+        &copy; {new Date().getFullYear()} Gokart Klub
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="ml-4 px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-sm"
-          aria-label={t('back_to_top')}
+          aria-label="Vissza a tetejére"
         >
-          {t('back_to_top')}
+          Vissza a tetejére
         </button>
       </footer>
     </>
