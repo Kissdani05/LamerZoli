@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Rólunk – Lámer Zoltán Gokart',
@@ -13,10 +14,12 @@ export default function AboutPage() {
       <section className="mb-8">
         <div className="flex flex-col md:flex-row gap-8 items-center">
           <div className="md:w-1/3 w-full flex justify-center">
-            <img
+            <Image
               src="/file.svg"
-              alt="Lámer Zoltán"
-              className="rounded-full w-40 h-40 object-cover border-4 border-primary"
+              alt="Bemutatkozás"
+              width={80}
+              height={80}
+              className="mx-auto mb-4"
             />
           </div>
           <div className="md:w-2/3 w-full">

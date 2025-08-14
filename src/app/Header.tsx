@@ -1,59 +1,60 @@
 'use client';
 import Link from 'next/link';
 import { useI18n } from './i18n/LanguageContext';
+import Image from 'next/image';
 
 export default function Header() {
   const { lang, setLang, t } = useI18n();
+  // Aktív oldal detektálása
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const navItems = [
+    { href: '/#race', label: t('nav_next_race') },
+    { href: '/calendar', label: t('nav_calendar') },
+    { href: '/tracks', label: t('nav_tracks') },
+    { href: '/results', label: t('nav_results') },
+    { href: '/blog', label: t('nav_blog') },
+    { href: '/rules', label: t('nav_rules') },
+    { href: '/contact', label: t('nav_contact') },
+  ];
   return (
-    <header className="header">
-      <div className="container flex flex-wrap items-center justify-between gap-3 py-3">
-        <nav className="flex flex-wrap gap-1 md:gap-2 items-center text-sm">
-          <Link href="/#hero" className="nav-link">
-            {t('nav_register')}
-          </Link>
-          <Link href="/#race" className="nav-link">
-            {t('nav_next_race')}
-          </Link>
-          <Link href="/results" className="nav-link">
-            {t('nav_results')}
-          </Link>
-          <Link href="/about" className="nav-link">
-            {t('nav_about')}
-          </Link>
-          <Link href="/calendar" className="nav-link">
-            {t('nav_calendar')}
-          </Link>
-          <Link href="/rules" className="nav-link">
-            {t('nav_rules')}
-          </Link>
-          <Link href="/tracks" className="nav-link">
-            {t('nav_tracks')}
-          </Link>
-          <Link href="/gallery" className="nav-link">
-            {t('nav_gallery')}
-          </Link>
-          <Link href="/blog" className="nav-link">
-            {t('nav_blog')}
-          </Link>
-          <Link href="/contact" className="nav-link">
-            {t('nav_contact')}
-          </Link>
+    <header className="header glass sticky top-0 z-50 border-b border-brand-2 backdrop-blur-lg">
+      <div className="container flex items-center justify-between py-2">
+        {/* Bal: logó */}
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/file.svg" alt="Logo" width={40} height={40} className="h-10 w-10" />
+        </Link>
+        {/* Közép: menü */}
+        <nav className="flex gap-1 md:gap-2 items-center text-sm relative">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`nav-link px-3 py-2 font-semibold relative${
+                currentPath === item.href ? ' active' : ''
+              }`}
+            >
+              {item.label}
+              {currentPath === item.href && (
+                <span className="absolute left-1/2 -translate-x-1/2 bottom-0 h-1 w-5 rounded-full bg-gradient-to-r from-brand-2 via-brand-3 to-brand-2 animate-race-line" />
+              )}
+            </Link>
+          ))}
         </nav>
+        {/* Jobb: fő CTA + nyelvváltó ikon */}
         <div className="flex items-center gap-3">
-          <img
-            src="/file.svg"
-            alt="Lámer Zoltán Gokart"
-            className="h-8 w-8 rounded-full border border-primary"
-          />
-          <select
-            aria-label={t('language_selector')}
-            className="select text-sm"
-            value={lang}
-            onChange={(e) => setLang(e.target.value as 'hu' | 'en')}
+          <button
+            className="btn btn-primary shadow-lg"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <option value="hu">HU</option>
-            <option value="en">EN</option>
-          </select>
+            {t('nav_register')}
+          </button>
+          <button
+            aria-label={t('language_selector')}
+            className="bg-surface rounded-full p-2 border-2 border-brand-2 hover:bg-brand-2 transition-colors"
+            onClick={() => setLang(lang === 'hu' ? 'en' : 'hu')}
+          >
+            <Image src="/globe.svg" alt="Nyelvváltó" width={24} height={24} className="h-6 w-6" />
+          </button>
         </div>
       </div>
     </header>

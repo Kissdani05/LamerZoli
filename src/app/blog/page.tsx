@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Blog – Lámer Zoltán Gokart',
@@ -13,9 +14,11 @@ export default function BlogPage() {
         <h2 className="text-2xl font-semibold mb-2">
           Hogyan készülj az első bérgokart versenyedre?
         </h2>
-        <img
+        <Image
           src="/gallery/sample1.jpg"
           alt="Bérgokart verseny"
+          width={320}
+          height={180}
           className="rounded w-full max-w-xl mb-4"
         />
         <p className="mb-2">
@@ -53,9 +56,11 @@ export default function BlogPage() {
       </article>
       <article className="mb-12">
         <h2 className="text-2xl font-semibold mb-2">Ideális ívek és fékezési pontok alapjai</h2>
-        <img
+        <Image
           src="/gallery/sample2.jpg"
           alt="Gokart pálya"
+          width={320}
+          height={180}
           className="rounded w-full max-w-xl mb-4"
         />
         <p className="mb-2">
@@ -92,9 +97,11 @@ export default function BlogPage() {
       </article>
       <article className="mb-12">
         <h2 className="text-2xl font-semibold mb-2">Miért jó az egykategóriás bajnokság?</h2>
-        <img
+        <Image
           src="/gallery/sample3.jpg"
           alt="Egykategóriás gokart"
+          width={320}
+          height={180}
           className="rounded w-full max-w-xl mb-4"
         />
         <p className="mb-2">
@@ -126,9 +133,11 @@ export default function BlogPage() {
       </article>
       <article className="mb-12">
         <h2 className="text-2xl font-semibold mb-2">Edzés gokartverseny előtt – hogyan készülj?</h2>
-        <img
+        <Image
           src="/gallery/sample4.jpg"
           alt="Gokart edzés"
+          width={320}
+          height={180}
           className="rounded w-full max-w-xl mb-4"
         />
         <p className="mb-2">
@@ -161,9 +170,11 @@ export default function BlogPage() {
       </article>
       <article className="mb-12">
         <h2 className="text-2xl font-semibold mb-2">Felszerelés: mit érdemes hozni a versenyre?</h2>
-        <img
+        <Image
           src="/gallery/sample5.jpg"
           alt="Gokart felszerelés"
+          width={320}
+          height={180}
           className="rounded w-full max-w-xl mb-4"
         />
         <p className="mb-2">
@@ -187,9 +198,11 @@ export default function BlogPage() {
         <h2 className="text-2xl font-semibold mb-2">
           Taktika a futamon – hogyan előzz, mikor támadj?
         </h2>
-        <img
+        <Image
           src="/gallery/sample6.jpg"
           alt="Gokart taktika"
+          width={320}
+          height={180}
           className="rounded w-full max-w-xl mb-4"
         />
         <p className="mb-2">
@@ -215,9 +228,11 @@ export default function BlogPage() {
       </article>
       <article className="mb-12">
         <h2 className="text-2xl font-semibold mb-2">Interjú: egy bajnok gondolatai</h2>
-        <img
+        <Image
           src="/gallery/sample7.jpg"
           alt="Interjú bajnokkal"
+          width={320}
+          height={180}
           className="rounded w-full max-w-xl mb-4"
         />
         <p className="mb-2">
@@ -241,9 +256,11 @@ export default function BlogPage() {
       </article>
       <article className="mb-12">
         <h2 className="text-2xl font-semibold mb-2">Vendégcikk: egy kezdő tapasztalatai</h2>
-        <img
+        <Image
           src="/gallery/sample8.jpg"
           alt="Vendégcikk gokart"
+          width={320}
+          height={180}
           className="rounded w-full max-w-xl mb-4"
         />
         <p className="mb-2">

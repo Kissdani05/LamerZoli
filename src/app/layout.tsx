@@ -54,38 +54,6 @@ export const metadata: Metadata = {
   },
 };
 
-function OrgJsonLd() {
-  const siteUrl = process.env.SITE_URL || 'https://lamerzoli.vercel.app';
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Organization',
-        name: 'Lámer Zoltán Gokart',
-        url: siteUrl,
-        logo: siteUrl + '/file.svg',
-        sameAs: ['https://www.facebook.com/', 'https://www.instagram.com/'],
-      },
-      {
-        '@type': 'Person',
-        name: 'Lámer Zoltán',
-        url: siteUrl,
-      },
-      {
-        '@type': 'WebSite',
-        name: 'Lámer Zoltán Gokart',
-        url: siteUrl,
-      },
-    ],
-  };
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{

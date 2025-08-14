@@ -14,13 +14,6 @@ export default function NotificationProvider({ children }: { children: React.Rea
     }
   }, []);
 
-  // Push engedély kérés (példa)
-  function requestNotificationPermission() {
-    if (typeof window !== 'undefined' && 'Notification' in window) {
-      Notification.requestPermission();
-    }
-  }
-
   // UI: gomb az engedély kéréshez (opcionális, később testreszabható)
   return (
     <>

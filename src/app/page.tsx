@@ -4,6 +4,8 @@ import { supabase } from '../lib/supabaseClient';
 import RegistrationModal from './RegistrationModal';
 import { useI18n } from './i18n/LanguageContext';
 import Image from 'next/image';
+import Countdown from './Countdown';
+import Link from 'next/link';
 
 function JsonLd({ data }: { data: object }) {
   return (
@@ -182,6 +184,27 @@ export default function Home() {
     ],
   };
 
+  const faqs = [
+    {
+      q: 'Hogyan tudok regisztrálni?',
+      a: 'Töltsd ki a regisztrációs űrlapot a főoldalon, majd kattints a Regisztráció gombra.',
+    },
+    { q: 'Vannak súlycsoportok?', a: 'Egykategóriás sorozat vagyunk, kiegyensúlyozott kartokkal.' },
+    {
+      q: 'Hol találom az eredményeket?',
+      a: 'Az Eredmények szekcióban láthatod a korábbi versenyek győzteseit.',
+    },
+    {
+      q: 'Mi történik, ha hibás email címet adok meg?',
+      a: 'A rendszer csak érvényes email címet fogad el, hibás esetben hibaüzenetet kapsz.',
+    },
+    {
+      q: 'Hogyan védjük az adataidat?',
+      a: 'A regisztrációhoz hozzájárulás szükséges, az adatokat biztonságosan kezeljük.',
+    },
+  ];
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+
   return (
     <>
       {eventJsonLd && <JsonLd data={eventJsonLd} />}
@@ -189,43 +212,48 @@ export default function Home() {
       <JsonLd data={breadcrumbJsonLd} />
 
       {/* Hero */}
-      <section id="hero" className="section">
-        <div className="container flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
-          <div className="flex flex-col items-start md:w-1/2 w-full">
-            <h1 className="mb-4">Lámer Zoltán Gokart – Bérgokart versenyek</h1>
-            <p className="text-lg text-gray-700 mb-6">
-              Évente 300+ induló, 8+ forduló, 4 pálya – az egyik legnagyobb egykategóriás bérgokart
-              sorozat. Nevezés pár kattintással.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-                Nevezés most
-              </button>
-              <a href="#race" className="btn btn-outline">
-                Következő verseny
-              </a>
-              <a href="#faq" className="nav-link">
-                GYIK
-              </a>
-            </div>
-            <div className="mt-6 w-full">
-              <p className="text-sm text-gray-600 mb-2">Partnereink</p>
-              <div className="flex flex-wrap items-center gap-6 opacity-80">
-                <Image src="/vercel.svg" alt="Partner logo" width={96} height={24} />
-                <Image src="/next.svg" alt="Partner logo" width={96} height={24} />
-                <Image src="/globe.svg" alt="Partner logo" width={96} height={24} />
-                <Image src="/window.svg" alt="Partner logo" width={96} height={24} />
-              </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="badge badge-primary">Biztonságos fizetés</span>
-                <span className="badge badge-muted">Több száz nevezés/év</span>
-                <span className="badge badge-muted">Top pályák</span>
-                <span className="badge badge-muted">Professzionális időmérés</span>
-              </div>
-            </div>
+      <section id="hero" className="hero section relative overflow-hidden">
+        {/* Animált/videó háttér */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-60"
+            poster="/next.svg"
+          >
+            <source src="/hero-bg.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-br from-brand via-brand-2 to-brand-3 opacity-30 pointer-events-none" />
+        </div>
+        <div className="container relative z-10 flex flex-col items-center justify-center min-h-[60vh] py-16">
+          <h1 className="mb-4 text-5xl md:text-7xl font-extrabold gradient-text text-center drop-shadow-lg">
+            Lámer Zoltán Gokart
+          </h1>
+          <p className="text-xl md:text-2xl font-semibold text-white text-center mb-8 drop-shadow">
+            Egyenlő technika. Tiszta szabályok. Valódi versenyélmény.
+          </p>
+          <div className="flex flex-wrap gap-6 justify-center mb-8">
+            <button
+              className="btn btn-primary text-lg px-8 py-4 shadow-xl animate-float"
+              onClick={() => setShowModal(true)}
+            >
+              Nevezek most
+            </button>
+            <a href="#race" className="btn btn-outline text-lg px-8 py-4 shadow-xl animate-float">
+              Következő verseny
+            </a>
           </div>
-          <div className="md:w-1/2 w-full flex justify-center items-center">
-            {/* Optional hero image placeholder */}
+          {/* Odometer badge-sáv */}
+          <div className="flex flex-wrap gap-4 justify-center mt-4">
+            <div className="badge badge-primary text-lg animate-odometer">
+              {new Date().getFullYear()}+ nevezés
+            </div>
+            <div className="badge badge-muted text-lg animate-odometer">Top pályák</div>
+            <div className="badge badge-muted text-lg animate-odometer">
+              Professzionális időmérés
+            </div>
           </div>
         </div>
       </section>
@@ -239,194 +267,227 @@ export default function Home() {
       {/* Következő verseny */}
       <section id="race" className="section">
         <div className="container flex flex-col items-center">
-          <h2 className="mb-4">Következő verseny</h2>
-          <div className="card w-full max-w-2xl">
-            <p>
-              Dátum:{' '}
-              <span className="font-semibold">
-                {race.next_race_at ? new Date(race.next_race_at).toLocaleString() : 'Hamarosan…'}
-              </span>
-            </p>
-            <p>
-              Pálya: <span className="font-semibold">{featuredRace?.location || 'Hamarosan…'}</span>
-            </p>
-            <p>
-              Cím: <span className="font-semibold">{featuredRace?.address || 'Hamarosan…'}</span>
-            </p>
-            <p>
-              Vonalvezetés:{' '}
-              <span className="font-semibold">{featuredRace?.layout || 'Hamarosan…'}</span>
-            </p>
-            <p>
-              Futamformátum:{' '}
-              <span className="font-semibold">{featuredRace?.format || 'Hamarosan…'}</span>
-            </p>
-            <p>
-              Nevezési díj:{' '}
-              <span className="font-semibold">{featuredRace?.fee || 'Hamarosan…'}</span>
-            </p>
-            <p>
-              Limit:{' '}
-              <span className="font-semibold">
-                {featuredRace?.max_participants || 'Hamarosan…'}
-              </span>
-            </p>
-            <p>
-              Súlykompenzáció:{' '}
-              <span className="font-semibold">{featuredRace?.weight_rule || 'Hamarosan…'}</span>
-            </p>
-            <p>
-              Kaució/fizetés:{' '}
-              <span className="font-semibold">{featuredRace?.deposit || 'Hamarosan…'}</span>
-            </p>
-            <p>
-              Nevezési határidő:{' '}
-              <span className="font-semibold">{featuredRace?.deadline || 'Hamarosan…'}</span>
-            </p>
-            <p>
-              Esőszabály:{' '}
-              <span className="font-semibold">{featuredRace?.rain_rule || 'Hamarosan…'}</span>
-            </p>
-            <p>
-              Fotó/videó:{' '}
-              <span className="font-semibold">{featuredRace?.media_rule || 'Hamarosan…'}</span>
-            </p>
-            <p>
-              Leírás: <span className="font-semibold">{race.next_race_desc || 'Hamarosan…'}</span>
-            </p>
+          <div className="glass card w-full max-w-2xl p-6 shadow-2xl relative animate-float">
             {race.next_race_image_path && (
-              <div className="w-full h-64 relative mt-4">
+              <div className="w-full h-64 relative mb-4 rounded-xl overflow-hidden">
                 <Image
                   src={race.next_race_image_path}
-                  alt="Következő verseny"
+                  alt="Következő verseny pályafotó"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  unoptimized
                   priority
                 />
               </div>
             )}
-          </div>
-        </div>
-      </section>
-
-      {/* Értékajánlatok */}
-      <section className="section border-t">
-        <div className="container grid md:grid-cols-3 gap-6">
-          <div className="card">
-            <h3 className="mb-2">Egyenlő feltételek</h3>
-            <p>Egységes technika, a vezetési tudás dönt.</p>
-          </div>
-          <div className="card">
-            <h3 className="mb-2">Professzionális szervezés</h3>
-            <p>Időmérés, szabályok, sportszerű környezet.</p>
-          </div>
-          <div className="card">
-            <h3 className="mb-2">Közösség</h3>
-            <p>Barátságos hangulat, visszajáró pilóták.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Pályák */}
-      <section className="section border-t">
-        <div className="container">
-          <h2 className="mb-4">Pályák</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="card">
-              <h3 className="mb-1">Hungaroring Kart Center</h3>
-              <p>
-                Gyors, külső aszfaltcsík, technikás középső szektorral. Minimum: 150 cm
-                (pályaszabálytól függően).
-              </p>
+            <h2 className="text-2xl font-bold mb-2 gradient-text">Következő verseny</h2>
+            <div className="mb-2 text-lg">
+              <span className="font-semibold">
+                {race.next_race_at ? new Date(race.next_race_at).toLocaleString() : 'Hamarosan…'}
+              </span>
+              {featuredRace?.location && <span> &middot; {featuredRace.location}</span>}
             </div>
-            <div className="card">
-              <h3 className="mb-1">G1 Kart Center</h3>
-              <p>Beltéri, technikás pálya, modern időmérő rendszer.</p>
+            <div className="mb-2 text-base">
+              <span className="font-semibold">Formátum:</span>{' '}
+              {featuredRace?.format || 'Hamarosan…'}
             </div>
-            <div className="card">
-              <h3 className="mb-1">Kecskemét Gokart</h3>
-              <p>Vegyes karakterű aszfaltcsík, családias hangulat.</p>
+            <div className="mb-2 text-base">
+              <span className="font-semibold">Nevezési díj:</span>{' '}
+              {featuredRace?.fee || 'Hamarosan…'}
+              {featuredRace?.max_participants && (
+                <span className="ml-4 font-semibold">Limit:</span>
+              )}{' '}
+              {featuredRace?.max_participants || ''}
+            </div>
+            <ul className="mb-4 list-disc pl-5">
+              <li>
+                <strong>Súlykompenzáció:</strong> {featuredRace?.weight_rule || 'Hamarosan…'}
+              </li>
+              <li>
+                <strong>Kiosztás:</strong> {featuredRace?.layout || 'Hamarosan…'}
+              </li>
+              <li>
+                <strong>Esőszabály:</strong> {featuredRace?.rain_rule || 'Hamarosan…'}
+              </li>
+            </ul>
+            {/* Countdown + progress-bar */}
+            <div className="mb-4">
+              {race.next_race_at && <Countdown targetDate={race.next_race_at} />}
+              {/* Progress bar: napok aránya a versenyig (példa) */}
+              {race.next_race_at && (
+                <div className="w-full h-2 bg-brand-3/30 rounded-full mt-2 overflow-hidden">
+                  <div
+                    className="h-2 bg-gradient-to-r from-brand-2 to-brand-3 rounded-full transition-all duration-700"
+                    style={{
+                      width: `${Math.max(0, Math.min(100, 100 - ((new Date(race.next_race_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30)) * 100))}%`,
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="flex gap-4 mt-2">
+              <button
+                className="btn btn-primary text-lg px-6 py-3 shadow-lg animate-float"
+                onClick={() => setShowModal(true)}
+              >
+                Nevezek
+              </button>
+              <a
+                href="/calendar"
+                className="btn btn-outline text-lg px-6 py-3 shadow-lg animate-float"
+              >
+                Teljes részletek
+              </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Hogyan működik */}
+      {/* Miért a Lámer-futam? */}
       <section className="section border-t">
-        <div className="container">
-          <h2 className="mb-4">Hogyan működik a nevezés?</h2>
-          <ol className="list-decimal pl-5 space-y-2">
-            <li>Kattints a Nevezés gombra.</li>
-            <li>Töltsd ki az adataidat.</li>
-            <li>Erősítsd meg e-mailben.</li>
-            <li>Találkozunk a pályán!</li>
-          </ol>
-        </div>
-      </section>
-
-      {/* Vélemények */}
-      <section className="section border-t">
-        <div className="container">
-          <h2 className="mb-4">Vélemények</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <blockquote className="card text-sm">
-              „Szuper hangulat és profi lebonyolítás.” – Bence
-            </blockquote>
-            <blockquote className="card text-sm">
-              „Igazi versenyélmény amatőröknek is.” – Anna
-            </blockquote>
-            <blockquote className="card text-sm">
-              „Visszatérő vendég vagyok, minden futam élmény.” – Gábor
-            </blockquote>
+        <div className="container grid md:grid-cols-3 gap-8">
+          <div className="glass card flex flex-col items-center p-8 shadow-xl animate-float">
+            <span className="text-5xl mb-4" role="img" aria-label="Egyenlő technika">
+              ⚙️
+            </span>
+            <h3 className="mb-2 text-xl font-bold gradient-text text-center">Egyenlő feltételek</h3>
+            <p className="text-base text-center">
+              Mindenki azonos technikával indul, csak a tudás számít.
+            </p>
+          </div>
+          <div className="glass card flex flex-col items-center p-8 shadow-xl animate-float">
+            <span className="text-5xl mb-4" role="img" aria-label="Profi szervezés">
+              🏁
+            </span>
+            <h3 className="mb-2 text-xl font-bold gradient-text text-center">Profi szervezés</h3>
+            <p className="text-base text-center">
+              Átlátható szabályok, időmérés, sportszerű versenyek.
+            </p>
+          </div>
+          <div className="glass card flex flex-col items-center p-8 shadow-xl animate-float">
+            <span className="text-5xl mb-4" role="img" aria-label="Közösség">
+              🤝
+            </span>
+            <h3 className="mb-2 text-xl font-bold gradient-text text-center">Közösség</h3>
+            <p className="text-base text-center">
+              Barátságos, támogató pilóták, visszajáró versenyzők.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Vélemények, értékelések */}
+      {/* Nevezés-lépések vizuális stepper */}
+      <section className="section border-t">
+        <div className="container flex flex-col md:flex-row items-center gap-8">
+          <div className="flex-1 flex flex-col md:flex-row gap-6 justify-center items-center">
+            <div className="stepper flex md:flex-row flex-col gap-6">
+              <div className="step flex flex-col items-center">
+                <span className="bg-brand-2 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg mb-2">
+                  1
+                </span>
+                <span className="font-semibold mb-1">Űrlap kitöltése</span>
+                <span className="text-sm text-muted">
+                  Add meg az adataidat, válaszd ki a futamot.
+                </span>
+              </div>
+              <div className="step flex flex-col items-center">
+                <span className="bg-brand-2 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg mb-2">
+                  2
+                </span>
+                <span className="font-semibold mb-1">Visszaigazolás</span>
+                <span className="text-sm text-muted">
+                  E-mailben kapsz visszaigazolást a nevezésről.
+                </span>
+              </div>
+              <div className="step flex flex-col items-center">
+                <span className="bg-brand-2 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg mb-2">
+                  3
+                </span>
+                <span className="font-semibold mb-1">Fizetés</span>
+                <span className="text-sm text-muted">
+                  A pályán vagy online fizethetsz, ahogy a kiírásban szerepel.
+                </span>
+              </div>
+              <div className="step flex flex-col items-center">
+                <span className="bg-brand-2 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg mb-2">
+                  4
+                </span>
+                <span className="font-semibold mb-1">Rajt</span>
+                <span className="text-sm text-muted">Találkozunk a pályán, indul a verseny!</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex-shrink-0 mt-8 md:mt-0">
+            <a href="#faq" className="btn btn-outline">
+              Kezdő vagyok, jöhetek?
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Vélemények kártya-slider */}
       <section className="section border-t" aria-labelledby="reviews-title">
         <div className="container">
           <h2 id="reviews-title" className="mb-4">
-            Versenyzői vélemények és értékelések
+            Versenyzői vélemények
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="card" tabIndex={0} aria-label="5 csillag, Bence, 2025. június">
-              <div className="flex items-center gap-2 mb-2">
-                <span aria-label="5 csillag" role="img">
-                  ★★★★★
-                </span>
-                <span className="text-sm text-gray-400">2025. június</span>
+          <div
+            className="slider flex gap-8 overflow-x-auto pb-4 snap-x snap-mandatory"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            {[
+              {
+                name: 'Bence',
+                race: 'Hungaroring Tavasz',
+                stars: 5,
+                text: 'Szuper hangulat és profi lebonyolítás. Minden futam élmény!',
+                img: '/gallery/bence.jpg',
+              },
+              {
+                name: 'Anna',
+                race: 'G1 Bajnokok',
+                stars: 4,
+                text: 'Igazi versenyélmény amatőröknek is. Barátságos közösség!',
+                img: '/gallery/anna.jpg',
+              },
+              {
+                name: 'Gábor',
+                race: 'Kecskemét Kupa',
+                stars: 5,
+                text: 'Visszatérő vendég vagyok, minden futam élmény. Ajánlom mindenkinek!',
+                img: '/gallery/gabor.jpg',
+              },
+            ].map((review) => (
+              <div
+                key={review.name}
+                className="glass card min-w-[320px] max-w-xs p-6 shadow-xl snap-center transition-transform duration-300 hover:scale-105"
+                tabIndex={0}
+                aria-label={`${review.stars} csillag, ${review.name}, ${review.race}`}
+                style={{ perspective: '800px' }}
+              >
+                <div className="flex flex-col items-center mb-2">
+                  <div className="w-16 h-16 rounded-full overflow-hidden mb-2 border-2 border-brand-2 shadow-lg">
+                    <Image
+                      src={review.img}
+                      alt={review.name + ' fotó'}
+                      width={64}
+                      height={64}
+                      className="object-cover"
+                    />
+                  </div>
+                  <div
+                    className="flex gap-1 text-brand-3 text-xl mb-1"
+                    aria-label={`${review.stars} csillag`}
+                  >
+                    {'★'.repeat(review.stars)}
+                    {'☆'.repeat(5 - review.stars)}
+                  </div>
+                  <div className="font-bold text-lg gradient-text mb-1">{review.name}</div>
+                  <div className="text-sm text-muted mb-2">{review.race}</div>
+                </div>
+                <blockquote className="text-base text-center mb-2">{review.text}</blockquote>
               </div>
-              <blockquote className="text-sm mb-2">
-                „Szuper hangulat és profi lebonyolítás.”
-              </blockquote>
-              <div className="text-xs text-gray-500">– Bence</div>
-            </div>
-            <div className="card" tabIndex={0} aria-label="4 csillag, Anna, 2025. május">
-              <div className="flex items-center gap-2 mb-2">
-                <span aria-label="4 csillag" role="img">
-                  ★★★★☆
-                </span>
-                <span className="text-sm text-gray-400">2025. május</span>
-              </div>
-              <blockquote className="text-sm mb-2">
-                „Igazi versenyélmény amatőröknek is.”
-              </blockquote>
-              <div className="text-xs text-gray-500">– Anna</div>
-            </div>
-            <div className="card" tabIndex={0} aria-label="5 csillag, Gábor, 2025. április">
-              <div className="flex items-center gap-2 mb-2">
-                <span aria-label="5 csillag" role="img">
-                  ★★★★★
-                </span>
-                <span className="text-sm text-gray-400">2025. április</span>
-              </div>
-              <blockquote className="text-sm mb-2">
-                „Visszatérő vendég vagyok, minden futam élmény.”
-              </blockquote>
-              <div className="text-xs text-gray-500">– Gábor</div>
-            </div>
+            ))}
           </div>
           <div className="mt-6 text-center">
             <a href="/blog" className="btn btn-outline">
@@ -437,61 +498,105 @@ export default function Home() {
       </section>
 
       {/* GYIK */}
-      <section id="faq" className="section border-t">
-        <div className="container">
-          <h2 className="mb-4">GYIK</h2>
-          <ul className="list-disc pl-6 max-w-3xl">
-            <li>
-              <strong>Mikor lesz a következő verseny?</strong>
-              <br />A főoldalon megtalálod a pontos dátumot.
-            </li>
-            <li>
-              <strong>Hogyan tudok regisztrálni?</strong>
-              <br />
-              Kattints a Nevezés gombra és töltsd ki az űrlapot.
-            </li>
-            <li>
-              <strong>Vannak súlycsoportok?</strong>
-              <br />
-              Egykategóriás sorozat vagyunk, kiegyensúlyozott kartokkal.
-            </li>
-            <li>
-              <strong>Hol találom az eredményeket?</strong>
-              <br />
-              Az Eredmények oldalon.
-            </li>
+      <section id="faq" className="section border-t glass-card gradient-bg motion-fade-in">
+        <div className="container max-w-3xl mx-auto">
+          <h2 className="mb-4 text-3xl font-bold gradient-text">GYIK</h2>
+          {/* Kiemelt Q&A */}
+          <div className="mb-6 p-4 rounded-xl glass-card border-l-4 border-primary shadow-lg motion-slide-in">
+            <div className="font-semibold text-lg">Mikor lesz a következő verseny?</div>
+            <div className="text-base text-muted">
+              A főoldalon mindig megtalálod a pontos dátumot és leírást.
+            </div>
+          </div>
+          {/* Accordion Q&A */}
+          <ul className="faq-accordion" role="list">
+            {faqs.map((faq, idx) => (
+              <li key={faq.q} className="mb-2">
+                <button
+                  className={`faq-toggle w-full text-left py-3 px-4 rounded-lg glass-card gradient-bg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all ${openIdx === idx ? 'active' : ''}`}
+                  aria-expanded={openIdx === idx}
+                  aria-controls={`faq-panel-${idx}`}
+                  onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
+                >
+                  <span className="font-semibold text-base">{faq.q}</span>
+                  <span className="float-right" aria-hidden>
+                    {openIdx === idx ? '−' : '+'}
+                  </span>
+                </button>
+                <div
+                  id={`faq-panel-${idx}`}
+                  className={`faq-panel px-4 pb-3 text-muted transition-all ${openIdx === idx ? 'open' : 'hidden'}`}
+                  role="region"
+                  aria-labelledby={`faq-toggle-${idx}`}
+                  style={{
+                    maxHeight: openIdx === idx ? '200px' : '0',
+                    overflow: 'hidden',
+                    transition: 'max-height 0.4s cubic-bezier(.4,0,.2,1)',
+                  }}
+                >
+                  {faq.a}
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
       </section>
 
       {/* Hírlevél és közösség */}
       <section className="section border-t">
-        <div className="container">
-          <h2 className="mb-4">Hírlevél</h2>
-          <p className="mb-3">Iratkozz fel, hogy elsőként értesülj az új futamokról.</p>
-          <form className="flex gap-2 max-w-xl">
-            <input type="email" placeholder="Email címed" className="input" aria-label="Email" />
-            <button type="button" className="btn btn-primary">
-              Feliratkozás
-            </button>
-          </form>
-          <div className="flex items-center gap-6 mt-6">
-            <a
-              href="https://www.facebook.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline"
-            >
-              Facebook csoport
-            </a>
-            <a
-              href="https://www.instagram.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline"
-            >
-              Instagram
-            </a>
+        <div className="container flex justify-center">
+          <div className="pitlane-card glass-card gradient-bg shadow-xl p-8 max-w-lg w-full motion-fade-in">
+            <h2 className="mb-4 text-2xl font-bold gradient-text flex items-center gap-2">
+              <span>Hírlevél</span>
+              <span className="nitro-badge motion-nitro" aria-label="Gyors infók">
+                🏁
+              </span>
+            </h2>
+            <p className="mb-3 text-base">
+              Iratkozz fel, hogy elsőként értesülj az új futamokról, exkluzív tippekről és
+              akciókról!
+            </p>
+            <form className="flex gap-2 mb-2" aria-label="Hírlevél feliratkozás">
+              <input
+                type="email"
+                placeholder="Email címed"
+                className="input glass-input"
+                aria-label="Email"
+                required
+              />
+              <button
+                type="submit"
+                className="btn btn-primary nitro-anim"
+                aria-label="Feliratkozás"
+              >
+                Feliratkozás
+              </button>
+            </form>
+            <div className="text-xs text-muted mb-2">
+              Az email megadásával elfogadod az{' '}
+              <a href="/rules" className="underline">
+                adatvédelmi szabályzatot
+              </a>{' '}
+              és bármikor leiratkozhatsz.
+            </div>
+            <div className="flex items-center gap-6 mt-4">
+              <a
+                href="https://www.facebook.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                Facebook csoport
+              </a>
+              <a
+                href="https://www.instagram.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                Instagram
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -509,15 +614,94 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="py-8 text-center text-gray-500">
-        &copy; {new Date().getFullYear()} Lámer Zoltán Gokart
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="ml-4 px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-sm"
-          aria-label="Vissza a tetejére"
-        >
-          Vissza a tetejére
-        </button>
+      <footer className="footer glass-card gradient-bg py-10 mt-12 motion-fade-in text-base text-gray-800 dark:text-gray-200">
+        <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+          {/* Bal: bemutatkozás + social */}
+          <div>
+            <div className="font-bold text-xl mb-2">Lámer Zoltán Gokart</div>
+            <div className="text-sm mb-4">
+              Motorsport, élmény, közösség – prémium amatőr futamok, mindenki számára!
+            </div>
+            <div className="flex gap-4">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener"
+                aria-label="Facebook"
+                className="social-icon"
+              >
+                <Image
+                  src="/window.svg"
+                  alt="Facebook"
+                  width={24}
+                  height={24}
+                  className="h-6 w-6"
+                />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener"
+                aria-label="Instagram"
+                className="social-icon"
+              >
+                <Image
+                  src="/globe.svg"
+                  alt="Instagram"
+                  width={24}
+                  height={24}
+                  className="h-6 w-6"
+                />
+              </a>
+              {/* További social ikonok... */}
+            </div>
+          </div>
+          {/* Közép: gyorslinkek */}
+          <nav aria-label="Gyorslinkek" className="footer-links flex flex-col gap-2">
+            <Link href="/" className="footer-link">
+              Főoldal
+            </Link>
+            <Link href="/calendar" className="footer-link">
+              Versenyek
+            </Link>
+            <Link href="/tracks" className="footer-link">
+              Pályák
+            </Link>
+            <Link href="/blog" className="footer-link">
+              Blog
+            </Link>
+            <Link href="/contact" className="footer-link">
+              Kapcsolat
+            </Link>
+          </nav>
+          {/* Jobb: kapcsolat + jogi linkek */}
+          <div className="footer-legal flex flex-col gap-2 items-end">
+            <div>
+              <span className="font-semibold">Kapcsolat:</span>
+              <a className="underline ml-2" href="mailto:info@example.com">
+                info@example.com
+              </a>
+            </div>
+            <a href="/rules" className="footer-link">
+              Szabályzat
+            </a>
+            <a href="/rules#adatvedelem" className="footer-link">
+              Adatvédelem
+            </a>
+            <div className="mt-4 text-xs text-muted">
+              &copy; {new Date().getFullYear()} Lámer Zoltán Gokart
+            </div>
+          </div>
+        </div>
+        <div className="mt-8 text-center">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="ml-4 px-3 py-1 rounded glass-btn gradient-bg text-sm motion-btn"
+            aria-label="Vissza a tetejére"
+          >
+            Vissza a tetejére
+          </button>
+        </div>
       </footer>
     </>
   );

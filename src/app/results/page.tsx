@@ -21,7 +21,7 @@ export default function ResultsPage() {
   useEffect(() => {
     async function fetchResults() {
       // Próbáljuk lekérni a Supabase-ból, ha nincs tábla, mock adat
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('results')
         .select('*')
         .order('year', { ascending: false })
