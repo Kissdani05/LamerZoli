@@ -5,10 +5,10 @@
   --surface: #0f1115;
   --foreground: #f7f7f7;
   --muted: #a3a3a3;
-  --brand: #6d28d9; /* violet-700 */
-  --brand-2: #22d3ee; /* cyan-400 */
-  --brand-3: #f97316; /* orange-500 */
-  --ring: #8b5cf6; /* violet-500 */
+  --brand: #e4eb34;
+  --brand-2: #e4eb34;
+  --brand-3: #e4eb34;
+  --ring: #e4eb34;
   --card: rgba(255,255,255,0.06);
   --card-border: rgba(255,255,255,0.08);
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
@@ -64,8 +64,8 @@ img, svg, video { max-width: 100%; height: auto; }
 /*************************
   Hero
 *************************/
-.hero { position: relative; overflow: hidden; background: linear-gradient(180deg, rgba(109,40,217,0.15), rgba(34,211,238,0.08) 50%, transparent); }
-.hero .decor-blob { position: absolute; inset: auto auto -30% -10%; width: 60vw; max-width: 800px; height: 60vw; max-height: 800px; background: radial-gradient(closest-side, rgba(34,211,238,0.35), transparent 70%); filter: blur(36px); transform: rotate(-12deg); pointer-events: none; }
+.hero { position: relative; overflow: hidden; background: linear-gradient(180deg, rgba(228,235,52,0.15), rgba(228,235,52,0.08) 50%, transparent); }
+.hero .decor-blob { position: absolute; inset: auto auto -30% -10%; width: 60vw; max-width: 800px; height: 60vw; max-height: 800px; background: radial-gradient(closest-side, rgba(228,235,52,0.35), transparent 70%); filter: blur(36px); transform: rotate(-12deg); pointer-events: none; }
 .hero .decor-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 28px 28px; mask-image: radial-gradient(closest-side, black, transparent 75%); pointer-events: none; }
 
 /*************************
@@ -73,8 +73,8 @@ img, svg, video { max-width: 100%; height: auto; }
 *************************/
 .btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 0.75rem; font-weight: 700; transition: transform .15s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease, border-color .2s ease; white-space: nowrap; }
 .btn:active { transform: translateY(1px); }
-.btn-primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #0a0a0b; padding: 0.75rem 1.25rem; box-shadow: 0 6px 18px rgba(139,92,246,0.35), inset 0 0 0 1px rgba(255,255,255,0.15); }
-.btn-primary:hover { box-shadow: 0 10px 26px rgba(139,92,246,0.45); }
+.btn-primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #0a0a0b; padding: 0.75rem 1.25rem; box-shadow: 0 6px 18px rgba(228,235,52,0.35), inset 0 0 0 1px rgba(255,255,255,0.15); }
+.btn-primary:hover { box-shadow: 0 10px 26px rgba(228,235,52,0.45); }
 .btn-outline { border: 1px solid rgba(255,255,255,0.18); color: #e5e7eb; padding: 0.75rem 1.25rem; background: rgba(255,255,255,0.02); }
 .btn-outline:hover { background: rgba(255,255,255,0.06); }
 .btn-ghost { color: #e5e7eb; text-decoration: underline; padding: 0.25rem 0.5rem; }

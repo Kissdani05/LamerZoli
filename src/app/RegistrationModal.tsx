@@ -94,17 +94,17 @@ export default function RegistrationModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      <div className="relative bg-white text-black rounded-lg shadow-lg p-8 w-full max-w-md z-10">
+      <div className="relative bg-black text-white rounded-2xl shadow-2xl p-8 w-full max-w-md z-10 transition-transform transform-gpu duration-300 ease-in-out border border-[#222]">
         <button
-          className="absolute top-4 right-4 text-2xl text-black hover:text-gray-600"
+          className="absolute top-4 right-4 text-2xl text-white hover:text-[#e4eb34] focus:outline-none focus:ring-2 focus:ring-[#e4eb34] rounded-full w-10 h-10 flex items-center justify-center transition-colors"
           onClick={onClose}
           aria-label={t('close')}
         >
           ×
         </button>
-        <h2 className="text-2xl font-bold mb-4">{t('modal_title')}</h2>
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          <label className="font-semibold" htmlFor="name">
+        <h2 className="text-2xl font-extrabold mb-6 tracking-tight">{t('modal_title')}</h2>
+        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+          <label className="font-semibold text-sm" htmlFor="name">
             {t('field_fullname')}
           </label>
           <input
@@ -112,13 +112,12 @@ export default function RegistrationModal({
             id="name"
             name="name"
             placeholder={t('field_fullname')}
-            className="border rounded px-3 py-2"
+            className="border-2 border-[#e4eb34] rounded-lg px-4 py-2 bg-white/10 text-white focus:ring-2 focus:ring-[#e4eb34] transition-all placeholder:text-white"
             value={form.name}
             onChange={handleChange}
             required
           />
-
-          <label className="font-semibold" htmlFor="email">
+          <label className="font-semibold text-sm" htmlFor="email">
             {t('field_email')}
           </label>
           <input
@@ -126,13 +125,12 @@ export default function RegistrationModal({
             id="email"
             name="email"
             placeholder={t('field_email')}
-            className="border rounded px-3 py-2"
+            className="border-2 border-[#e4eb34] rounded-lg px-4 py-2 bg-white/10 text-white focus:ring-2 focus:ring-[#e4eb34] transition-all placeholder:text-white"
             value={form.email}
             onChange={handleChange}
             required
           />
-
-          <label className="font-semibold" htmlFor="phone">
+          <label className="font-semibold text-sm" htmlFor="phone">
             {t('field_phone')}
           </label>
           <input
@@ -140,13 +138,12 @@ export default function RegistrationModal({
             id="phone"
             name="phone"
             placeholder={t('field_phone')}
-            className="border rounded px-3 py-2"
+            className="border-2 border-[#e4eb34] rounded-lg px-4 py-2 bg-white/10 text-white focus:ring-2 focus:ring-[#e4eb34] transition-all placeholder:text-white"
             value={form.phone}
             onChange={handleChange}
             required
           />
-
-          <label className="font-semibold" htmlFor="weight">
+          <label className="font-semibold text-sm" htmlFor="weight">
             {t('field_weight')}
           </label>
           <input
@@ -154,41 +151,39 @@ export default function RegistrationModal({
             id="weight"
             name="weight"
             placeholder={t('field_weight')}
-            className="border rounded px-3 py-2"
+            className="border-2 border-[#e4eb34] rounded-lg px-4 py-2 bg-white/10 text-white focus:ring-2 focus:ring-[#e4eb34] transition-all placeholder:text-white"
             value={form.weight}
             onChange={handleChange}
             required
             min={30}
             max={200}
           />
-
-          <label className="font-semibold" htmlFor="race">
+          <label className="font-semibold text-sm" htmlFor="race">
             {t('field_race')}
           </label>
           <select
             id="race"
             name="race"
-            className="border rounded px-3 py-2"
+            className="border-2 border-[#e4eb34] rounded-lg px-4 py-2 bg-white/10 text-white focus:ring-2 focus:ring-[#e4eb34] transition-all"
             value={form.race}
             onChange={handleChange}
             required
           >
             {races.map((r) => (
-              <option key={r.id} value={r.id} className="bg-white text-black">
+              <option key={r.id} value={r.id} className="bg-black text-white">
                 {r.name}
               </option>
             ))}
           </select>
-
           <button
             type="submit"
-            className="bg-black text-white rounded px-4 py-2 font-bold"
+            className="bg-[#e4eb34] text-black rounded-lg px-6 py-3 font-bold shadow-lg transform transition-transform duration-300 ease-in-out hover:scale-105 hover:bg-black hover:text-[#e4eb34] text-lg tracking-wide"
             disabled={loading}
           >
             {loading ? t('submit') : t('register_btn')}
           </button>
         </form>
-        {message && <p className="mt-4 text-red-600">{message}</p>}
+        {message && <p className="mt-4 text-red-500 text-sm">{message}</p>}
       </div>
     </div>
   );

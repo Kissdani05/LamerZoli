@@ -8,20 +8,23 @@ export default function Header() {
   // Aktív oldal detektálása
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
   const navItems = [
-    { href: '/#race', label: t('nav_next_race') },
     { href: '/calendar', label: t('nav_calendar') },
     { href: '/tracks', label: t('nav_tracks') },
     { href: '/results', label: t('nav_results') },
     { href: '/blog', label: t('nav_blog') },
     { href: '/rules', label: t('nav_rules') },
-    { href: '/contact', label: t('nav_contact') },
   ];
   return (
     <header className="header glass sticky top-0 z-50 border-b border-brand-2 backdrop-blur-lg">
       <div className="container flex items-center justify-between py-2">
-        {/* Bal: logó */}
+        {/* Bal: logó helyett sárga "LámerKart" felirat */}
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/file.svg" alt="Logo" width={40} height={40} className="h-10 w-10" />
+          <span
+            className="text-[1.7rem] font-extrabold text-[#e4eb34] drop-shadow-lg tracking-tight"
+            style={{ fontFamily: 'inherit' }}
+          >
+            LÁMERKART
+          </span>
         </Link>
         {/* Közép: menü */}
         <nav className="flex gap-1 md:gap-2 items-center text-sm relative">
