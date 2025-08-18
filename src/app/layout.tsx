@@ -59,15 +59,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Ellenőrizzük, hogy az admin oldalon vagyunk-e
+  const isAdminRoute =
+    typeof window !== 'undefined' ? window.location.pathname.startsWith('/admin') : false;
   return (
     <html lang="hu">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-white text-black antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-white text-black antialiased px-2 md:px-0 w-full max-w-full overflow-x-hidden`}
       >
         <LanguageProvider>
           <NotificationProvider>
-            <Header />
-            {children}
+            {/* Csak akkor jelenítjük meg a Header-t, ha NEM admin route-on vagyunk */}
+            {!isAdminRoute && <Header />}
+            {/* Az admin route-on soha ne jelenjen meg a Header, se belépés előtt, se után */}
+            <div className="w-full flex flex-col max-w-full">{children}</div>
             <ConsentBanner />
           </NotificationProvider>
         </LanguageProvider>

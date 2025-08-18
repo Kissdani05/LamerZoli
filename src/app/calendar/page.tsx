@@ -40,7 +40,7 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [races, setRaces] = useState<Race[]>([]); // Specify Race[] type
   const [month, setMonth] = useState(today.getMonth());
-  const [year, setYear] = useState(today.getFullYear()); // Add year state
+  const year = today.getFullYear(); // Use year directly, remove unused setYear
 
   useEffect(() => {
     async function fetchRaces() {

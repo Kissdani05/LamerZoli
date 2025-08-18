@@ -1,290 +1,199 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Blog – Lámer Zoltán Gokart',
-  description: 'Tippek, hírek és történetek a bérgokart világából.',
+  description: 'Tippek, útmutatók, kulisszák, hírek a bérgokart világából.',
+  alternates: { canonical: 'https://lamerzoli.vercel.app/blog' },
 };
+
+const articles = [
+  {
+    slug: '/elso-bergokart-verseny-felkeszules',
+    title: 'Hogyan készülj az első bérgokart versenyedre? (10 lépés, kezdőknek) 🔰',
+    tags: ['Tippek', 'Útmutatók'],
+    cover: '/1.png',
+    alt: 'Onboard nézet balos kanyarban, naplemente',
+    date: '2025-08-18',
+    read: '5 perc olvasás',
+    description:
+      'Első versenyed? Ruházat, érkezés, zászlók, ülés- és pedálbeállítás, ívek, versenynapi rutin – 10 lépésben.',
+    meta: 'Lámer Zoltán • 2025-08-18 • 5 perc olvasás',
+    content: [
+      'Első futamra készülsz? Nyugi, mindenki így kezdte! Itt a gyors checklist, amivel magabiztosan állsz rajthoz.',
+      '👕 Felszerelés: zárt cipő, hosszú nadrág, kesztyű ajánlott; sisakot adunk.',
+      '⏰ Érkezz korán: admin + briefing + ülés/pedál beállítás.',
+      '🏳️ Zászlók gyorsan: zöld = rajt, sárga = előzés TILOS, piros = futam megáll. Részletek: ',
+      <Link key="rules-link" href="/rules" className="underline">
+        Szabályok
+      </Link>,
+      '🪑 Pozíció: ülés hátra/előre, hogy teljes fékerőt elérd; kormányfogás „9–3”.',
+      '🛞 Gáz–fék fegyelem: egyszerre soha; féket egyenesen használd.',
+      '🎯 Kanyar-stratégia: külső–belső–külső ív, késői apex biztonságosabb a kezdőknek.',
+      '👀 Nézéstechnika: tekintet a kijáraton; a kart oda megy, ahova nézel.',
+      '🧠 Mentális fókusz: első körök = ismerkedés; építs tempót.',
+      '🤝 Fair play: lökdösés nincs; ha hiba, emeld a kezed és engedd el a gyorsabbat.',
+      '✅ Versenynapi mini-checklist (nyomtasd ki): ruha, kesztyű, víz, érkezés -20’, briefing jegyzet, ülés/pedál beállítva, zászlók ismételve.',
+      <div key="rules-calendar-btns" className="flex gap-4 mt-4">
+        <Link key="calendar-btn" href="/calendar" className="btn btn-outline">
+          Megnézem a Naptárt
+        </Link>
+        <Link key="rules-btn" href="/rules" className="btn btn-outline">
+          Elolvasom a Szabályokat
+        </Link>
+      </div>,
+    ],
+  },
+  {
+    slug: '/ideal-ivek-es-fekezesi-pontok',
+    title: 'Ideális ívek és fékezési pontok alapjai 🧭',
+    tags: ['Útmutatók'],
+    cover: '/2.png',
+    alt: 'Rajt-rács éjszakai fényekkel, kockás zászló a háttérben',
+    date: '2025-08-18',
+    read: '4 perc olvasás',
+    description:
+      'Kanyarok olvasása, apex-időzítés, féknyomás és kigyorsítás – a stabil köridő első lépései.',
+    meta: 'Lámer Zoltán • 2025-08-18 • 4 perc olvasás',
+    content: [
+      '🗺️ Pálya felosztása: fékezés → fordítás (apex) → kigyorsítás.',
+      '⏱️ Fékpont kijelölése: fix referencia (tábla, rázókő eleje). Kezdőként korábban fékezz, de rövidebben.',
+      '📐 Apex: „késői apex” biztonságos, különösen hosszú kijáratú kanyaroknál.',
+      '⚖️ Kart egyensúlya: fék felengedése után fordíts; a terhelt első tengely segít befordulni.',
+      '🔁 Összekötött kanyarok: az elsőből úgy gyere ki, hogy a másodikra jó legyen a kijárat – a hosszabb egyenes számít.',
+      '🎥 Önelemzés: 2–3 körönként egy cél: pl. csak a fékpontokra figyelsz; ne mindent egyszerre.',
+      <Link key="tracks-btn" href="/tracks" className="btn btn-outline mt-4">
+        Pályák és helyszínek
+      </Link>,
+    ],
+  },
+  {
+    slug: '/miert-jo-az-egykategorias-bajnoksag',
+    title: 'Miért jó az egykategóriás bajnokság? ⚖️',
+    tags: ['Tippek'],
+    cover: '/1.png',
+    alt: 'Onboard kanyar szakai rajtrács – bérgokart',
+    date: '2025-08-18',
+    read: '3 perc olvasás',
+    description:
+      'Egyenlő technika, tiszta verseny, közösség és gyors fejlődés – ezért szeretjük az egykategóriát.',
+    meta: 'Lámer Zoltán • 2025-08-18 • 3 perc olvasás',
+    content: [
+      '🟰 Egyenlő esélyek: ugyanaz a kategória, a tudás dönt.',
+      '🧮 Átlátható költség: bérautó, nincs setup-mánia – a pályaidőre fókuszálsz.',
+      '🧑‍🤝‍🧑 Közösség: visszajáró pilóták, fair-play kultúra.',
+      '📈 Fejlődés: azonos technikán gyorsabban mérhető a javulás; könnyebb célokat kitűzni (PB, szektoridők).',
+      '🔁 Kart-rotáció sorsolás: több futam alatt kiegyenlít (ha van ilyen háziszabály).',
+      <Link key="register-btn" href="/registration" className="btn btn-primary mt-4">
+        Regisztrálok a következő futamra
+      </Link>,
+    ],
+  },
+];
 
 export default function BlogPage() {
   return (
-    <main className="max-w-5xl mx-auto px-4 py-12 text-black">
-      <h1 className="text-3xl font-bold mb-8">Blog – Lámer Zoltán Gokart</h1>
-      <article className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2">
-          Hogyan készülj az első bérgokart versenyedre?
-        </h2>
+    <main className="blog-main max-w-6xl mx-auto px-4 pb-16 text-white relative">
+      {/* Blur háttérkép az egész oldalhoz */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
         <Image
-          src="/gallery/sample1.jpg"
-          alt="Bérgokart verseny"
-          width={320}
-          height={180}
-          className="rounded w-full max-w-xl mb-4"
+          src="/2.png"
+          alt="Blog oldal háttér – naplementés onboard"
+          fill
+          className="object-cover w-full h-full" // Remove blur utility
+          style={{ filter: 'blur(32px) brightness(0.7)' }} // Use inline CSS blur for reliability
+          priority
+          sizes="100vw"
         />
-        <p className="mb-2">
-          Az első bérgokart verseny mindig izgalmas kihívás. Ebben a cikkben összegyűjtöttük, mire
-          érdemes figyelned, hogy magabiztosan állj rajthoz.
-        </p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Felszerelés és biztonság</h3>
-        <ul className="list-disc pl-5 mb-2">
-          <li>Sisak, zárt cipő, overall – ezek kötelezőek.</li>
-          <li>Ajánlott: kesztyű, nyakvédő, bérelhető a pályán.</li>
-        </ul>
-        <h3 className="text-lg font-bold mt-4 mb-2">Mentális felkészülés</h3>
-        <p>
-          Fontos, hogy ne izgulj túl, koncentrálj a pályára és a szabályokra. A{' '}
-          <a href="/rules" className="underline">
-            szabályzatot
-          </a>{' '}
-          érdemes előre átnézni.
-        </p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Nevezés menete</h3>
-        <p>
-          Regisztrálj online a{' '}
-          <a href="/calendar" className="underline">
-            naptár
-          </a>{' '}
-          oldalon, válaszd ki a futamot, és töltsd ki az adatokat. A{' '}
-          <a href="/tracks" className="underline">
-            pályák
-          </a>{' '}
-          leírása segít a választásban.
-        </p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Gyakorlás</h3>
-        <p>Ha van lehetőséged, próbáld ki a pályát verseny előtt. A tapasztalat sokat számít!</p>
-        <p className="mt-4">Sok sikert az első futamhoz!</p>
-      </article>
-      <article className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2">Ideális ívek és fékezési pontok alapjai</h2>
-        <Image
-          src="/gallery/sample2.jpg"
-          alt="Gokart pálya"
-          width={320}
-          height={180}
-          className="rounded w-full max-w-xl mb-4"
-        />
-        <p className="mb-2">
-          A gyors kör titka az ideális ív és a pontos fékezés. Ebben a cikkben bemutatjuk az
-          alapokat, amivel javíthatod a köridődet.
-        </p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Ívek</h3>
-        <p>
-          Az ívek megválasztása pályánként eltérő, de általános szabály: minél kevesebb kormányzás,
-          annál gyorsabb kör. A{' '}
-          <a href="/tracks" className="underline">
-            pályák
-          </a>{' '}
-          szekcióban minden helyszínhez találsz tippet.
-        </p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Fékezés</h3>
-        <p>
-          Mindig egyenesben fékezz, és ne blokkolj. A fékezési pontokat érdemes előre megfigyelni,
-          akár gyalog is bejárni a pályát.
-        </p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Gyakorlat</h3>
-        <p>Próbálj ki több pályát, figyeld a tapasztaltabb versenyzőket, kérdezz bátran!</p>
-        <p className="mt-4">
-          További tippekért nézd meg a{' '}
-          <a href="/results" className="underline">
-            eredményeket
-          </a>{' '}
-          és a{' '}
-          <a href="/gallery" className="underline">
-            fotókat
-          </a>
-          .
-        </p>
-      </article>
-      <article className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2">Miért jó az egykategóriás bajnokság?</h2>
-        <Image
-          src="/gallery/sample3.jpg"
-          alt="Egykategóriás gokart"
-          width={320}
-          height={180}
-          className="rounded w-full max-w-xl mb-4"
-        />
-        <p className="mb-2">
-          Az egykategóriás bajnokság lényege, hogy mindenki azonos technikával indul, így a tudás és
-          a sportszerűség kerül előtérbe.
-        </p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Előnyök</h3>
-        <ul className="list-disc pl-5 mb-2">
-          <li>Igazságosabb verseny, nincs technikai előny.</li>
-          <li>Kiegyenlített mezőny, izgalmasabb futamok.</li>
-          <li>Barátságosabb közösség, kevesebb konfliktus.</li>
-        </ul>
-        <h3 className="text-lg font-bold mt-4 mb-2">Tapasztalatok</h3>
-        <p>
-          Lámer Zoltán szervezésében évek óta sikeresen működik az egykategóriás rendszer. A{' '}
-          <a href="/about" className="underline">
-            Rólunk
-          </a>{' '}
-          oldalon többet is megtudhatsz.
-        </p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Csatlakozz!</h3>
-        <p>
-          Ha szeretnél igazságos, izgalmas versenyeken indulni, regisztrálj a{' '}
-          <a href="/registration" className="underline">
-            regisztráció
-          </a>{' '}
-          oldalon!
-        </p>
-      </article>
-      <article className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2">Edzés gokartverseny előtt – hogyan készülj?</h2>
-        <Image
-          src="/gallery/sample4.jpg"
-          alt="Gokart edzés"
-          width={320}
-          height={180}
-          className="rounded w-full max-w-xl mb-4"
-        />
-        <p className="mb-2">
-          A rendszeres edzés segít abban, hogy a versenyen magabiztosan és gyorsan vezess. Mutatjuk,
-          mire figyelj!
-        </p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Fizikai felkészülés</h3>
-        <ul className="list-disc pl-5 mb-2">
-          <li>Erősítsd a kar- és törzsizmaidat, hogy jobban bírd a terhelést.</li>
-          <li>Fontos a jó állóképesség, próbálj ki futást, kerékpározást.</li>
-        </ul>
-        <h3 className="text-lg font-bold mt-4 mb-2">Mentális edzés</h3>
-        <p>Koncentráció, stresszkezelés, vizualizáció – ezek mind segítenek a versenyhelyzetben.</p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Gyakorlati tippek</h3>
-        <ul className="list-disc pl-5 mb-2">
-          <li>Próbálj ki több pályát, ismerd meg a kanyarokat.</li>
-          <li>Figyeld a tapasztaltabb versenyzőket, kérdezz bátran!</li>
-        </ul>
-        <p className="mt-4">
-          További edzéstippekért nézd meg a{' '}
-          <a href="/tracks" className="underline">
-            pályákat
-          </a>{' '}
-          és a{' '}
-          <a href="/results" className="underline">
-            eredményeket
-          </a>
-          .
-        </p>
-      </article>
-      <article className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2">Felszerelés: mit érdemes hozni a versenyre?</h2>
-        <Image
-          src="/gallery/sample5.jpg"
-          alt="Gokart felszerelés"
-          width={320}
-          height={180}
-          className="rounded w-full max-w-xl mb-4"
-        />
-        <p className="mb-2">
-          A megfelelő felszerelés nemcsak biztonságot, hanem kényelmet is ad. Lássuk, mire van
-          szükség!
-        </p>
-        <ul className="list-disc pl-5 mb-2">
-          <li>Sisak, zárt cipő, overall – kötelező.</li>
-          <li>Kesztyű, nyakvédő, esőruha – ajánlott.</li>
-          <li>Bérelhető felszerelés a pályán.</li>
-        </ul>
-        <p className="mt-4">
-          A{' '}
-          <a href="/rules" className="underline">
-            szabályzatban
-          </a>{' '}
-          minden részletet megtalálsz.
-        </p>
-      </article>
-      <article className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2">
-          Taktika a futamon – hogyan előzz, mikor támadj?
-        </h2>
-        <Image
-          src="/gallery/sample6.jpg"
-          alt="Gokart taktika"
-          width={320}
-          height={180}
-          className="rounded w-full max-w-xl mb-4"
-        />
-        <p className="mb-2">
-          A jó taktika sokszor többet ér, mint a puszta gyorsaság. Mutatjuk, mire figyelj a futam
-          alatt!
-        </p>
-        <ul className="list-disc pl-5 mb-2">
-          <li>Figyeld a versenytársakat, keresd a hibákat.</li>
-          <li>Előzésnél légy határozott, de sportszerű.</li>
-          <li>Boxkiállás időzítése kulcsfontosságú lehet.</li>
-        </ul>
-        <p className="mt-4">
-          További taktikai tippekért olvasd el a{' '}
-          <a href="/rules" className="underline">
-            szabályzatot
-          </a>{' '}
-          és nézd meg a{' '}
-          <a href="/results" className="underline">
-            dobogósokat
-          </a>
-          .
-        </p>
-      </article>
-      <article className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2">Interjú: egy bajnok gondolatai</h2>
-        <Image
-          src="/gallery/sample7.jpg"
-          alt="Interjú bajnokkal"
-          width={320}
-          height={180}
-          className="rounded w-full max-w-xl mb-4"
-        />
-        <p className="mb-2">
-          Kiss Péter, többszörös dobogós, mesél a felkészülésről, versenyélményről és a közösségről.
-        </p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Motiváció</h3>
-        <p>„A legfontosabb, hogy minden futamon tanuljak valamit, és jól érezzem magam.”</p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Közösség</h3>
-        <p>„A Lámer Zoltán Gokart sorozatban mindenki segítőkész, barátságos, sportszerű.”</p>
-        <p className="mt-4">
-          További interjúkért nézd meg a{' '}
-          <a href="/results" className="underline">
-            dobogósokat
-          </a>{' '}
-          és a{' '}
-          <a href="/about" className="underline">
-            Rólunk
-          </a>{' '}
-          oldalt.
-        </p>
-      </article>
-      <article className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2">Vendégcikk: egy kezdő tapasztalatai</h2>
-        <Image
-          src="/gallery/sample8.jpg"
-          alt="Vendégcikk gokart"
-          width={320}
-          height={180}
-          className="rounded w-full max-w-xl mb-4"
-        />
-        <p className="mb-2">
-          Tóth Anna, első versenyző, megosztja élményeit, tanulságait és tippjeit a kezdőknek.
-        </p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Első benyomások</h3>
-        <p>„Nagyon izgultam, de a szervezők és a többi pilóta segítőkészek voltak.”</p>
-        <h3 className="text-lg font-bold mt-4 mb-2">Tanulságok</h3>
-        <ul className="list-disc pl-5 mb-2">
-          <li>Érdemes előre gyakorolni, ismerkedni a pályával.</li>
-          <li>Ne félj kérdezni, mindenki segít!</li>
-        </ul>
-        <p className="mt-4">
-          További élménybeszámolókért nézd meg a{' '}
-          <a href="/results" className="underline">
-            eredményeket
-          </a>{' '}
-          és a{' '}
-          <a href="/gallery" className="underline">
-            fotókat
-          </a>
-          .
-        </p>
-      </article>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/40 to-brand-3/60" />
+      </div>
+      {/* Hero + intro */}
+      <section className="blog-hero relative rounded-xl overflow-hidden mb-8">
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src="/1.png"
+            alt="Onboard nézet balos kanyarban, naplemente"
+            fill
+            className="object-cover blur-2xl"
+            style={{ filter: 'brightness(0.7)' }}
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/40 to-brand-3/60 pointer-events-none" />
+        </div>
+        <div className="relative z-10 py-10 px-6 flex flex-col items-center text-center">
+          <h1 className="text-4xl md:text-5xl font-extrabold gradient-text drop-shadow mb-2">
+            Blog 🏎️
+          </h1>
+          <p className="text-xl md:text-2xl font-semibold mb-2">Tippek, útmutatók, kulisszák</p>
+        </div>
+      </section>
+
+      {/* Toolbar */}
+      <section className="blog-toolbar flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+        <div className="flex-1 flex items-center gap-2">
+          <span className="text-xl">🔍</span>
+          <input
+            type="text"
+            placeholder="Keresés a cikkekben…"
+            className="input glass-input px-4 py-2 rounded-xl w-full max-w-md"
+            aria-label="Keresés a cikkekben"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          {['Tippek', 'Útmutatók', 'Hírek'].map((tag) => (
+            <button
+              key={tag}
+              className="pill-btn px-4 py-2 rounded-full glass-card gradient-bg text-base font-semibold"
+            >
+              {tag}
+            </button>
+          ))}
+          <select className="input glass-input px-2 py-2 rounded-xl ml-2">
+            <option>Legújabb</option>
+            <option>Legrégebbi</option>
+          </select>
+        </div>
+      </section>
+
+      {/* Card grid */}
+      <section className="blog-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        {articles.map((article) => (
+          <div
+            key={article.slug}
+            className="blog-card glass-card rounded-xl overflow-hidden shadow-xl transition-all hover:-translate-y-1 hover:shadow-2xl relative"
+          >
+            <div className="relative aspect-video w-full">
+              <Image
+                src={article.cover}
+                alt={article.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
+                loading="lazy"
+              />
+              <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-[#e4eb34] to-transparent" />
+            </div>
+            <div className="p-5 flex flex-col gap-2">
+              <h2 className="text-xl font-bold gradient-text mb-1 line-clamp-2">{article.title}</h2>
+              <p className="text-base text-muted line-clamp-2 mb-1">{article.description}</p>
+              <div className="flex items-center gap-2 text-xs text-muted mb-2">
+                <span>📅 {article.date}</span>
+                <span>• ⏱️ {article.read}</span>
+              </div>
+              <Link href={article.slug} className="btn btn-outline mt-2">
+                Olvasom →
+              </Link>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-8">
+        <button className="btn btn-outline px-6 py-3 rounded-xl shadow-lg">További cikkek</button>
+      </div>
     </main>
   );
 }

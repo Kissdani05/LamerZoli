@@ -205,13 +205,13 @@ export default function Home() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   return (
-    <>
+    <main className="min-h-screen flex flex-col items-center justify-center px-2 md:px-0">
       {eventJsonLd && <JsonLd data={eventJsonLd} />}
       <JsonLd data={faqJsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
 
       {/* Hero */}
-      <section id="hero" className="hero section relative overflow-hidden">
+      <section id="hero" className="hero section relative overflow-hidden w-full px-0 md:px-4">
         {/* Onboard/sunset kép BLUR háttérként */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -225,13 +225,13 @@ export default function Home() {
           {/* Sötét overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/40 to-brand-3/60 pointer-events-none" />
         </div>
-        <div className="container relative z-10 min-h-[60vh] py-16 flex flex-col md:flex-row items-center justify-center gap-12">
+        <div className="container relative z-10 min-h-[60vh] py-8 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 px-2 md:px-0">
           {/* Bal oldal: szöveg */}
-          <div className="flex-1 flex flex-col items-center md:items-start justify-center">
-            <h1 className="mb-4 text-5xl md:text-7xl font-extrabold gradient-text text-center md:text-left drop-shadow-lg">
+          <div className="flex-1 flex flex-col items-center md:items-start justify-center w-full">
+            <h1 className="mb-4 text-4xl md:text-7xl font-extrabold gradient-text text-center md:text-left drop-shadow-lg w-full px-2 md:px-0">
               Lámer Zoltán Gokart
             </h1>
-            <p className="text-xl md:text-2xl font-semibold text-white text-center md:text-left mb-8 drop-shadow">
+            <p className="text-xl md:text-2xl font-semibold text-white text-center md:text-left mb-8 drop-shadow w-full px-2 md:px-0">
               Egyenlő technika. Tiszta szabályok. Valódi versenyélmény.
             </p>
             <div className="flex flex-wrap gap-6 justify-center md:justify-start mb-8">
@@ -285,7 +285,7 @@ export default function Home() {
       {/* Fehér csík a hero és következő verseny között */}
 
       {/* Következő verseny */}
-      <section id="race" className="section border-t">
+      <section id="race" className="section border-t px-2 md:px-0">
         <div className="container flex flex-col md:flex-row items-stretch gap-8">
           {/* Bal oldal: csak a kért adatok, BLUR kép háttérrel */}
           <div className="flex-1 flex flex-col justify-center rounded-xl p-8 shadow-xl relative overflow-hidden">
@@ -353,7 +353,7 @@ export default function Home() {
       </section>
 
       {/* Miért a Lámer-futam? – 3 USP kártya */}
-      <section className="section border-t">
+      <section className="section border-t px-2 md:px-0">
         <div className="container grid md:grid-cols-3 gap-8">
           <div className="glass card flex flex-col items-center p-8 shadow-xl animate-float relative">
             <Image
@@ -410,7 +410,7 @@ export default function Home() {
       </section>
 
       {/* Nevezés-lépések vizuális stepper */}
-      <section className="section border-t">
+      <section className="section border-t px-2 md:px-0">
         <div className="container flex flex-col md:flex-row items-center gap-8">
           <div className="flex-1 flex flex flex-col md:flex-row gap-6 justify-center items-center">
             <div className="stepper flex md:flex-row flex-col gap-6">
@@ -467,7 +467,7 @@ export default function Home() {
       </section>
 
       {/* Vélemények kártya-slider */}
-      <section className="section border-t" aria-labelledby="reviews-title">
+      <section className="section border-t px-2 md:px-0" aria-labelledby="reviews-title">
         <div className="container relative">
           {/* Háttér: 2.png rajtrács, blur, sötétítés */}
           <div className="absolute inset-0 -z-10">
@@ -543,7 +543,10 @@ export default function Home() {
       </section>
 
       {/* GYIK (zászló-tematikájú accordions) */}
-      <section id="faq" className="section border-t glass-card gradient-bg motion-fade-in">
+      <section
+        id="faq"
+        className="section border-t glass-card gradient-bg motion-fade-in px-2 md:px-0"
+      >
         <div className="container max-w-3xl mx-auto">
           <h2 className="mb-4 text-3xl font-bold gradient-text">GYIK</h2>
           {/* Accordion Q&A zászló ikonokkal */}
@@ -590,7 +593,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="footer section border-t glass-card gradient-bg py-10 mt-12 motion-fade-in text-base text-gray-800 dark:text-gray-200">
+      <footer className="footer section border-t glass-card gradient-bg py-10 mt-12 motion-fade-in text-base text-gray-800 dark:text-gray-200 px-2 md:px-0">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           {/* Bal: bemutatkozás + social */}
           <div>
@@ -699,6 +702,6 @@ export default function Home() {
           </button>
         </div>
       </footer>
-    </>
+    </main>
   );
 }
