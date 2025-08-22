@@ -1,4 +1,5 @@
 'use client';
+// Removed unused import
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';

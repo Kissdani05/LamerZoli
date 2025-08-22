@@ -33,15 +33,26 @@ interface Race {
   location: string;
   date: string;
   description?: string;
+  image_url?: string;
+  max_participants?: number;
+  address?: string;
+  layout?: string;
+  format?: string;
+  fee?: string;
+  weight_rule?: string;
+  deposit?: string;
+  deadline?: string;
+  rain_rule?: string;
+  media_rule?: string;
 }
 
 export default function CalendarPage() {
   const today = new Date();
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  today.setHours(0, 0, 0, 0); // Ensure no time component
+  const [selectedDate, setSelectedDate] = useState<Date | null>(today);
   const [races, setRaces] = useState<Race[]>([]); // Specify Race[] type
   const [month, setMonth] = useState(today.getMonth());
-  const year = today.getFullYear(); // Use year directly, remove unused setYear
-
+  const [year, setYear] = useState(today.getFullYear()); // Add year state
   useEffect(() => {
     async function fetchRaces() {
       const { data } = await supabase.from('races').select('*');
@@ -49,6 +60,24 @@ export default function CalendarPage() {
     }
     fetchRaces();
   }, []);
+
+  // Hónap léptetése
+  function handlePrevMonth() {
+    if (month === 0) {
+      setMonth(11);
+      setYear(year - 1);
+    } else {
+      setMonth(month - 1);
+    }
+  }
+  function handleNextMonth() {
+    if (month === 11) {
+      setMonth(0);
+      setYear(year + 1);
+    } else {
+      setMonth(month + 1);
+    }
+  }
 
   // Versenyek dátumai
   const raceDates = races.map((r) => (r.date ? new Date(r.date).toISOString().slice(0, 10) : null));
@@ -70,32 +99,60 @@ export default function CalendarPage() {
       <div className="absolute inset-0 -z-10">
         <Image src="/2.png" alt="Naptár háttér" fill className="object-cover blur-2xl" />
       </div>
-      <h1 className="mb-8 text-4xl font-extrabold gradient-text text-center drop-shadow-lg">
-        Naptár
-      </h1>
+      <h1 className=" text-4xl font-extrabold gradient-text text-center drop-shadow-lg">Naptár</h1>
       <div className="apple-calendar flex flex-col md:flex-row gap-8 p-8">
         {/* Bal: nagy naptár */}
         <div className="calendar-glass rounded-2xl shadow-xl p-6 bg-gray-200/80 dark:bg-gray-800/60 backdrop-blur-xl w-full max-w-xl">
-          <div className="flex justify-between items-center mb-4">
-            <button
-              onClick={() => setMonth(month === 0 ? 11 : month - 1)}
-              aria-label="Előző hónap"
-              className="calendar-btn rounded-full border-2 border-white bg-white/80 dark:bg-black/30 px-3 py-1 text-lg font-bold shadow hover:bg-[#e4eb34] hover:text-black transition-colors"
-              style={{ minWidth: 40, cursor: 'pointer' }}
-            >
-              ◀
-            </button>
-            <div className="text-2xl font-bold gradient-text">
-              {year} {monthNames[month]}
+          <div className="mb-4">
+            {/* Mobile: year above, month below, arrows beside, centered */}
+            <div className="flex flex-col items-center md:hidden gap-2">
+              <div className="flex items-center gap-2 relative">
+                <button
+                  onClick={handlePrevMonth}
+                  aria-label="Előző hónap"
+                  className="calendar-btn rounded-full border-2 border-white bg-white/80 dark:bg-black/30 px-3 py-1 text-lg font-bold shadow hover:bg-[#e4eb34] hover:text-black transition-colors"
+                  style={{ minWidth: 40, cursor: 'pointer' }}
+                >
+                  ◀
+                </button>
+                <div className="flex items-center gap-2">
+                  <div className="text-xl font-bold gradient-text">{year}</div>
+                  <div className="text-xl font-bold gradient-text">{monthNames[month]}</div>
+                </div>
+                <button
+                  onClick={handleNextMonth}
+                  aria-label="Következő hónap"
+                  className="calendar-btn rounded-full border-2 border-white bg-white/80 dark:bg-black/30 px-3 py-1 text-lg font-bold shadow hover:bg-[#e4eb34] hover:text-black transition-colors"
+                  style={{ minWidth: 40, cursor: 'pointer' }}
+                >
+                  ▶
+                </button>
+              </div>
+              {/* Alsó hónapváltó eltávolítva mobil nézetből */}
             </div>
-            <button
-              onClick={() => setMonth(month === 11 ? 0 : month + 1)}
-              aria-label="Következő hónap"
-              className="calendar-btn rounded-full border-2 border-white bg-white/80 dark:bg-black/30 px-3 py-1 text-lg font-bold shadow hover:bg-[#e4eb34] hover:text-black transition-colors"
-              style={{ minWidth: 40, cursor: 'pointer' }}
-            >
-              ▶
-            </button>
+            {/* Desktop: year and month inline, arrows beside */}
+            <div className="hidden md:flex justify-between items-center">
+              <button
+                onClick={handlePrevMonth}
+                aria-label="Előző hónap"
+                className="calendar-btn rounded-full border-2 border-white bg-white/80 dark:bg-black/30 px-3 py-1 text-lg font-bold shadow hover:bg-[#e4eb34] hover:text-black transition-colors"
+                style={{ minWidth: 40, cursor: 'pointer' }}
+              >
+                ◀
+              </button>
+              <div className="flex items-center gap-2 relative">
+                <div className="text-xl font-bold gradient-text">{year}</div>
+                <div className="text-xl font-bold gradient-text">{monthNames[month]}</div>
+              </div>
+              <button
+                onClick={handleNextMonth}
+                aria-label="Következő hónap"
+                className="calendar-btn rounded-full border-2 border-white bg-white/80 dark:bg-black/30 px-3 py-1 text-lg font-bold shadow hover:bg-[#e4eb34] hover:text-black transition-colors"
+                style={{ minWidth: 40, cursor: 'pointer' }}
+              >
+                ▶
+              </button>
+            </div>
           </div>
           <div className="grid grid-cols-7 gap-2 mb-2 text-center text-lg font-semibold">
             {['H', 'K', 'Sz', 'Cs', 'P', 'Sz', 'V'].map((d) => (
@@ -133,23 +190,90 @@ export default function CalendarPage() {
                 {selectedDate.toLocaleDateString()}
               </div>
               {dayRaces.length > 0 ? (
-                <ul className="space-y-4">
+                <ul className="space-y-8">
                   {dayRaces.map((race) => (
                     <li
                       key={race.id}
-                      className="glass-card p-4 rounded-xl shadow-lg border-l-4 border-brand-2 border-2 border-white"
+                      className="glass-card p-6 rounded-xl shadow-lg border-l-4 border-brand-2 border-2 border-white flex flex-col md:flex-row gap-6 items-center"
                     >
-                      <div className="font-bold text-lg mb-1">{race.name}</div>
-                      <div className="text-base mb-1">{race.location}</div>
-                      <div className="text-sm mb-1">
-                        {race.date
-                          ? new Date(race.date).toLocaleTimeString([], {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })
-                          : ''}
+                      {race.image_url && (
+                        <div className="w-40 h-40 flex-shrink-0 rounded-xl overflow-hidden shadow-lg mb-4 md:mb-0">
+                          <Image
+                            src={race.image_url}
+                            alt={race.name + ' kép'}
+                            width={160}
+                            height={160}
+                            className="object-cover w-full h-full"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1 space-y-2">
+                        <div className="font-bold text-2xl mb-2">{race.name}</div>
+                        <div className="text-base mb-1">
+                          <span className="font-semibold">Helyszín:</span> {race.location}
+                        </div>
+                        <div className="text-base mb-1">
+                          <span className="font-semibold">Dátum és idő:</span>{' '}
+                          {race.date ? new Date(race.date).toLocaleString() : ''}
+                        </div>
+                        {race.max_participants && (
+                          <div className="text-base mb-1">
+                            <span className="font-semibold">Max. férőhely:</span>{' '}
+                            {race.max_participants}
+                          </div>
+                        )}
+                        {race.address && (
+                          <div className="text-base mb-1">
+                            <span className="font-semibold">Cím:</span> {race.address}
+                          </div>
+                        )}
+                        {race.layout && (
+                          <div className="text-base mb-1">
+                            <span className="font-semibold">Pálya elrendezés:</span> {race.layout}
+                          </div>
+                        )}
+                        {race.format && (
+                          <div className="text-base mb-1">
+                            <span className="font-semibold">Formátum:</span> {race.format}
+                          </div>
+                        )}
+                        {race.fee && (
+                          <div className="text-base mb-1">
+                            <span className="font-semibold">Díj:</span> {race.fee}
+                          </div>
+                        )}
+                        {race.weight_rule && (
+                          <div className="text-base mb-1">
+                            <span className="font-semibold">Súlyszabály:</span> {race.weight_rule}
+                          </div>
+                        )}
+                        {race.deposit && (
+                          <div className="text-base mb-1">
+                            <span className="font-semibold">Előleg:</span> {race.deposit}
+                          </div>
+                        )}
+                        {race.deadline && (
+                          <div className="text-base mb-1">
+                            <span className="font-semibold">Nevezési határidő:</span>{' '}
+                            {race.deadline}
+                          </div>
+                        )}
+                        {race.rain_rule && (
+                          <div className="text-base mb-1">
+                            <span className="font-semibold">Esőszabály:</span> {race.rain_rule}
+                          </div>
+                        )}
+                        {race.media_rule && (
+                          <div className="text-base mb-1">
+                            <span className="font-semibold">Média szabály:</span> {race.media_rule}
+                          </div>
+                        )}
+                        {race.description && (
+                          <div className="text-base text-muted mt-2">
+                            <span className="font-semibold">Leírás:</span> {race.description}
+                          </div>
+                        )}
                       </div>
-                      <div className="text-sm text-muted">{race.description}</div>
                     </li>
                   ))}
                 </ul>

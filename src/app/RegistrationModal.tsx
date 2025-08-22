@@ -25,10 +25,12 @@ export default function RegistrationModal({
   open,
   onClose,
   onSubmit,
+  defaultRaceId,
 }: {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: RegistrationSubmit) => void;
+  defaultRaceId?: string;
 }) {
   const { t } = useI18n();
   const [form, setForm] = useState<RegistrationForm>({
@@ -38,6 +40,16 @@ export default function RegistrationModal({
     weight: '',
     race: '',
   });
+
+  // Ha a modal megnyílik és van defaultRaceId, állítsuk be a race-t
+  useEffect(() => {
+    if (open && defaultRaceId) {
+      setForm((f) => ({ ...f, race: defaultRaceId }));
+    }
+    if (open && !defaultRaceId) {
+      setForm((f) => ({ ...f, race: '' }));
+    }
+  }, [open, defaultRaceId]);
   const [races, setRaces] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -94,7 +106,20 @@ export default function RegistrationModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      <div className="relative bg-black text-white rounded-2xl shadow-2xl p-8 w-full max-w-md z-10 transition-transform transform-gpu duration-300 ease-in-out border border-[#222]">
+      <div
+        className="relative bg-black text-white rounded-2xl shadow-2xl p-8 w-full max-w-md z-10 transition-transform transform-gpu duration-300 ease-in-out border border-[#222]"
+        style={{
+          ...(typeof window !== 'undefined' && window.innerWidth < 768
+            ? {
+                maxWidth: 'calc(100vw - 70px)',
+                margin: '35px auto',
+                maxHeight: 'calc(100vh - 70px)',
+                height: 'auto',
+                overflow: 'auto',
+              }
+            : { maxWidth: '400px', margin: '0 auto', overflow: 'auto' }),
+        }}
+      >
         <button
           className="absolute top-4 right-4 text-2xl text-white hover:text-[#e4eb34] focus:outline-none focus:ring-2 focus:ring-[#e4eb34] rounded-full w-10 h-10 flex items-center justify-center transition-colors"
           onClick={onClose}
@@ -103,7 +128,11 @@ export default function RegistrationModal({
           ×
         </button>
         <h2 className="text-2xl font-extrabold mb-6 tracking-tight">{t('modal_title')}</h2>
-        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col gap-5 w-full"
+          onSubmit={handleSubmit}
+          style={{ boxSizing: 'border-box' }}
+        >
           <label className="font-semibold text-sm" htmlFor="name">
             {t('field_fullname')}
           </label>

@@ -82,18 +82,18 @@ export default function TracksPage() {
           {/* Jobb oldal: képslider nyilakkal és gombok alatta */}
           <div className="w-full max-w-md flex flex-col items-center">
             <TrackImageSlider />
-            <div className="flex gap-4 mt-6">
+            <div className="flex flex-col sm:flex-row gap-4 mt-6 w-full">
               <a
                 href="https://teglasf1gokartpalya.hu/"
                 target="_blank"
                 rel="noopener"
-                className="btn btn-outline text-lg px-8 py-4 shadow-xl animate-float"
+                className="btn btn-outline text-lg px-8 py-4 shadow-xl animate-float w-full sm:w-auto"
               >
                 Pálya weboldala
               </a>
               <a
                 href="/calendar"
-                className="btn btn-primary text-lg px-8 py-4 shadow-xl animate-float"
+                className="btn btn-primary text-lg px-8 py-4 shadow-xl animate-float w-full sm:w-auto"
               >
                 Megnézem a naptárban
               </a>

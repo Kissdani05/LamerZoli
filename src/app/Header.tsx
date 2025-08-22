@@ -59,16 +59,37 @@ export default function Header() {
         <div className="hidden md:flex items-center gap-3">
           <button
             className="btn btn-primary shadow-lg"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => {
+              if (window.openRegistrationModal) window.openRegistrationModal();
+            }}
           >
             {t('nav_register')}
           </button>
           <button
             aria-label={t('language_selector')}
-            className="bg-surface rounded-full p-2 border-2 border-brand-2 hover:bg-brand-2 transition-colors"
+            className="border-2 border-brand-2 hover:bg-brand-2 transition-colors flex items-center"
+            style={{ background: 'none', padding: 0, borderRadius: '0.5rem' }}
             onClick={() => setLang(lang === 'hu' ? 'en' : 'hu')}
           >
-            <Image src="/globe.svg" alt="Nyelvváltó" width={24} height={24} className="h-6 w-6" />
+            {lang === 'hu' ? (
+              <Image
+                src="/hu-flag.svg"
+                alt="Magyar"
+                width={48}
+                height={30}
+                className="block"
+                style={{ borderRadius: '0.25rem', boxShadow: '0 0 0 2px #e4eb34' }}
+              />
+            ) : (
+              <Image
+                src="/en-flag.svg"
+                alt="English"
+                width={48}
+                height={30}
+                className="block"
+                style={{ borderRadius: '0.25rem', boxShadow: '0 0 0 2px #e4eb34' }}
+              />
+            )}
           </button>
         </div>
       </div>
@@ -91,20 +112,40 @@ export default function Header() {
             className="btn btn-primary w-full mt-2"
             onClick={() => {
               setMenuOpen(false);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              if (window.openRegistrationModal) window.openRegistrationModal();
             }}
           >
             {t('nav_register')}
           </button>
           <button
             aria-label={t('language_selector')}
-            className="bg-surface rounded-full p-2 border-2 border-brand-2 hover:bg-brand-2 transition-colors mt-2"
-            onClick={() => {
+            className="border-2 border-brand-2 hover:bg-brand-2 transition-colors mt-2 flex items-center"
+            style={{ background: 'none', padding: 0, borderRadius: '0.5rem' }}
+            onClick={(e) => {
+              e.stopPropagation();
               setLang(lang === 'hu' ? 'en' : 'hu');
-              setMenuOpen(false);
+              // Don't close menu here
             }}
           >
-            <Image src="/globe.svg" alt="Nyelvváltó" width={24} height={24} className="h-6 w-6" />
+            {lang === 'hu' ? (
+              <Image
+                src="/hu-flag.svg"
+                alt="Magyar"
+                width={48}
+                height={30}
+                className="block"
+                style={{ borderRadius: '0.25rem', boxShadow: '0 0 0 2px #e4eb34' }}
+              />
+            ) : (
+              <Image
+                src="/en-flag.svg"
+                alt="English"
+                width={48}
+                height={30}
+                className="block"
+                style={{ borderRadius: '0.25rem', boxShadow: '0 0 0 2px #e4eb34' }}
+              />
+            )}
           </button>
         </nav>
       )}

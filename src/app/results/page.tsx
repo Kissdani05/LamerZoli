@@ -1,66 +1,38 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 
-const years = [2023, 2024, 2025];
-const tracks = ['G1', 'Hungaroring', 'Kecskemét', 'Téglás'];
-const categories = ['Open', 'Junior', 'Pro'];
+type Event = {
+  id: string;
+  name: string;
+  date: string;
+  location: string;
+  participants: number;
+  image_url?: string;
+};
 
 export default function ResultsPage() {
-  // Szűrők állapota
-  const [year, setYear] = useState(2025);
-  const [track, setTrack] = useState('G1');
-  const [category, setCategory] = useState('');
-  const [search, setSearch] = useState('');
-  const [sort, setSort] = useState('desc');
+  // Supabase eredmények betöltése
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    async function fetchResults() {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('results')
+        .select('*')
+        .order('date', { ascending: false });
+      if (!error && data) {
+        setEvents(data);
+      }
+      setLoading(false);
+    }
+    fetchResults();
+  }, []);
 
-  // Dummy adatok (helyettesíthető API-val)
-  const latestRace = {
-    title: 'G1 Nyári Sprint – 2025.08.10.',
-    date: '2025-08-10',
-    track: 'G1',
-    format: 'Q + 2×13’',
-    entrants: 28,
-    bestLap: '00:42.713',
-    podium: [
-      { name: 'Kovács Bence', place: 1 },
-      { name: 'Tóth Máté', place: 2 },
-      { name: 'Farkas Lili', place: 3 },
-    ],
-    image: '/1.png',
-    detailsUrl: '#',
-  };
-
-  const events = [
-    {
-      title: 'Téglás Sprint – 2025.06.14.',
-      date: '2025-06-14',
-      track: 'Téglás',
-      entrants: 22,
-      bestLap: '00:43.201',
-      avgLap: '00:44.100',
-      image: '/2.png',
-      detailsUrl: '#',
-    },
-    {
-      title: 'Hungaroring Tavaszi – 2025.05.03.',
-      date: '2025-05-03',
-      track: 'Hungaroring',
-      entrants: 30,
-      bestLap: '00:41.900',
-      avgLap: '00:43.000',
-      image: '/1.png',
-      detailsUrl: '#',
-    },
-  ];
-
-  const standings = [
-    { place: 1, name: 'Kovács Bence', races: 5, wins: 3, podiums: 5, points: 98 },
-    { place: 2, name: 'Tóth Máté', races: 5, wins: 1, podiums: 4, points: 87 },
-    { place: 3, name: 'Farkas Lili', races: 5, wins: 1, podiums: 3, points: 80 },
-    { place: 4, name: 'Kiss Ádám', races: 5, wins: 0, podiums: 2, points: 72 },
-  ];
+  // ...existing code...
 
   return (
     <main className="max-w-6xl mx-auto px-4 pb-16 text-white">
@@ -88,213 +60,17 @@ export default function ResultsPage() {
         </div>
       </section>
 
-      {/* Szűrősáv (sticky) */}
-      <div className="sticky top-0 z-20 bg-white/10 backdrop-blur-md border-b border-white/10 flex flex-wrap gap-2 px-2 py-2 rounded-b-xl mb-6 shadow-lg items-center">
-        <select
-          value={year}
-          onChange={(e) => setYear(Number(e.target.value))}
-          className="chip-btn px-3 py-1 rounded-full font-semibold bg-white/10 text-white"
-        >
-          {years.map((y) => (
-            <option key={y} value={y}>
-              {y}
-            </option>
-          ))}
-        </select>
-        <select
-          value={track}
-          onChange={(e) => setTrack(e.target.value)}
-          className="chip-btn px-3 py-1 rounded-full font-semibold bg-white/10 text-white"
-        >
-          {tracks.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="chip-btn px-3 py-1 rounded-full font-semibold bg-white/10 text-white"
-        >
-          <option value="">Kategória</option>
-          {categories.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Kezdj el gépelni: pl. Kiss Ádám…"
-          className="chip-btn px-3 py-1 rounded-full font-semibold bg-white/10 text-white min-w-[180px]"
-        />
-        <span className="ml-auto text-xs text-muted">Rendezés:</span>
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-          className="chip-btn px-3 py-1 rounded-full font-semibold bg-white/10 text-white"
-        >
-          <option value="desc">Legutóbbi</option>
-          <option value="asc">Legrégebbi</option>
-          <option value="most">Több induló</option>
-        </select>
-        <button className="chip-btn px-3 py-1 rounded-full font-semibold bg-[#e4eb34] text-black ml-2">
-          📥 CSV letöltés
-        </button>
-        <button className="chip-btn px-3 py-1 rounded-full font-semibold bg-white/10 text-white ml-2">
-          📄 PDF összesítő
-        </button>
-      </div>
+      {/* Szűrősáv eltávolítva */}
 
-      {/* Legutóbbi futam */}
-      <section id="latest" className="mb-8">
-        <div className="glass-card flex flex-col md:flex-row items-center gap-6 p-6 rounded-xl">
-          <div className="w-full md:w-1/3">
-            <Image
-              src={latestRace.image}
-              alt="Legutóbbi futam borítókép"
-              width={320}
-              height={180}
-              className="rounded-xl object-cover"
-              sizes="(max-width: 768px) 100vw, 320px"
-              loading="eager"
-            />
-          </div>
-          <div className="flex-1 flex flex-col gap-2">
-            <h2 className="text-xl font-bold mb-1">{latestRace.title}</h2>
-            <div className="text-sm text-muted mb-1">
-              {latestRace.date} • {latestRace.track} • {latestRace.format}
-            </div>
-            <div className="flex gap-2 mb-2">
-              {latestRace.podium.map((p, i) => (
-                <span
-                  key={p.name}
-                  className={`chip glass-card font-semibold ${i === 0 ? 'bg-yellow-400 text-black' : 'bg-white/10 text-white'}`}
-                >
-                  {i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'} {p.name}
-                </span>
-              ))}
-            </div>
-            <div className="text-xs text-muted mb-2">
-              Indulók: {latestRace.entrants} • Legjobb kör: {latestRace.bestLap}
-            </div>
-            <div className="flex gap-2">
-              <Link
-                href={latestRace.detailsUrl}
-                className="chip-btn px-3 py-1 rounded-full font-semibold bg-[#e4eb34] text-black"
-              >
-                Részletek →
-              </Link>
-              <button className="chip-btn px-3 py-1 rounded-full font-semibold bg-white/10 text-white">
-                📥 CSV
-              </button>
-              <button className="chip-btn px-3 py-1 rounded-full font-semibold bg-white/10 text-white">
-                📄 PDF
-              </button>
-            </div>
-          </div>
-        </div>
-        {/* SportsEvent JSON-LD */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: `{
-          "@context": "https://schema.org",
-          "@type": "SportsEvent",
-          "name": "${latestRace.title}",
-          "startDate": "${latestRace.date}",
-          "location": {"@type": "Place", "name": "${latestRace.track}"},
-          "organizer": {"@type": "Organization", "name": "Lámer Zoltán Gokart"}
-        }`,
-          }}
-        />
-      </section>
-
-      {/* Eseményrács */}
-      <section id="events" className="mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events.map((ev) => (
-            <div key={ev.title} className="glass-card rounded-xl p-4 flex flex-col gap-2">
-              <Image
-                src={ev.image}
-                alt={ev.title + ' borítókép'}
-                width={320}
-                height={180}
-                className="rounded-xl object-cover mb-2"
-                sizes="(max-width: 768px) 100vw, 320px"
-                loading="lazy"
-              />
-              <h3 className="font-semibold text-lg mb-1">{ev.title}</h3>
-              <div className="text-xs text-muted mb-1">
-                {ev.date} • {ev.track}
-              </div>
-              <div className="flex gap-2 text-xs mb-2">
-                <span>Indulók: {ev.entrants}</span>
-                <span>Legjobb kör: {ev.bestLap}</span>
-                <span>Átlagkör: {ev.avgLap}</span>
-              </div>
-              <Link
-                href={ev.detailsUrl}
-                className="chip-btn px-3 py-1 rounded-full font-semibold bg-[#e4eb34] text-black"
-              >
-                Eredmények →
-              </Link>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Ponttáblázat */}
-      <section id="standings" className="mb-8">
-        <div className="overflow-x-auto rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
-          <table className="min-w-[600px] w-full text-sm">
-            <caption className="text-base font-semibold mb-2">
-              2025 – Összetett ranglista (frissítve: 2025-08-18)
-            </caption>
-            <thead className="sticky top-0 bg-black/60 backdrop-blur supports-[backdrop-filter]:bg-black/40">
-              <tr>
-                <th scope="col" className="p-2">
-                  Hely
-                </th>
-                <th scope="col" className="p-2">
-                  Pilóta
-                </th>
-                <th scope="col" className="p-2">
-                  Futamok
-                </th>
-                <th scope="col" className="p-2">
-                  Győzelmek
-                </th>
-                <th scope="col" className="p-2">
-                  Dobogók
-                </th>
-                <th scope="col" className="p-2">
-                  Pont
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {standings.map((row) => (
-                <tr key={row.name}>
-                  <td className="p-2 font-bold text-center">{row.place}</td>
-                  <td
-                    className="p-2 font-semibold text-brand-3 hover:underline cursor-pointer"
-                    tabIndex={0}
-                  >
-                    {row.name}
-                  </td>
-                  <td className="p-2 text-center">{row.races}</td>
-                  <td className="p-2 text-center">{row.wins}</td>
-                  <td className="p-2 text-center">{row.podiums}</td>
-                  <td className="p-2 text-center">{row.points}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {/* Események egymás mellett asztali nézetben */}
+      <section id="events" className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {loading ? (
+          <div className="col-span-3 text-center py-8 text-lg">Betöltés...</div>
+        ) : events.length === 0 ? (
+          <div className="col-span-3 text-center py-8 text-lg">Nincs eredmény.</div>
+        ) : (
+          events.map((ev) => <EventResultCard key={ev.id} event={ev} />)
+        )}
       </section>
 
       {/* BreadcrumbList + Dataset JSON-LD */}
@@ -328,5 +104,42 @@ export default function ResultsPage() {
         }}
       />
     </main>
+  );
+}
+
+// Egy esemény kártya és részletes eredmény nézet
+// ...existing code...
+
+function EventResultCard({ event }: { event: Event }) {
+  return (
+    <div className="transition-all duration-300 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 rounded-2xl shadow-xl p-5 flex flex-col items-center gap-3 mb-6 h-[370px] md:h-[400px] justify-between hover:scale-[1.03] hover:shadow-2xl border border-gray-800 relative">
+      <div className="w-full flex justify-center">
+        <Image
+          src={event.image_url || '/1.png'}
+          alt={event.name + ' borítókép'}
+          width={220}
+          height={140}
+          className="rounded-xl object-cover mb-2 w-[220px] h-[140px] shadow-lg border border-gray-700 bg-gray-900"
+          sizes="(max-width: 768px) 100vw, 220px"
+          loading="lazy"
+        />
+      </div>
+      <h3 className="font-extrabold text-xl mb-1 text-center text-white tracking-tight drop-shadow-lg">
+        {event.name}
+      </h3>
+      <div className="text-xs text-gray-400 mb-1 text-center">
+        {event.date} • {event.location}
+      </div>
+      <div className="text-xs text-gray-400 mb-2 text-center">Indulók: {event.participants}</div>
+      <div className="w-full flex flex-grow items-end justify-center mt-2 mb-0">
+        <Link
+          className="w-full px-4 py-2 rounded-full font-bold bg-yellow-400 text-gray-900 shadow hover:bg-yellow-300 transition text-sm text-center"
+          style={{ marginBottom: '0', marginTop: 'auto' }}
+          href={`/results/${event.id}`}
+        >
+          Eredmények megtekintése
+        </Link>
+      </div>
+    </div>
   );
 }
