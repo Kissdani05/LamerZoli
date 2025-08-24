@@ -161,14 +161,23 @@ type LangContextType = {
 
 const LangContext = createContext<LangContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>('hu');
+export function LanguageProvider({
+  children,
+  initialLang,
+}: {
+  children: React.ReactNode;
+  initialLang?: Lang;
+}) {
+  const [lang, setLang] = useState<Lang>(initialLang ?? 'hu');
 
   useEffect(() => {
-    const stored =
-      typeof window !== 'undefined' ? (localStorage.getItem('lang') as Lang | null) : null;
-    if (stored === 'hu' || stored === 'en') setLang(stored);
-  }, []);
+    // If initialLang is explicitly provided, respect it and do not read localStorage (force behavior)
+    if (initialLang === undefined) {
+      const stored =
+        typeof window !== 'undefined' ? (localStorage.getItem('lang') as Lang | null) : null;
+      if (stored === 'hu' || stored === 'en') setLang(stored);
+    }
+  }, [initialLang]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

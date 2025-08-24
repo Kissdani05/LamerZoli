@@ -1,31 +1,35 @@
 'use client';
 import Link from 'next/link';
-import { useI18n } from './i18n/LanguageContext';
+// removed language hook — static Hungarian labels in header
 import Image from 'next/image';
 import { useState } from 'react';
 
 export default function Header() {
-  const { lang, setLang, t } = useI18n();
+  // no i18n here — header labels are fixed Hungarian
   const [menuOpen, setMenuOpen] = useState(false);
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
   const navItems = [
-    { href: '/calendar', label: t('nav_calendar') },
-    { href: '/tracks', label: t('nav_tracks') },
-    { href: '/results', label: t('nav_results') },
-    { href: '/blog', label: t('nav_blog') },
-    { href: '/rules', label: t('nav_rules') },
+    { href: '/calendar', label: 'Naptár' },
+    { href: '/tracks', label: 'Pályák' },
+    { href: '/results', label: 'Eredmények' },
+    { href: '/blog', label: 'Blog' },
+    { href: '/rules', label: 'Szabályok' },
   ];
+
   return (
     <header className="header glass sticky top-0 z-50 border-b border-brand-2 backdrop-blur-lg">
       <div className="container flex items-center justify-between py-2 px-2 md:px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <span
-            className="text-[1.7rem] font-extrabold text-[#e4eb34] drop-shadow-lg tracking-tight"
-            style={{ fontFamily: 'inherit' }}
-          >
-            LÁMERKART
-          </span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
+            <span
+              className="text-[1.7rem] font-extrabold text-[#e4eb34] drop-shadow-lg tracking-tight"
+              style={{ fontFamily: 'inherit' }}
+            >
+              LÁMERKART
+            </span>
+          </Link>
+        </div>
+
         {/* Mobil: hamburger ikon */}
         <button
           className="md:hidden flex items-center justify-center p-2 rounded focus:outline-none"
@@ -38,6 +42,7 @@ export default function Header() {
             <span className="block w-full h-1 bg-[#e4eb34] rounded"></span>
           </span>
         </button>
+
         {/* Asztali: menü */}
         <nav className="hidden md:flex gap-1 md:gap-2 items-center text-sm relative">
           {navItems.map((item) => (
@@ -55,7 +60,8 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        {/* Jobb: fő CTA + nyelvváltó ikon */}
+
+        {/* Jobb: fő CTA + social icons */}
         <div className="hidden md:flex items-center gap-3">
           <button
             className="btn btn-primary shadow-lg"
@@ -63,36 +69,31 @@ export default function Header() {
               if (window.openRegistrationModal) window.openRegistrationModal();
             }}
           >
-            {t('nav_register')}
+            Nevezés
           </button>
-          <button
-            aria-label={t('language_selector')}
-            className="border-2 border-brand-2 hover:bg-brand-2 transition-colors flex items-center"
-            style={{ background: 'none', padding: 0, borderRadius: '0.5rem' }}
-            onClick={() => setLang(lang === 'hu' ? 'en' : 'hu')}
+
+          <a
+            href="https://www.tiktok.com/@lamerkart?is_from_webapp=1&sender_device=pc"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="TikTok"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-white/5 hover:bg-white/10"
           >
-            {lang === 'hu' ? (
-              <Image
-                src="/hu-flag.svg"
-                alt="Magyar"
-                width={48}
-                height={30}
-                className="block"
-                style={{ borderRadius: '0.25rem', boxShadow: '0 0 0 2px #e4eb34' }}
-              />
-            ) : (
-              <Image
-                src="/en-flag.svg"
-                alt="English"
-                width={48}
-                height={30}
-                className="block"
-                style={{ borderRadius: '0.25rem', boxShadow: '0 0 0 2px #e4eb34' }}
-              />
-            )}
-          </button>
+            <Image src="/tiktok_icon.png" alt="TikTok" width={20} height={20} />
+          </a>
+
+          <a
+            href="https://www.facebook.com/zoltan.lamer"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Facebook"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-white/5 hover:bg-white/10"
+          >
+            <Image src="/facebook_icon.png" alt="Facebook" width={20} height={20} />
+          </a>
         </div>
       </div>
+
       {/* Mobil: lenyíló menü */}
       {menuOpen && (
         <nav className="md:hidden absolute top-full left-0 w-full bg-black/95 text-white flex flex-col items-center py-4 z-50 shadow-lg">
@@ -115,38 +116,28 @@ export default function Header() {
               if (window.openRegistrationModal) window.openRegistrationModal();
             }}
           >
-            {t('nav_register')}
+            Nevezés
           </button>
-          <button
-            aria-label={t('language_selector')}
-            className="border-2 border-brand-2 hover:bg-brand-2 transition-colors mt-2 flex items-center"
-            style={{ background: 'none', padding: 0, borderRadius: '0.5rem' }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setLang(lang === 'hu' ? 'en' : 'hu');
-              // Don't close menu here
-            }}
-          >
-            {lang === 'hu' ? (
-              <Image
-                src="/hu-flag.svg"
-                alt="Magyar"
-                width={48}
-                height={30}
-                className="block"
-                style={{ borderRadius: '0.25rem', boxShadow: '0 0 0 2px #e4eb34' }}
-              />
-            ) : (
-              <Image
-                src="/en-flag.svg"
-                alt="English"
-                width={48}
-                height={30}
-                className="block"
-                style={{ borderRadius: '0.25rem', boxShadow: '0 0 0 2px #e4eb34' }}
-              />
-            )}
-          </button>
+          <div className="flex gap-2 mt-2">
+            <a
+              href="https://www.tiktok.com/@lamerkart?is_from_webapp=1&sender_device=pc"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="TikTok"
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-white/5 hover:bg-white/10"
+            >
+              <Image src="/tiktok_icon.png" alt="TikTok" width={18} height={18} />
+            </a>
+            <a
+              href="https://www.facebook.com/zoltan.lamer"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Facebook"
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-white/5 hover:bg-white/10"
+            >
+              <Image src="/facebook_icon.png" alt="Facebook" width={18} height={18} />
+            </a>
+          </div>
         </nav>
       )}
     </header>

@@ -45,7 +45,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-white text-black antialiased`}
       >
-        <LanguageProvider>
+        <LanguageProvider initialLang={isAdminRoute ? 'hu' : 'en'}>
           <NotificationProvider>
             {/* Csak akkor jelenítjük meg a Header-t, ha NEM admin route-on vagyunk */}
             {!isAdminRoute && <Header />}
