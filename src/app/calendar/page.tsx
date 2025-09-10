@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabaseClient';
 import Image from 'next/image';
 
 // export const metadata: Metadata = {
@@ -50,15 +49,11 @@ export default function CalendarPage() {
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Ensure no time component
   const [selectedDate, setSelectedDate] = useState<Date | null>(today);
-  const [races, setRaces] = useState<Race[]>([]); // Specify Race[] type
+  const [races, setRaces] = useState<Race[]>([]); // Statikus: nem töltünk DB-ből
   const [month, setMonth] = useState(today.getMonth());
   const [year, setYear] = useState(today.getFullYear()); // Add year state
   useEffect(() => {
-    async function fetchRaces() {
-      const { data } = await supabase.from('races').select('*');
-      setRaces(data || []);
-    }
-    fetchRaces();
+    setRaces([]);
   }, []);
 
   // Hónap léptetése
@@ -80,18 +75,41 @@ export default function CalendarPage() {
   }
 
   // Versenyek dátumai
-  const raceDates = races.map((r) => (r.date ? new Date(r.date).toISOString().slice(0, 10) : null));
+  // Note: raceDates kept for future highlighting logic; currently unused
+  // const raceDates = races.map((r) => (r.date ? new Date(r.date).toISOString().slice(0, 10) : null));
 
   // Apple stílusú naptár grid
   const daysInMonth = getMonthDays(year, month);
+  // Compute Monday-first offset: JS getDay() => 0 Sun ... 6 Sat; convert so Mon=0
   const firstDay = new Date(year, month, 1).getDay();
-  const calendarDays = [];
-  for (let i = 0; i < firstDay; i++) calendarDays.push(null);
+  const mondayOffset = (firstDay + 6) % 7;
+  const calendarDays: Array<Date | null> = [];
+  for (let i = 0; i < mondayOffset; i++) calendarDays.push(null);
   for (let d = 1; d <= daysInMonth; d++) calendarDays.push(new Date(year, month, d));
 
   // Kiválasztott nap versenyei
-  const selectedDayStr = selectedDate ? selectedDate.toISOString().slice(0, 10) : '';
+  const keyFromDate = (d: Date) => {
+    const y = d.getFullYear();
+    const m = (d.getMonth() + 1).toString().padStart(2, '0');
+    const dd = d.getDate().toString().padStart(2, '0');
+    return `${y}-${m}-${dd}`;
+  };
+  const selectedDayStr = selectedDate ? keyFromDate(selectedDate) : '';
   const dayRaces = races.filter((r) => r.date && r.date.startsWith(selectedDayStr));
+
+  // Static highlight days (2025):
+  // Brand (participating): 2025-09-27, 2025-09-28
+  // Blue (organizing): from provided schedule (deduped)
+  const brandDays = new Set(['2025-09-27', '2025-09-28']);
+  const blueDays = new Set([
+    '2025-09-25',
+    '2025-10-12',
+    '2025-10-31',
+    '2025-11-09',
+    '2025-11-29',
+    '2025-12-07',
+    '2025-12-27',
+  ]);
 
   return (
     <div className="relative">
@@ -161,22 +179,25 @@ export default function CalendarPage() {
           </div>
           <div className="grid grid-cols-7 gap-2">
             {calendarDays.map((date, idx) => {
-              const dateStr = date ? date.toISOString().slice(0, 10) : '';
-              const isRaceDay = raceDates.includes(dateStr);
+              const dateStr = date ? keyFromDate(date) : '';
               const isSelected = selectedDayStr === dateStr;
+              const isBrandDay = date ? brandDays.has(dateStr) : false;
+              const isBlueDay = date ? blueDays.has(dateStr) : false;
+              const baseBg = isBrandDay
+                ? 'bg-[var(--brand-2)] text-black shadow-lg'
+                : isBlueDay
+                  ? 'bg-[#3b82f6] text-white shadow-lg'
+                  : 'bg-white/80 dark:bg-black/30';
               return (
                 <button
                   key={idx}
-                  className={`calendar-day rounded-xl aspect-square flex items-center justify-center text-lg font-bold transition-all relative ${isRaceDay ? 'bg-[#e4eb34] text-black shadow-lg' : 'bg-white/80 dark:bg-black/30'} ${isSelected ? 'border-2 border-white ring-4 ring-brand-2' : ''}`}
+                  className={`calendar-day rounded-xl aspect-square flex items-center justify-center text-lg font-bold transition-all relative ${baseBg} ${isSelected ? 'border-2 border-white ring-4 ring-brand-2' : ''}`}
                   disabled={!date}
                   onClick={() => date && setSelectedDate(date)}
                   aria-label={date ? date.toLocaleDateString() : ''}
                   style={{ cursor: date ? 'pointer' : 'default' }}
                 >
                   {date ? date.getDate() : ''}
-                  {isRaceDay && (
-                    <span className="absolute top-1 right-1 w-3 h-3 rounded-full bg-brand-2 animate-pulse" />
-                  )}
                 </button>
               );
             })}
@@ -284,6 +305,21 @@ export default function CalendarPage() {
           ) : (
             <div className="text-muted">Válassz egy napot a naptárból!</div>
           )}
+        </div>
+      </div>
+
+      {/* Legend below the calendar */}
+      <div className="px-8 mt-4 space-y-2">
+        <div className="flex items-center gap-3">
+          <span
+            className="inline-block w-4 h-4 rounded-sm"
+            style={{ background: 'var(--brand-2)' }}
+          />
+          <span className="text-sm">- Amelyik versenyeken részt veszek</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="inline-block w-4 h-4 rounded-sm bg-[#3b82f6]" />
+          <span className="text-sm">- Amelyik versenyeket én szervezem</span>
         </div>
       </div>
     </div>

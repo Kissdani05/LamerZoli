@@ -1,8 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { useState } from 'react';
 
 type BlogArticle = {
   id: string | number;
@@ -14,25 +13,11 @@ type BlogArticle = {
 };
 
 export default function BlogPage() {
-  const [articles, setArticles] = useState<BlogArticle[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [articles] = useState<BlogArticle[]>([]);
+  const [loading] = useState(false);
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [search, setSearch] = useState('');
   const [showAll, setShowAll] = useState(false);
-
-  useEffect(() => {
-    async function fetchArticles() {
-      setLoading(true);
-      // Lekérdezés: percre pontosan, timestamp mezővel
-      const { data, error } = await supabase
-        .from('blog')
-        .select('*')
-        .order('date', { ascending: sortOrder === 'asc', nullsFirst: false });
-      if (!error && data) setArticles(data as BlogArticle[]);
-      setLoading(false);
-    }
-    fetchArticles();
-  }, [sortOrder]);
 
   return (
     <main className="blog-main max-w-6xl mx-auto px-4 pb-16 text-white relative">

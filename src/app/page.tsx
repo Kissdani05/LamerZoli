@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
 import RegistrationModal from './RegistrationModal';
 import { useI18n } from './i18n/LanguageContext';
 import Image from 'next/image';
@@ -51,6 +50,7 @@ interface RegistrationData {
   weight: number;
   race: string;
   race_name: string;
+  sws_id?: string;
 }
 
 export default function Home() {
@@ -71,35 +71,12 @@ export default function Home() {
     process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://lamerzoli.vercel.app';
 
   useEffect(() => {
-    async function fetchRace() {
-      const { data } = await supabase.from('site_settings').select('*').eq('id', 1).single();
-      if (data) {
-        setRace({
-          next_race_at: data.next_race_at || '',
-          next_race_desc: data.next_race_desc || '',
-          next_race_image_path: data.next_race_image_path || '',
-        });
-      }
-    }
-    fetchRace();
+    // Nincs DB: állíts be statikus tartalmat vagy hagyd üresen
+    setRace({ next_race_at: '', next_race_desc: '', next_race_image_path: '' });
   }, []);
 
   useEffect(() => {
-    async function fetchFeaturedRace() {
-      const settingsRes = await supabase
-        .from('site_settings')
-        .select('featured_race_id')
-        .eq('id', 1)
-        .single();
-      const featuredId = settingsRes.data?.featured_race_id as string | undefined;
-      if (featuredId) {
-        const { data } = await supabase.from('races').select('*').eq('id', featuredId).single();
-        setFeaturedRace((data as FeaturedRace) || null);
-      } else {
-        setFeaturedRace(null);
-      }
-    }
-    fetchFeaturedRace();
+    setFeaturedRace(null);
   }, []);
 
   async function handleRegistration(data: RegistrationData) {
@@ -114,6 +91,7 @@ export default function Home() {
           weight: data.weight,
           race_id: data.race,
           race_name: data.race_name,
+          sws_id: data.sws_id,
         }),
       });
       if (!res.ok) {
@@ -193,18 +171,17 @@ export default function Home() {
       q: 'Hogyan tudok regisztrálni?',
       a: 'Töltsd ki a regisztrációs űrlapot a főoldalon, majd kattints a Regisztráció gombra.',
     },
-    { q: 'Vannak súlycsoportok?', a: 'Egykategóriás sorozat vagyunk, kiegyensúlyozott kartokkal.' },
+    {
+      q: 'Vannak súlycsoportok?',
+      a: 'Nálunk mindenki egységesen 95 kg-ra felsúlyozva megy, egy kategóriás bajnokság vagyunk.',
+    },
     {
       q: 'Hol találom az eredményeket?',
-      a: 'Az Eredmények szekcióban láthatod a korábbi versenyek győzteseit.',
+      a: 'Nem csak a korábbi győzteseket, hanem a korábbi versenyek teljes eredményeit és ponttábláit is az Eredmények menüpont alatt találod.',
     },
     {
       q: 'Mi történik, ha hibás email címet adok meg?',
       a: 'A rendszer csak érvényes email címet fogad el, hibás esetben hibaüzenetet kapsz.',
-    },
-    {
-      q: 'Hogyan védjük az adataidat?',
-      a: 'A regisztrációhoz hozzájárulás szükséges, az adatokat biztonságosan kezeljük.',
     },
   ];
   const [openIdx, setOpenIdx] = useState<number | null>(null);
@@ -241,10 +218,11 @@ export default function Home() {
           {/* Bal oldal: szöveg */}
           <div className="flex-1 flex flex-col items-center md:items-start justify-center w-full">
             <h1 className="mb-4 text-4xl md:text-7xl font-extrabold gradient-text text-center md:text-left drop-shadow-lg w-full px-2 md:px-0">
-              Lámer Zoltán Gokart
+              Lámer Zoltán bérgokartversenyző és versenyszervező
             </h1>
             <p className="text-xl md:text-2xl font-semibold text-white text-center md:text-left mb-8 drop-shadow w-full px-2 md:px-0">
-              Egyenlő technika. Tiszta szabályok. Valódi versenyélmény.
+              Bemutatom nektek a motorsport azon ágát, ahol egyenlő feltételek, egyenlő technika vár
+              mindenkire, ráadásul megfizethető áron!
             </p>
             <div className="flex flex-wrap gap-6 justify-center md:justify-start mb-4 md:mb-8">
               <button
@@ -262,10 +240,12 @@ export default function Home() {
               <div className="absolute inset-0 -z-10">
                 <Image src="/3.png" alt="" fill className="object-cover blur-2xl opacity-30" />
               </div>
-              <div className="badge badge-muted text-lg animate-odometer">500+ nevező</div>
-              <div className="badge badge-muted text-lg animate-odometer">5+ év tapasztalat</div>
+              <div className="badge badge-muted text-lg animate-odometer">1000+ nevező</div>
               <div className="badge badge-muted text-lg animate-odometer">
-                50+ verseny szervezés
+                10 év versenyszervezői tapasztalat
+              </div>
+              <div className="badge badge-muted text-lg animate-odometer">
+                200+ verseny szervezés
               </div>
             </div>
           </div>
@@ -404,9 +384,9 @@ export default function Home() {
                     </div>
                     <p className="text-lg text-black font-semibold text-center mt-16 relative z-10">
                       <span style={{ color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
-                        2-3 naponta feltöltésre kerülő videóimból elsajátíthatjátok a bérgokartozás
-                        alapjait. Verseny elemzések, bejelentések és további tanító tartalmakkal
-                        találkozhattok csatornámon.
+                        ...TikTok csatornámon a videóimból a bérgokartozás alapjaitól a
+                        bérgokartversenyzés legprofibb módon való űzéséig minden segítséget
+                        megtaláltok!...
                       </span>
                     </p>
                   </div>

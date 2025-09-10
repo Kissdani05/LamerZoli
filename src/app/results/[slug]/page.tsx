@@ -2,7 +2,6 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { supabase } from '@/lib/supabaseClient';
 
 type Participant = {
   id: string | number;
@@ -21,30 +20,13 @@ type Race = {
 
 export default function RaceResultPage() {
   const { slug } = useParams();
-  const [race, setRace] = useState<Race | null>(null);
-  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [race, _setRace] = useState<Race | null>(null);
+  const [participants, _setParticipants] = useState<Participant[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      // Verseny lekérdezése
-      const { data: raceData, error: raceError } = await supabase
-        .from('results')
-        .select('*')
-        .eq('id', slug)
-        .single();
-      // Indulók lekérdezése
-      const { data: partData, error: partError } = await supabase
-        .from('result_participants')
-        .select('*')
-        .eq('race_id', slug)
-        .order('position', { ascending: true });
-      if (!raceError && raceData) setRace(raceData as Race);
-      if (!partError && partData) setParticipants(partData as Participant[]);
-      setLoading(false);
-    }
-    if (slug) fetchData();
+    // Nincs DB: hagyjuk üresen a tartalmat
+    setLoading(false);
   }, [slug]);
 
   if (loading) {

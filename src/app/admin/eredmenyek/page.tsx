@@ -1,11 +1,5 @@
-'use client';
-// ...existing code...
-import EredmenyekAdmin from '../EredmenyekAdmin';
+import { redirect } from 'next/navigation';
 
 export default function EredmenyekAdminPage() {
-  return (
-    <>
-      <EredmenyekAdmin />
-    </>
-  );
+  redirect('/admin');
 }

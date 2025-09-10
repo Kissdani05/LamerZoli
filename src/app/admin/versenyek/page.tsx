@@ -1,11 +1,5 @@
-'use client';
-// ...existing code...
-import VersenyAdmin from '../VersenyAdmin';
+import { redirect } from 'next/navigation';
 
 export default function VersenyAdminPage() {
-  return (
-    <>
-      <VersenyAdmin />
-    </>
-  );
+  redirect('/admin');
 }

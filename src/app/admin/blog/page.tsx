@@ -1,11 +1,5 @@
-'use client';
-// ...existing code...
-import BlogAdmin from '../BlogAdmin';
+import { redirect } from 'next/navigation';
 
 export default function BlogAdminPage() {
-  return (
-    <>
-      <BlogAdmin />
-    </>
-  );
+  redirect('/admin');
 }

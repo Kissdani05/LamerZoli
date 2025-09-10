@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import AdminForm from './AdminForm';
+import NevezesekAdmin from './NevezesekAdmin';
 
 export default async function AdminPage() {
   const cookieStore = await cookies();
@@ -11,7 +11,7 @@ export default async function AdminPage() {
   }
   return (
     <>
-      <AdminForm />
+      <NevezesekAdmin />
     </>
   );
 }

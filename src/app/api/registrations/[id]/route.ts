@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { sendEmail } from '@/lib/mailer';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -78,8 +79,31 @@ export async function PATCH(req: Request) {
   const { createClient } = await import('@supabase/supabase-js');
   const serverClient = createClient(supabaseUrl, serviceRoleKey);
 
-  const { error } = await serverClient.from('registrations').update(body).eq('id', id);
+  const { data, error } = await serverClient
+    .from('registrations')
+    .update(body)
+    .eq('id', id)
+    .select('email, name, race_name, status')
+    .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+
+  // If status changed to accepted/rejected, notify the registrant
+  try {
+    const status = (body as Record<string, unknown>)?.status as string | undefined;
+    if (status && (status === 'accepted' || status === 'rejected') && data?.email) {
+      const to = data.email;
+      const subject = status === 'accepted' ? 'Nevezésed elfogadva' : 'Nevezésed elutasítva';
+      const text =
+        status === 'accepted'
+          ? `Kedves ${data.name || ''}, nevezésed elfogadtuk ${data.race_name || ''} versenyre.`
+          : `Kedves ${data.name || ''}, sajnos nevezésedet elutasítottuk ${data.race_name || ''} versenyre.`;
+      const html = `<p>Kedves ${data.name || ''},</p>
+        <p>${
+          status === 'accepted' ? 'Nevezésedet elfogadtuk' : 'Sajnos nevezésedet elutasítottuk'
+        } ${data.race_name || ''} versenyre.</p>`;
+      await sendEmail({ to, subject, text, html });
+    }
+  } catch {}
 
   return NextResponse.json({ success: true });
 }
