@@ -17,7 +17,7 @@ export default function TracksPage() {
             Téglás F1 Gokartpálya
           </h2>
           <p className="mb-4 text-lg text-center text-white max-w-2xl">
-            Kelet-Magyarország egyik legtechnikásabb kültéri bérgokart pályája ~650 m hosszal és 390
+            Kelet-Magyarország egyik legtechnikásabb kültéri bérgokart pályája ~470 m hosszal és 390
             cm³-es SODI flottával.
             <br />
             Számítógépes időmérés, 8 perces menetek.
@@ -37,7 +37,7 @@ export default function TracksPage() {
               <div className="spec-card glass-card p-4 rounded-xl shadow flex flex-col items-center md:items-start">
                 <span className="text-2xl mb-1">🛣️</span>
                 <span className="font-bold text-base mb-1">Méret</span>
-                <span className="text-sm text-center md:text-left">~650 m hosszú, 7 m széles</span>
+                <span className="text-sm text-center md:text-left">~470 m hosszú, 7 m széles</span>
               </div>
               <div className="spec-card glass-card p-4 rounded-xl shadow flex flex-col items-center md:items-start">
                 <span className="text-2xl mb-1">🛞</span>

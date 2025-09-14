@@ -56,8 +56,9 @@ export async function GET(req: Request) {
       if (data?.email) {
         const to = data.email;
         const subject = 'Nevezésed elfogadva';
-        const text = `Kedves ${data.name || ''}, nevezésed elfogadtuk ${data.race_name || ''} versenyre.`;
-        const html = `<p>Kedves ${data.name || ''},</p><p>Nevezésedet elfogadtuk ${data.race_name || ''} versenyre.</p>`;
+        const extra = ' Hamarosan értesítünk a pontosabb információkról a versennyel kapcsolatban.';
+        const text = `Kedves ${data.name || ''}, nevezésed elfogadtuk ${data.race_name || ''} versenyre.${extra}`;
+        const html = `<p>Kedves ${data.name || ''},</p><p>Nevezésedet elfogadtuk ${data.race_name || ''} versenyre.<br/>Hamarosan értesítünk a pontosabb információkról a versennyel kapcsolatban.</p>`;
         await sendEmail({ to, subject, text, html });
       }
     } catch {}

@@ -358,56 +358,60 @@ export default function NevezesekAdmin() {
                     >
                       {loadingDelete === reg.id ? 'Törlés...' : 'Törlés'}
                     </button>
-                    <button
-                      className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50"
-                      onClick={async () => {
-                        setErrorMsg('');
-                        setSuccessMsg('');
-                        const res = await fetch(`/api/registrations/${reg.id}`, {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ status: 'accepted' }),
-                        });
-                        const body = await res.json().catch(() => ({}));
-                        if (!res.ok) {
-                          setErrorMsg(String(body?.error || 'Hiba a státusz állításnál'));
-                        } else {
-                          setSuccessMsg('Elfogadva. Email elküldve.');
-                          await fetchRegistrations();
-                        }
-                        setTimeout(() => {
-                          setSuccessMsg('');
-                          setErrorMsg('');
-                        }, 2000);
-                      }}
-                    >
-                      Elfogadás
-                    </button>
-                    <button
-                      className="bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700 disabled:opacity-50"
-                      onClick={async () => {
-                        setErrorMsg('');
-                        setSuccessMsg('');
-                        const res = await fetch(`/api/registrations/${reg.id}`, {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ status: 'rejected' }),
-                        });
-                        const body = await res.json().catch(() => ({}));
-                        if (!res.ok) {
-                          setErrorMsg(String(body?.error || 'Hiba a státusz állításnál'));
-                        } else {
-                          setSuccessMsg('Elutasítva. Email elküldve.');
-                          await fetchRegistrations();
-                        }
-                        setTimeout(() => {
-                          setSuccessMsg('');
-                          setErrorMsg('');
-                        }, 2000);
-                      }}
-                    >
-                      Elutasítás
-                    </button>
+                    {(!reg.status || reg.status === 'pending') && (
+                      <>
+                        <button
+                          className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+                          onClick={async () => {
+                            setErrorMsg('');
+                            setSuccessMsg('');
+                            const res = await fetch(`/api/registrations/${reg.id}`, {
+                              method: 'PATCH',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ status: 'accepted' }),
+                            });
+                            const body = await res.json().catch(() => ({}));
+                            if (!res.ok) {
+                              setErrorMsg(String(body?.error || 'Hiba a státusz állításnál'));
+                            } else {
+                              setSuccessMsg('Elfogadva. Email elküldve.');
+                              await fetchRegistrations();
+                            }
+                            setTimeout(() => {
+                              setSuccessMsg('');
+                              setErrorMsg('');
+                            }, 2000);
+                          }}
+                        >
+                          Elfogadás
+                        </button>
+                        <button
+                          className="bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700 disabled:opacity-50"
+                          onClick={async () => {
+                            setErrorMsg('');
+                            setSuccessMsg('');
+                            const res = await fetch(`/api/registrations/${reg.id}`, {
+                              method: 'PATCH',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ status: 'rejected' }),
+                            });
+                            const body = await res.json().catch(() => ({}));
+                            if (!res.ok) {
+                              setErrorMsg(String(body?.error || 'Hiba a státusz állításnál'));
+                            } else {
+                              setSuccessMsg('Elutasítva. Email elküldve.');
+                              await fetchRegistrations();
+                            }
+                            setTimeout(() => {
+                              setSuccessMsg('');
+                              setErrorMsg('');
+                            }, 2000);
+                          }}
+                        >
+                          Elutasítás
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}

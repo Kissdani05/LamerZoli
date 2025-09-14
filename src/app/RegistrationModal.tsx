@@ -27,11 +27,13 @@ export default function RegistrationModal({
   onClose,
   onSubmit,
   defaultRaceId,
+  defaultRaceName,
 }: {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: RegistrationSubmit) => void;
   defaultRaceId?: string;
+  defaultRaceName?: string;
 }) {
   const { t } = useI18n();
   const [form, setForm] = useState<RegistrationForm>({
@@ -58,30 +60,36 @@ export default function RegistrationModal({
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (open) {
-      // Try to fetch races from API; fall back to manual option only
-      fetch('/api/races')
-        .then((res) => res.json())
-        .then((json) => {
-          const list: { id: string; name: string }[] = Array.isArray(json?.races) ? json.races : [];
-          const options = [
-            { id: '', name: t('select_placeholder') },
-            ...list,
-            { id: 'manual', name: 'Egyéb (írd be a verseny nevét)' },
-          ];
-          setRaces(options);
-        })
-        .catch(() => {
-          setRaces([
-            { id: '', name: t('select_placeholder') },
-            { id: 'manual', name: 'Egyéb (írd be a verseny nevét)' },
-          ]);
-        });
-    }
-  }, [open, t]);
+    if (!open) return;
+    (async () => {
+      try {
+        const res = await fetch('/api/races');
+        const json = await res.json();
+        const list: { id: string; name: string }[] = Array.isArray(json?.races) ? json.races : [];
+        const hasDefault = defaultRaceId ? list.some((r) => r.id === defaultRaceId) : false;
+        const injected =
+          !hasDefault && defaultRaceId
+            ? [{ id: defaultRaceId, name: defaultRaceName || 'Téglás Gokart GP 6. Forduló' }]
+            : [];
+        const options = [
+          { id: '', name: t('select_placeholder') },
+          ...injected,
+          ...list,
+          { id: 'manual', name: 'Egyéb (írd be a verseny nevét)' },
+        ];
+        setRaces(options);
+      } catch {
+        setRaces([
+          { id: '', name: t('select_placeholder') },
+          { id: 'manual', name: 'Egyéb (írd be a verseny nevét)' },
+        ]);
+      }
+    })();
+  }, [open, t, defaultRaceId, defaultRaceName]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
   }
 
   async function handleSubmit(e: React.FormEvent) {

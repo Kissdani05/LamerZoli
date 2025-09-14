@@ -93,14 +93,17 @@ export async function PATCH(req: Request) {
     if (status && (status === 'accepted' || status === 'rejected') && data?.email) {
       const to = data.email;
       const subject = status === 'accepted' ? 'Nevezésed elfogadva' : 'Nevezésed elutasítva';
+      const extra = ' Hamarosan értesítünk a pontosabb információkról a versennyel kapcsolatban.';
       const text =
         status === 'accepted'
-          ? `Kedves ${data.name || ''}, nevezésed elfogadtuk ${data.race_name || ''} versenyre.`
+          ? `Kedves ${data.name || ''}, nevezésed elfogadtuk ${data.race_name || ''} versenyre.${extra}`
           : `Kedves ${data.name || ''}, sajnos nevezésedet elutasítottuk ${data.race_name || ''} versenyre.`;
       const html = `<p>Kedves ${data.name || ''},</p>
         <p>${
-          status === 'accepted' ? 'Nevezésedet elfogadtuk' : 'Sajnos nevezésedet elutasítottuk'
-        } ${data.race_name || ''} versenyre.</p>`;
+          status === 'accepted'
+            ? `Nevezésedet elfogadtuk ${data.race_name || ''} versenyre. <br/>Hamarosan értesítünk a pontosabb információkról a versennyel kapcsolatban.`
+            : `Sajnos nevezésedet elutasítottuk ${data.race_name || ''} versenyre.`
+        }</p>`;
       await sendEmail({ to, subject, text, html });
     }
   } catch {}

@@ -72,16 +72,31 @@ export async function POST(req: Request) {
       const id = inserted?.id as string;
       let acceptLink = '';
       let acceptFallback = '';
+      let rejectLink = '';
+      let rejectFallback = '';
       if (id) {
         const exp = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60; // 7 days
-        const msg = `${id}:accept:${exp}`;
-        const sig = crypto.createHmac('sha256', signingSecret).update(msg).digest('hex');
-        const token = `${exp}.${sig}`; // token binds id via msg
-        acceptLink = `${siteUrl}/api/registrations/${id}/accept?t=${encodeURIComponent(token)}`;
-        acceptFallback = `${siteUrl}/api/accept?id=${encodeURIComponent(id)}&t=${encodeURIComponent(token)}`;
+        // Accept token
+        const msgAccept = `${id}:accept:${exp}`;
+        const sigAccept = crypto
+          .createHmac('sha256', signingSecret)
+          .update(msgAccept)
+          .digest('hex');
+        const tokenAccept = `${exp}.${sigAccept}`;
+        acceptLink = `${siteUrl}/api/registrations/${id}/accept?t=${encodeURIComponent(tokenAccept)}`;
+        acceptFallback = `${siteUrl}/api/accept?id=${encodeURIComponent(id)}&t=${encodeURIComponent(tokenAccept)}`;
+        // Reject token
+        const msgReject = `${id}:reject:${exp}`;
+        const sigReject = crypto
+          .createHmac('sha256', signingSecret)
+          .update(msgReject)
+          .digest('hex');
+        const tokenReject = `${exp}.${sigReject}`;
+        rejectLink = `${siteUrl}/api/registrations/${id}/reject?t=${encodeURIComponent(tokenReject)}`;
+        rejectFallback = `${siteUrl}/api/accept?id=${encodeURIComponent(id)}&t=${encodeURIComponent(tokenReject)}&action=reject`;
       }
 
-      const text = `Új nevezés:\nNév: ${name}\nEmail: ${email}\nTelefon: ${phone}\nSúly: ${weight}\nVerseny: ${race_name ?? ''}\nSWS ID: ${sws_id ?? ''}${acceptLink ? `\n\nElfogadás: ${acceptLink}` : ''}`;
+      const text = `Új nevezés:\nNév: ${name}\nEmail: ${email}\nTelefon: ${phone}\nSúly: ${weight}\nVerseny: ${race_name ?? ''}\nSWS ID: ${sws_id ?? ''}${acceptLink ? `\n\nElfogadás: ${acceptLink}` : ''}${rejectLink ? `\nElutasítás: ${rejectLink}` : ''}`;
       const html = `<p>Új nevezés érkezett:</p>
         <ul>
           <li><b>Név:</b> ${name}</li>
@@ -94,9 +109,12 @@ export async function POST(req: Request) {
         ${
           acceptLink
             ? `<div style="margin-top:16px">
-          <a href="${acceptLink}" style="background:#22c55e;color:#000;font-weight:700;padding:12px 18px;border-radius:8px;text-decoration:none;display:inline-block">Nevezés elfogadása</a>
-          <div style="margin-top:8px;font-size:12px;color:#666">Ha a gomb nem működik: <a href="${acceptLink}">${acceptLink}</a></div>
-          <div style="margin-top:6px;font-size:12px;color:#666">Alternatív link: <a href="${acceptFallback}">${acceptFallback}</a></div>
+          <a href="${acceptLink}" style="background:#22c55e;color:#000;font-weight:700;padding:12px 18px;border-radius:8px;text-decoration:none;display:inline-block;margin-right:8px">Nevezés elfogadása</a>
+          <a href="${rejectLink}" style="background:#dc2626;color:#fff;font-weight:700;padding:12px 18px;border-radius:8px;text-decoration:none;display:inline-block">Elutasítás</a>
+          <div style="margin-top:8px;font-size:12px;color:#666">Ha az elfogadás gomb nem működik: <a href="${acceptLink}">${acceptLink}</a></div>
+          <div style="margin-top:6px;font-size:12px;color:#666">Elfogadás alternatív: <a href="${acceptFallback}">${acceptFallback}</a></div>
+          <div style="margin-top:8px;font-size:12px;color:#666">Ha az elutasítás gomb nem működik: <a href="${rejectLink}">${rejectLink}</a></div>
+          <div style="margin-top:6px;font-size:12px;color:#666">Elutasítás alternatív: <a href="${rejectFallback}">${rejectFallback}</a></div>
         </div>`
             : ''
         }`;

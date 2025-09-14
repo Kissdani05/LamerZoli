@@ -76,7 +76,25 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    setFeaturedRace(null);
+    // Állítsuk be a következő versenyt statikusan
+    setFeaturedRace({
+      id: 'gokart-gp-6',
+      name: 'Gokart GP 6th Round',
+      location: 'Téglás',
+      date: '2025-09-07T09:00:00+02:00',
+      max_participants: 36,
+      description: 'Jó lesz',
+      image_url: '/Gokart GP 6th Round.jpg',
+      address: null,
+      layout: null,
+      format: null,
+      fee: null,
+      weight_rule: null,
+      deposit: null,
+      deadline: null,
+      rain_rule: null,
+      media_rule: null,
+    });
   }, []);
 
   async function handleRegistration(data: RegistrationData) {
@@ -271,6 +289,7 @@ export default function Home() {
         onClose={() => setShowModal(false)}
         onSubmit={handleRegistration}
         defaultRaceId={modalRaceId}
+        defaultRaceName={featuredRace?.name}
       />
 
       {/* Fehér csík a hero és következő verseny között */}
@@ -296,7 +315,12 @@ export default function Home() {
             <div className="mb-2 text-lg font-semibold">{featuredRace?.name || 'Hamarosan…'}</div>
             <div className="mb-2 text-base">
               <span className="font-semibold">Dátum:</span>{' '}
-              {featuredRace?.date ? new Date(featuredRace.date).toLocaleDateString() : 'Hamarosan…'}
+              {featuredRace?.date
+                ? new Date(featuredRace.date).toLocaleString('hu-HU', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  })
+                : 'Hamarosan…'}
             </div>
             <div className="mb-2 text-base">
               <span className="font-semibold">Max. férőhely:</span>{' '}
