@@ -13,7 +13,7 @@
     "@heroicons/react": "^2.2.0",
     "@supabase/supabase-js": "^2.55.0",
     "bcryptjs": "^3.0.3",
-    "next": "15.4.6",
+    "next": "15.4.10",
     "nodemailer": "^6.9.13",
     "react": "19.1.0",
     "react-datepicker": "^8.4.0",
