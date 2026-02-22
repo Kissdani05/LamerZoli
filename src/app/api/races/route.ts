@@ -21,12 +21,15 @@ export async function GET() {
     // Select minimal fields for dropdown; ignore failures gracefully
     const { data, error } = await client
       .from('races')
-      .select('id, name')
+      .select('id, name, categories')
       .order('name', { ascending: true });
 
     if (error) {
       // Return empty list on error to avoid breaking registration modal
-      return NextResponse.json({ races: [], error: error.message }, { status: 200 });
+      return NextResponse.json(
+        { races: [], error: error?.message || 'Ismeretlen hiba' },
+        { status: 200 },
+      );
     }
 
     return NextResponse.json({ races: (data || []).filter((r) => r && r.id && r.name) });
@@ -37,6 +40,43 @@ export async function GET() {
   }
 }
 
-export async function POST() {
-  return NextResponse.json({ error: 'Deprecated endpoint' }, { status: 410 });
+export async function POST(request: Request) {
+  try {
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !serviceRoleKey) {
+      return NextResponse.json({ error: 'Missing Supabase configuration' }, { status: 500 });
+    }
+
+    const { createClient } = await import('@supabase/supabase-js');
+    const client = createClient(supabaseUrl, serviceRoleKey);
+
+    const body = await request.json();
+    const { name, location, date, categories } = body;
+
+    if (!name || !location || !date) {
+      return NextResponse.json({ error: 'Hiányzó mezők' }, { status: 400 });
+    }
+
+    const { data, error } = await client
+      .from('races')
+      .insert({
+        name,
+        location,
+        date,
+        categories: categories || [],
+      })
+      .select()
+      .single();
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    return NextResponse.json({ race: data }, { status: 201 });
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

@@ -20,8 +20,10 @@ type Race = {
 
 export default function RaceResultPage() {
   const { slug } = useParams();
-  const [race, _setRace] = useState<Race | null>(null);
-  const [participants, _setParticipants] = useState<Participant[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [race, setRace] = useState<Race | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [participants, setParticipants] = useState<Participant[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

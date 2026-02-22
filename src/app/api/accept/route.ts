@@ -40,7 +40,8 @@ export async function GET(req: Request) {
       .eq('id', id)
       .select('email, name, race_name, status')
       .single();
-    if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+    if (error)
+      return NextResponse.json({ error: error?.message || 'Ismeretlen hiba' }, { status: 400 });
 
     try {
       if (data?.email) {

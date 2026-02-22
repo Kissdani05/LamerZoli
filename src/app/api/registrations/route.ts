@@ -5,9 +5,43 @@ import crypto from 'crypto';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+export async function GET() {
+  try {
+    const { cookies } = await import('next/headers');
+    const c = await cookies();
+    const isAdmin = c.get('admin')?.value === '1';
+    if (!isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  } catch {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !serviceRoleKey) {
+    return NextResponse.json({ error: 'Missing Supabase configuration' }, { status: 500 });
+  }
+
+  const { createClient } = await import('@supabase/supabase-js');
+  const serverClient = createClient(supabaseUrl, serviceRoleKey);
+
+  const { data, error } = await serverClient
+    .from('registrations')
+    .select(
+      'id, name, email, phone, weight, race_id, race_name, category, team_size, sws_id, status',
+    )
+    .order('id', { ascending: false });
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+
+  return NextResponse.json({ registrations: data || [] });
+}
+
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
-  const { name, email, phone, weight, race_id, race_name, sws_id } = body || {};
+  const { name, email, phone, weight, race_id, race_name, category, team_size, sws_id } =
+    body || {};
 
   if (
     !name ||
@@ -42,6 +76,8 @@ export async function POST(req: Request) {
         weight: Number(weight),
         race_id: typeof race_id === 'string' ? race_id : null,
         race_name: typeof race_name === 'string' ? race_name : null,
+        category: typeof category === 'string' ? category : null,
+        team_size: team_size && !isNaN(Number(team_size)) ? Number(team_size) : null,
         sws_id: typeof sws_id === 'string' && sws_id.trim() ? sws_id.trim() : null,
         status: 'pending',
       },
@@ -49,7 +85,8 @@ export async function POST(req: Request) {
     .select('id, name, email, race_name')
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error)
+    return NextResponse.json({ error: error?.message || 'Ismeretlen hiba' }, { status: 400 });
 
   // Notify admin about new registration
   try {
@@ -96,7 +133,7 @@ export async function POST(req: Request) {
         rejectFallback = `${siteUrl}/api/accept?id=${encodeURIComponent(id)}&t=${encodeURIComponent(tokenReject)}&action=reject`;
       }
 
-      const text = `Új nevezés:\nNév: ${name}\nEmail: ${email}\nTelefon: ${phone}\nSúly: ${weight}\nVerseny: ${race_name ?? ''}\nSWS ID: ${sws_id ?? ''}${acceptLink ? `\n\nElfogadás: ${acceptLink}` : ''}${rejectLink ? `\nElutasítás: ${rejectLink}` : ''}`;
+      const text = `Új nevezés:\nNév: ${name}\nEmail: ${email}\nTelefon: ${phone}\nSúly: ${weight}\nVerseny: ${race_name ?? ''}\nKategória: ${category ?? ''}${team_size ? `\nCsapat létszám: ${team_size} fő` : ''}\nSWS ID: ${sws_id ?? ''}${acceptLink ? `\n\nElfogadás: ${acceptLink}` : ''}${rejectLink ? `\nElutasítás: ${rejectLink}` : ''}`;
       const html = `<p>Új nevezés érkezett:</p>
         <ul>
           <li><b>Név:</b> ${name}</li>
@@ -104,6 +141,8 @@ export async function POST(req: Request) {
           <li><b>Telefon:</b> ${phone}</li>
           <li><b>Súly:</b> ${weight}</li>
           <li><b>Verseny:</b> ${race_name ?? ''}</li>
+          <li><b>Kategória:</b> ${category ?? ''}</li>
+          ${team_size ? `<li><b>Csapat létszám:</b> ${team_size} fő</li>` : ''}
           <li><b>SWS ID:</b> ${sws_id ?? ''}</li>
         </ul>
         ${

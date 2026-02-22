@@ -1,11 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
-import RegistrationModal from './RegistrationModal';
 import { useI18n } from './i18n/LanguageContext';
 import Image from 'next/image';
 import Link from 'next/link';
-
-// ...existing code...
 
 function JsonLd({ data }: { data: object }) {
   return (
@@ -32,40 +29,20 @@ interface FeaturedRace {
   max_participants: number | null;
   description?: string | null;
   image_url?: string | null;
-  address?: string | null;
-  layout?: string | null;
-  format?: string | null;
-  fee?: string | null;
-  weight_rule?: string | null;
-  deposit?: string | null;
-  deadline?: string | null;
-  rain_rule?: string | null;
-  media_rule?: string | null;
-}
-
-interface RegistrationData {
-  name: string;
-  email: string;
-  phone: string;
-  weight: number;
-  race: string;
-  race_name: string;
-  sws_id?: string;
+  categories?: string[];
 }
 
 export default function Home() {
   useEffect(() => {
     // TikTok API fetch logika eltávolítva, nincs már latestTiktokId változó
   }, []);
-  const { t } = useI18n();
+  useI18n();
   const [race, setRace] = useState<NextRaceSettings>({
     next_race_at: '',
     next_race_desc: '',
     next_race_image_path: '',
   });
-  const [showModal, setShowModal] = useState(false);
   const [featuredRace, setFeaturedRace] = useState<FeaturedRace | null>(null);
-  const [modalRaceId, setModalRaceId] = useState<string>('');
 
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://lamerzoli.vercel.app';
@@ -76,51 +53,20 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // Állítsuk be a következő versenyt statikusan
-    setFeaturedRace({
-      id: 'gokart-gp-6',
-      name: 'Gokart GP 6th Round',
-      location: 'Téglás',
-      date: '2025-09-07T09:00:00+02:00',
-      max_participants: 36,
-      description: 'Jó lesz',
-      image_url: '/Gokart GP 6th Round.jpg',
-      address: null,
-      layout: null,
-      format: null,
-      fee: null,
-      weight_rule: null,
-      deposit: null,
-      deadline: null,
-      rain_rule: null,
-      media_rule: null,
-    });
-  }, []);
-
-  async function handleRegistration(data: RegistrationData) {
-    try {
-      const res = await fetch('/api/registrations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          weight: data.weight,
-          race_id: data.race,
-          race_name: data.race_name,
-          sws_id: data.sws_id,
-        }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body?.error || `HTTP ${res.status}`);
+    // Fetch next race from API
+    async function fetchNextRace() {
+      try {
+        const res = await fetch('/api/next-race');
+        const data = await res.json();
+        if (data.race) {
+          setFeaturedRace(data.race);
+        }
+      } catch (error) {
+        console.error('Failed to fetch next race:', error);
       }
-      alert(t('registration_success'));
-    } catch {
-      alert(t('error_occurred'));
     }
-  }
+    fetchNextRace();
+  }, []);
 
   const eventJsonLd = race.next_race_at
     ? {
@@ -211,7 +157,9 @@ export default function Home() {
         type="button"
         data-open-registration-modal
         style={{ display: 'none' }}
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          if (window.openRegistrationModal) window.openRegistrationModal();
+        }}
       />
       {eventJsonLd && <JsonLd data={eventJsonLd} />}
       <JsonLd data={faqJsonLd} />
@@ -245,7 +193,9 @@ export default function Home() {
             <div className="flex flex-wrap gap-6 justify-center md:justify-start mb-4 md:mb-8">
               <button
                 className="btn btn-primary text-lg px-8 py-4 shadow-xl animate-float"
-                onClick={() => setShowModal(true)}
+                onClick={() => {
+                  if (window.openRegistrationModal) window.openRegistrationModal();
+                }}
               >
                 Nevezek most
               </button>
@@ -284,25 +234,17 @@ export default function Home() {
         </div>
       </section>
 
-      <RegistrationModal
-        open={showModal}
-        onClose={() => setShowModal(false)}
-        onSubmit={handleRegistration}
-        defaultRaceId={modalRaceId}
-        defaultRaceName={featuredRace?.name}
-      />
-
       {/* Fehér csík a hero és következő verseny között */}
 
       {/* Következő verseny */}
       <section id="race" className="section border-t w-full">
         <div className="container w-full max-w-full flex flex-col md:flex-row items-stretch gap-8">
           {/* Bal oldal: csak a kért adatok, BLUR kép háttérrel */}
-          <div className="flex-1 flex flex-col justify-center rounded-xl p-8 shadow-xl relative overflow-hidden">
-            {/* Blur háttérkép: verseny image_url vagy fallback */}
+          <div className="flex-1 flex flex-col justify-center rounded-xl p-10 md:p-12 shadow-xl relative overflow-hidden min-h-[600px]">
+            {/* Blur háttérkép: firstgp */}
             <div className="absolute inset-0 -z-10">
               <Image
-                src={featuredRace?.image_url || '/next.svg'}
+                src="/firstgp.jpg"
                 alt="Következő verseny háttérkép"
                 fill
                 className="object-cover blur-lg brightness-60"
@@ -311,61 +253,107 @@ export default function Home() {
               />
               <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/40 to-brand-3/60 pointer-events-none" />
             </div>
-            <h2 className="text-2xl font-bold mb-2 gradient-text">Következő verseny</h2>
-            <div className="mb-2 text-lg font-semibold">{featuredRace?.name || 'Hamarosan…'}</div>
-            <div className="mb-2 text-base">
-              <span className="font-semibold">Dátum:</span>{' '}
-              {featuredRace?.date
-                ? new Date(featuredRace.date).toLocaleString('hu-HU', {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  })
-                : 'Hamarosan…'}
-            </div>
-            <div className="mb-2 text-base">
-              <span className="font-semibold">Max. férőhely:</span>{' '}
-              {featuredRace?.max_participants || 'Hamarosan…'}
-            </div>
-            <div className="mb-2 text-base">
-              <span className="font-semibold">Lokáció:</span>{' '}
-              {featuredRace?.location || 'Hamarosan…'}
-            </div>
-            <div className="mb-4 text-base">
-              <span className="font-semibold">Leírás:</span>{' '}
-              {featuredRace?.description || 'Hamarosan…'}
-            </div>
-            <div className="flex flex-col md:flex-row gap-2 md:gap-4 mt-2 w-full">
-              <button
-                className="btn btn-primary text-lg px-6 py-3 shadow-lg animate-float w-full md:w-auto"
-                onClick={() => {
-                  setModalRaceId(featuredRace?.id || '');
-                  setShowModal(true);
-                }}
-              >
-                Nevezés
-              </button>
-              <a
-                href="/calendar"
-                className="btn btn-outline text-lg px-6 py-3 shadow-lg animate-float w-full md:w-auto"
-              >
-                Teljes részletek
-              </a>
+
+            {/* Tartalom */}
+            <div className="space-y-6">
+              <div>
+                <p className="text-[#e4eb34] text-sm font-semibold tracking-widest uppercase mb-2">
+                  🏁 Következő esemény
+                </p>
+                <h2 className="text-3xl md:text-4xl font-bold gradient-text leading-tight">
+                  {featuredRace?.name || 'Hamarosan…'}
+                </h2>
+              </div>
+
+              <div className="h-px bg-gradient-to-r from-[#e4eb34] via-white/20 to-transparent"></div>
+
+              <div className="space-y-4">
+                {/* Dátum */}
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 text-2xl">📅</div>
+                  <div>
+                    <p className="text-white/60 text-xs font-semibold uppercase tracking-wide mb-1">
+                      Dátum
+                    </p>
+                    <p className="text-lg font-semibold text-white">
+                      {featuredRace?.date
+                        ? new Date(featuredRace.date).toLocaleString('hu-HU', {
+                            dateStyle: 'medium',
+                            timeStyle: 'short',
+                          })
+                        : 'Hamarosan…'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Lokáció */}
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 text-2xl">📍</div>
+                  <div>
+                    <p className="text-white/60 text-xs font-semibold uppercase tracking-wide mb-1">
+                      Helyszín
+                    </p>
+                    <p className="text-lg font-semibold text-white">
+                      {featuredRace?.location || 'Hamarosan…'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Kategóriák */}
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 text-2xl">🏆</div>
+                  <div className="flex-1">
+                    <p className="text-white/60 text-xs font-semibold uppercase tracking-wide mb-2">
+                      Kategóriák
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {featuredRace?.categories &&
+                      Array.isArray(featuredRace.categories) &&
+                      featuredRace.categories.length > 0 ? (
+                        featuredRace.categories.map((cat, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1.5 bg-[#e4eb34]/20 border border-[#e4eb34]/40 rounded-full text-[#e4eb34] text-sm font-semibold backdrop-blur-sm"
+                          >
+                            {cat}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-white/80">Hamarosan…</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+
+              {/* Gombok */}
+              <div className="pt-2">
+                <button
+                  className="btn btn-primary text-xl px-12 py-4 shadow-lg animate-float w-full font-bold"
+                  onClick={() => {
+                    if (window.openRegistrationModal)
+                      window.openRegistrationModal(featuredRace?.id);
+                  }}
+                >
+                  🎯 Nevezés
+                </button>
+              </div>
             </div>
           </div>
-          {/* Jobb oldal: kép az adatbázisból (races.image_url) */}
+          {/* Jobb oldal: firstgp kép */}
           <div className="flex-1 flex items-center justify-center">
-            {featuredRace?.image_url && (
-              <div className="w-full h-96 relative rounded-xl overflow-hidden shadow-2xl">
-                <Image
-                  src={featuredRace.image_url}
-                  alt="Következő verseny pályafotó"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-              </div>
-            )}
+            <div className="w-full h-[600px] relative rounded-xl overflow-hidden shadow-2xl">
+              <Image
+                src="/firstgp.jpg"
+                alt="Gokart verseny"
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -556,7 +544,9 @@ export default function Home() {
                 </span>
                 <button
                   className="btn btn-primary font-semibold mt-1"
-                  onClick={() => setShowModal(true)}
+                  onClick={() => {
+                    if (window.openRegistrationModal) window.openRegistrationModal();
+                  }}
                   style={{ minWidth: 120 }}
                 >
                   Nevezés

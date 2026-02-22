@@ -45,7 +45,7 @@ export async function DELETE(req: Request) {
 
   const { error } = await serverClient.from('registrations').delete().eq('id', id);
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    return NextResponse.json({ error: error?.message || 'Ismeretlen hiba' }, { status: 400 });
   }
 
   return NextResponse.json({ success: true });
@@ -85,7 +85,8 @@ export async function PATCH(req: Request) {
     .eq('id', id)
     .select('email, name, race_name, status')
     .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error)
+    return NextResponse.json({ error: error?.message || 'Ismeretlen hiba' }, { status: 400 });
 
   // If status changed to accepted/rejected, notify the registrant
   try {

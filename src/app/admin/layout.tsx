@@ -1,10 +1,11 @@
 'use client';
 import AdminHeader from './AdminHeader';
+import { usePathname } from 'next/navigation';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  // Ellenőrizzük, hogy az aktuális oldal az admin login-e
-  const isLoginPage =
-    typeof window !== 'undefined' ? window.location.pathname === '/admin/login' : false;
+  const pathname = usePathname();
+  const isLoginPage = pathname === '/admin/login';
+
   return (
     <>
       {/* Csak akkor jelenjen meg az AdminHeader, ha NEM a login oldalon vagyunk */}

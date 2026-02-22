@@ -1,13 +1,7 @@
-'use client';
-
+import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import Header from './Header';
-import { LanguageProvider } from './i18n/LanguageContext';
-import ConsentBanner from './ConsentBanner';
-import NotificationProvider from './NotificationProvider';
-import RegistrationModal from './RegistrationModal';
-import { useState, useEffect } from 'react';
+import RootLayoutShell from './RootLayoutShell';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -19,46 +13,45 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-declare global {
-  interface Window {
-    openRegistrationModal: () => void;
-  }
-}
+export const metadata: Metadata = {
+  title: {
+    default: 'LámerKart – Téglás Gokart Bajnokság',
+    template: '%s | LámerKart',
+  },
+  description:
+    'Magyarország egyik legjobb gokart bajnoksága Tégláson. Sprint, Endurance és Junior kategóriák. Nevezz be versenyeinkre és kövesd az eredményeket!',
+  keywords: [
+    'gokart',
+    'gokart bajnokság',
+    'téglás',
+    'lamerkart',
+    'verseny',
+    'sprint',
+    'endurance',
+    'junior',
+  ],
+  authors: [{ name: 'LámerKart' }],
+  openGraph: {
+    type: 'website',
+    locale: 'hu_HU',
+    siteName: 'LámerKart',
+    title: 'LámerKart – Téglás Gokart Bajnokság',
+    description:
+      'Magyarország egyik legjobb gokart bajnoksága Tégláson. Sprint, Endurance és Junior kategóriák.',
+  },
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Ellenőrizzük, hogy az admin oldalon vagyunk-e
-  const isAdminRoute =
-    typeof window !== 'undefined' ? window.location.pathname.startsWith('/admin') : false;
-  const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    // Globális függvény, amit a Header bárhonnan hívhat
-    window.openRegistrationModal = () => setShowModal(true);
-  }, []);
-
   return (
     <html lang="hu">
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-white text-black antialiased`}
       >
-        <LanguageProvider initialLang={isAdminRoute ? 'hu' : 'en'}>
-          <NotificationProvider>
-            {/* Csak akkor jelenítjük meg a Header-t, ha NEM admin route-on vagyunk */}
-            {!isAdminRoute && <Header />}
-            {/* RegistrationModal minden oldalon elérhető */}
-            <RegistrationModal
-              open={showModal}
-              onClose={() => setShowModal(false)}
-              onSubmit={() => {}}
-            />
-            {children}
-            <ConsentBanner />
-          </NotificationProvider>
-        </LanguageProvider>
+        <RootLayoutShell>{children}</RootLayoutShell>
       </body>
     </html>
   );

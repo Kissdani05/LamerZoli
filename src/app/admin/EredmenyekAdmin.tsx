@@ -70,7 +70,7 @@ export default function EredmenyekAdmin() {
       upsert: true,
     });
     if (error) {
-      setMessage('Kép feltöltési hiba: ' + error.message);
+      setMessage('Kép feltöltési hiba: ' + (error?.message || 'Ismeretlen hiba'));
     } else {
       const publicUrl = supabase.storage.from('images').getPublicUrl(filePath).data.publicUrl;
       if (publicUrl) {
@@ -121,7 +121,7 @@ export default function EredmenyekAdmin() {
     }));
     const { error: rowsError } = await supabase.from('result_participants').insert(rowsToInsert);
     if (rowsError) {
-      setMessage('Indulók mentése sikertelen: ' + rowsError.message);
+      setMessage('Indulók mentése sikertelen: ' + (rowsError?.message || 'Ismeretlen hiba'));
       setSaving(false);
       return;
     }

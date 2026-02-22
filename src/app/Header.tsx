@@ -1,32 +1,55 @@
 'use client';
 import Link from 'next/link';
-// removed language hook — static Hungarian labels in header
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+
+interface NextRace {
+  id: string;
+  name: string;
+  date: string;
+  location: string;
+}
 
 export default function Header() {
-  // no i18n here — header labels are fixed Hungarian
   const [menuOpen, setMenuOpen] = useState(false);
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const currentPath = usePathname();
+  const [nextRace, setNextRace] = useState<NextRace | null>(null);
+  const [loading, setLoading] = useState(true);
+
   const navItems = [
-    { href: '/calendar', label: 'Naptár' },
-    { href: '/tracks', label: 'Pályák' },
-    { href: '/results', label: 'Eredmények' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/rules', label: 'Szabályok' },
+    { href: '/', label: 'Főoldal', visible: true },
+    { href: '/calendar', label: 'Naptár', visible: true },
+    { href: '/tracks', label: 'Pályák', visible: true },
+    { href: '/results', label: 'Eredmények', visible: true },
+    { href: '/blog', label: 'Blog', visible: false },
+    { href: '/rules', label: 'Szabályok', visible: true },
   ];
 
-  // Egyszerű statikus következő verseny infó (külön kezelve a fő nav-tól)
-  const nextRace = {
-    id: 'gokart-gp-6',
-    name: 'Gokart GP 6th Round',
-    date: '2025-09-07T09:00:00+02:00',
-    location: 'Téglás',
-  } as const;
-  const nextRaceDateStr = new Date(nextRace.date).toLocaleString('hu-HU', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  });
+  // Fetch next race from API
+  useEffect(() => {
+    async function fetchNextRace() {
+      try {
+        const res = await fetch('/api/next-race');
+        const data = await res.json();
+        if (data.race) {
+          setNextRace(data.race);
+        }
+      } catch (error) {
+        console.error('Failed to fetch next race:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchNextRace();
+  }, []);
+
+  const nextRaceDateStr = nextRace?.date
+    ? new Date(nextRace.date).toLocaleString('hu-HU', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      })
+    : '';
 
   return (
     <header className="header glass sticky top-0 z-50">
@@ -57,20 +80,22 @@ export default function Header() {
 
         {/* Asztali: menü */}
         <nav className="hidden md:flex gap-1 md:gap-2 items-center text-sm relative">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`nav-link px-3 py-2 font-semibold relative${
-                currentPath === item.href ? ' active' : ''
-              }`}
-            >
-              {item.label}
-              {currentPath === item.href && (
-                <span className="absolute left-1/2 -translate-x-1/2 bottom-0 h-1 w-5 rounded-full bg-gradient-to-r from-brand-2 via-brand-3 to-brand-2 animate-race-line" />
-              )}
-            </Link>
-          ))}
+          {navItems
+            .filter((item) => item.visible !== false)
+            .map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`nav-link px-3 py-2 font-semibold relative transition-colors${
+                  currentPath === item.href ? ' active' : ''
+                }`}
+              >
+                {item.label}
+                {currentPath === item.href && (
+                  <span className="absolute left-1/2 -translate-x-1/2 bottom-0 h-1 w-5 rounded-full bg-gradient-to-r from-brand-2 via-brand-3 to-brand-2 animate-race-line" />
+                )}
+              </Link>
+            ))}
         </nav>
 
         {/* Jobb: social icons (Nevezés gomb eltávolítva az eredeti headerből) */}
@@ -98,49 +123,53 @@ export default function Header() {
       </div>
 
       {/* Külön következő verseny sáv (független a felső nav-tól) */}
-      <div
-        className="w-full border-t border-white/10 text-white/90 text-xs md:text-sm"
-        role="region"
-        aria-label="Következő verseny"
-      >
-        <div className="container flex flex-col md:flex-row gap-2 md:items-center justify-between py-2 px-3 md:px-4">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-            <span className="font-semibold tracking-wide text-[#e4eb34]">Következő verseny</span>
-            <span className="font-medium">{nextRace.name}</span>
-            <span className="opacity-70">{nextRace.location}</span>
-            <span className="opacity-70">{nextRaceDateStr}</span>
-          </div>
-          <div className="flex gap-2">
-            <button
-              className="btn btn-primary btn-sm px-4 py-1.5 shadow-md"
-              onClick={() => {
-                if (window.openRegistrationModal) window.openRegistrationModal();
-              }}
-            >
-              Nevezés
-            </button>
-            <Link href="#race" className="btn btn-outline btn-sm px-4 py-1.5" prefetch={false}>
-              Részletek
-            </Link>
+      {!loading && nextRace && (
+        <div
+          className="w-full border-t border-white/10 text-white/90 text-xs md:text-sm"
+          role="region"
+          aria-label="Következő verseny"
+        >
+          <div className="container flex flex-col md:flex-row gap-2 md:items-center justify-between py-2 px-3 md:px-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <span className="font-semibold tracking-wide text-[#e4eb34]">Következő verseny</span>
+              <span className="font-medium">{nextRace.name}</span>
+              <span className="opacity-70">{nextRace.location}</span>
+              <span className="opacity-70">{nextRaceDateStr}</span>
+            </div>
+            <div className="flex gap-2">
+              <button
+                className="btn btn-primary btn-sm px-4 py-1.5 shadow-md"
+                onClick={() => {
+                  if (window.openRegistrationModal) window.openRegistrationModal(nextRace.id);
+                }}
+              >
+                Nevezés
+              </button>
+              <Link href="/#race" className="btn btn-outline btn-sm px-4 py-1.5" prefetch={false}>
+                Részletek
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Mobil: lenyíló menü */}
       {menuOpen && (
         <nav className="md:hidden absolute top-full left-0 w-full bg-black/95 text-white flex flex-col items-center py-4 z-50 shadow-lg">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`w-full text-center py-3 font-semibold border-b border-white/10${
-                currentPath === item.href ? ' bg-[#e4eb34] text-black' : ''
-              }`}
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navItems
+            .filter((item) => item.visible !== false)
+            .map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`w-full text-center py-3 font-semibold border-b border-white/10${
+                  currentPath === item.href ? ' bg-[#e4eb34] text-black' : ''
+                }`}
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
           {/* Nevezés gomb eltávolítva a mobil menüből is */}
           <div className="flex gap-2 mt-2">
             <a

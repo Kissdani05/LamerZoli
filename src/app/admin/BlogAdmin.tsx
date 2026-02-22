@@ -68,7 +68,7 @@ export default function BlogAdmin() {
           upsert: true,
         });
       if (uploadError) {
-        setError('Kép feltöltése sikertelen: ' + uploadError.message);
+        setError('Kép feltöltése sikertelen: ' + (uploadError?.message || 'Ismeretlen hiba'));
         setUploading(false);
         return;
       }
@@ -87,7 +87,7 @@ export default function BlogAdmin() {
       },
     ]);
     if (dbError) {
-      setError('Mentés sikertelen: ' + dbError.message);
+      setError('Mentés sikertelen: ' + (dbError?.message || 'Ismeretlen hiba'));
     } else {
       setSuccess(true);
       setTitle('');

@@ -1,6 +1,8 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // export const metadata: Metadata = {
 //   title: 'Versenynaptár – Lámer Zoltán Gokart',
@@ -32,6 +34,7 @@ interface Race {
   location: string;
   date: string;
   description?: string;
+  categories?: string[];
   image_url?: string;
   max_participants?: number;
   address?: string;
@@ -45,16 +48,115 @@ interface Race {
   media_rule?: string;
 }
 
-export default function CalendarPage() {
+function CalendarContent() {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Ensure no time component
-  const [selectedDate, setSelectedDate] = useState<Date | null>(today);
-  const [races, setRaces] = useState<Race[]>([]); // Statikus: nem töltünk DB-ből
-  const [month, setMonth] = useState(today.getMonth());
-  const [year, setYear] = useState(today.getFullYear()); // Add year state
+
+  // Ha van date paraméter az URL-ben, azt használjuk
+  const initialDate = dateParam ? new Date(dateParam) : today;
+  initialDate.setHours(0, 0, 0, 0);
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
+  const [month, setMonth] = useState(initialDate.getMonth());
+  const [year, setYear] = useState(initialDate.getFullYear());
+
+  // URL paraméter változásakor frissítjük a kiválasztott dátumot
   useEffect(() => {
-    setRaces([]);
-  }, []);
+    if (dateParam) {
+      const newDate = new Date(dateParam);
+      newDate.setHours(0, 0, 0, 0);
+      setSelectedDate(newDate);
+      setMonth(newDate.getMonth());
+      setYear(newDate.getFullYear());
+    }
+  }, [dateParam]);
+
+  // Static races for 2026 season
+  const races: Race[] = [
+    {
+      id: '1',
+      name: 'Téglás Gokart GP 2026 1. Forduló',
+      location: 'Téglás F1 Gokartpálya',
+      date: '2026-03-07T10:00:00',
+      categories: ['Sprint', 'Endurance', 'Junior'],
+      address: 'Téglás F1 Gokartpálya',
+    },
+    {
+      id: '2',
+      name: 'Téglás Gokart GP 2026 2. Forduló',
+      location: 'Téglás F1 Gokartpálya',
+      date: '2026-04-03T09:00:00',
+      categories: ['Sprint', 'Endurance', 'Junior'],
+      address: 'Téglás F1 Gokartpálya',
+    },
+    {
+      id: '3',
+      name: 'Téglás Gokart GP 2026 3. Forduló',
+      location: 'Téglás F1 Gokartpálya',
+      date: '2026-05-03T09:00:00',
+      categories: ['Sprint', 'Endurance', 'Junior'],
+      address: 'Téglás F1 Gokartpálya',
+    },
+    {
+      id: '4',
+      name: 'Téglás Gokart GP 2026 4. Forduló',
+      location: 'Téglás F1 Gokartpálya',
+      date: '2026-06-07T09:00:00',
+      categories: ['Sprint', 'Endurance', 'Junior'],
+      address: 'Téglás F1 Gokartpálya',
+    },
+    {
+      id: '5',
+      name: 'Téglás Gokart GP 2026 5. Forduló',
+      location: 'Téglás F1 Gokartpálya',
+      date: '2026-07-12T09:00:00',
+      categories: ['Sprint', 'Endurance', 'Junior'],
+      address: 'Téglás F1 Gokartpálya',
+    },
+    {
+      id: '6',
+      name: 'Téglás Gokart GP 2026 6. Forduló',
+      location: 'Téglás F1 Gokartpálya',
+      date: '2026-08-02T09:00:00',
+      categories: ['Sprint', 'Endurance', 'Junior'],
+      address: 'Téglás F1 Gokartpálya',
+    },
+    {
+      id: '7',
+      name: 'Téglás Gokart GP 2026 7. Forduló',
+      location: 'Téglás F1 Gokartpálya',
+      date: '2026-08-23T09:00:00',
+      categories: ['Sprint', 'Endurance', 'Junior'],
+      address: 'Téglás F1 Gokartpálya',
+    },
+    {
+      id: '8',
+      name: 'Téglás Gokart GP 2026 8. Forduló',
+      location: 'Téglás F1 Gokartpálya',
+      date: '2026-09-13T09:00:00',
+      categories: ['Sprint', 'Endurance', 'Junior'],
+      address: 'Téglás F1 Gokartpálya',
+    },
+    {
+      id: '9',
+      name: 'Téglás Gokart GP 2026 9. Forduló',
+      location: 'Téglás F1 Gokartpálya',
+      date: '2026-10-04T09:00:00',
+      categories: ['Sprint', 'Endurance', 'Junior'],
+      address: 'Téglás F1 Gokartpálya',
+    },
+    {
+      id: '10',
+      name: 'Téglás Gokart GP 2026 10. Forduló',
+      location: 'Téglás F1 Gokartpálya',
+      date: '2026-11-08T09:00:00',
+      categories: ['Sprint', 'Endurance', 'Junior'],
+      address: 'Téglás F1 Gokartpálya',
+    },
+  ];
 
   // Hónap léptetése
   function handlePrevMonth() {
@@ -97,18 +199,20 @@ export default function CalendarPage() {
   const selectedDayStr = selectedDate ? keyFromDate(selectedDate) : '';
   const dayRaces = races.filter((r) => r.date && r.date.startsWith(selectedDayStr));
 
-  // Static highlight days (2025):
-  // Brand (participating): 2025-09-27, 2025-09-28
-  // Blue (organizing): from provided schedule (deduped)
-  const brandDays = new Set(['2025-09-27', '2025-09-28']);
+  // Static highlight days (2026):
+  // Blue (organizing): 2026 race schedule - Teglas Gokart Palya
+  const brandDays = new Set<string>([]);
   const blueDays = new Set([
-    '2025-09-25',
-    '2025-10-12',
-    '2025-10-31',
-    '2025-11-09',
-    '2025-11-29',
-    '2025-12-07',
-    '2025-12-27',
+    '2026-03-07', // 1. forduló - Március 7 SZOMBAT
+    '2026-04-03', // 2. forduló - Április 3 PÉNTEK
+    '2026-05-03', // 3. forduló - Május 3 VASÁRNAP
+    '2026-06-07', // 4. forduló - Június 7 VASÁRNAP
+    '2026-07-12', // 5. forduló - Július 12 VASÁRNAP
+    '2026-08-02', // 6. forduló - Augusztus 2 VASÁRNAP
+    '2026-08-23', // 7. forduló - Augusztus 23 VASÁRNAP
+    '2026-09-13', // 8. forduló - Szeptember 13 VASÁRNAP
+    '2026-10-04', // 9. forduló - Október 4 VASÁRNAP
+    '2026-11-08', // 10. forduló - November 8 VASÁRNAP
   ]);
 
   return (
@@ -173,7 +277,7 @@ export default function CalendarPage() {
             </div>
           </div>
           <div className="grid grid-cols-7 gap-2 mb-2 text-center text-lg font-semibold">
-            {['H', 'K', 'Sz', 'Cs', 'P', 'Sz', 'V'].map((d) => (
+            {['H', 'K', 'Sz', 'Cs', 'P', 'Szo', 'V'].map((d) => (
               <div key={d}>{d}</div>
             ))}
           </div>
@@ -215,83 +319,61 @@ export default function CalendarPage() {
                   {dayRaces.map((race) => (
                     <li
                       key={race.id}
-                      className="glass-card p-6 rounded-xl shadow-lg border-l-4 border-brand-2 border-2 border-white flex flex-col md:flex-row gap-6 items-center"
+                      className="glass-card p-6 rounded-xl shadow-lg border-l-4 border-brand-2 border-2 border-white"
                     >
-                      {race.image_url && (
-                        <div className="w-40 h-40 flex-shrink-0 rounded-xl overflow-hidden shadow-lg mb-4 md:mb-0">
-                          <Image
-                            src={race.image_url}
-                            alt={race.name + ' kép'}
-                            width={160}
-                            height={160}
-                            className="object-cover w-full h-full"
-                          />
+                      <div className="flex flex-col md:flex-row gap-6">
+                        <div className="flex-1 space-y-4">
+                          <div className="font-bold text-2xl mb-4 text-center">{race.name}</div>
+                          <div className="text-center">
+                            <div className="font-semibold text-lg mb-1">Helyszín</div>
+                            <div className="text-base">{race.location}</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="font-semibold text-lg mb-1">Időpont</div>
+                            <div className="text-base">
+                              {race.date ? new Date(race.date).toLocaleDateString('hu-HU') : ''}{' '}
+                              9:00 - 15:00
+                            </div>
+                          </div>
+                          {race.categories && race.categories.length > 0 && (
+                            <div className="text-center">
+                              <div className="font-semibold text-lg mb-1">Kategóriák</div>
+                              <div className="text-base">{race.categories.join(', ')}</div>
+                            </div>
+                          )}
+                          <div className="flex justify-center mt-6">
+                            {race.id === '1' ? (
+                              <Link
+                                href="/#race"
+                                className="btn btn-primary px-8 py-3 shadow-lg text-lg font-bold inline-block"
+                              >
+                                Részletek
+                              </Link>
+                            ) : (
+                              <button
+                                className="btn btn-outline px-8 py-3 shadow-lg text-lg font-semibold cursor-not-allowed opacity-50"
+                                disabled
+                              >
+                                Hamarosan...
+                              </button>
+                            )}
+                          </div>
                         </div>
-                      )}
-                      <div className="flex-1 space-y-2">
-                        <div className="font-bold text-2xl mb-2">{race.name}</div>
-                        <div className="text-base mb-1">
-                          <span className="font-semibold">Helyszín:</span> {race.location}
-                        </div>
-                        <div className="text-base mb-1">
-                          <span className="font-semibold">Dátum és idő:</span>{' '}
-                          {race.date ? new Date(race.date).toLocaleString() : ''}
-                        </div>
-                        {race.max_participants && (
-                          <div className="text-base mb-1">
-                            <span className="font-semibold">Max. férőhely:</span>{' '}
-                            {race.max_participants}
+                        {race.id === '1' ? (
+                          <div className="w-full md:w-80 rounded-xl overflow-hidden shadow-lg border-2 border-white">
+                            <Image
+                              src="/firstgp.jpg"
+                              alt="Teglas Gokart GP 2026 1. Forduló"
+                              width={1200}
+                              height={630}
+                              className="w-full h-auto"
+                            />
                           </div>
-                        )}
-                        {race.address && (
-                          <div className="text-base mb-1">
-                            <span className="font-semibold">Cím:</span> {race.address}
-                          </div>
-                        )}
-                        {race.layout && (
-                          <div className="text-base mb-1">
-                            <span className="font-semibold">Pálya elrendezés:</span> {race.layout}
-                          </div>
-                        )}
-                        {race.format && (
-                          <div className="text-base mb-1">
-                            <span className="font-semibold">Formátum:</span> {race.format}
-                          </div>
-                        )}
-                        {race.fee && (
-                          <div className="text-base mb-1">
-                            <span className="font-semibold">Díj:</span> {race.fee}
-                          </div>
-                        )}
-                        {race.weight_rule && (
-                          <div className="text-base mb-1">
-                            <span className="font-semibold">Súlyszabály:</span> {race.weight_rule}
-                          </div>
-                        )}
-                        {race.deposit && (
-                          <div className="text-base mb-1">
-                            <span className="font-semibold">Előleg:</span> {race.deposit}
-                          </div>
-                        )}
-                        {race.deadline && (
-                          <div className="text-base mb-1">
-                            <span className="font-semibold">Nevezési határidő:</span>{' '}
-                            {race.deadline}
-                          </div>
-                        )}
-                        {race.rain_rule && (
-                          <div className="text-base mb-1">
-                            <span className="font-semibold">Esőszabály:</span> {race.rain_rule}
-                          </div>
-                        )}
-                        {race.media_rule && (
-                          <div className="text-base mb-1">
-                            <span className="font-semibold">Média szabály:</span> {race.media_rule}
-                          </div>
-                        )}
-                        {race.description && (
-                          <div className="text-base text-muted mt-2">
-                            <span className="font-semibold">Leírás:</span> {race.description}
+                        ) : (
+                          <div className="w-full md:w-80 h-64 rounded-xl shadow-lg border-2 border-white bg-gray-300 dark:bg-gray-700 flex items-center justify-center">
+                            <span className="text-2xl font-semibold text-gray-600 dark:text-gray-400">
+                              Hamarosan...
+                            </span>
                           </div>
                         )}
                       </div>
@@ -323,5 +405,19 @@ export default function CalendarPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CalendarPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <span className="text-white">Betöltés...</span>
+        </div>
+      }
+    >
+      <CalendarContent />
+    </Suspense>
   );
 }

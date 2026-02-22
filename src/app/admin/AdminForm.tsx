@@ -60,6 +60,8 @@ export default function AdminForm() {
   const [featuredRaceId, setFeaturedRaceId] = useState('');
   const [featuredRace, setFeaturedRace] = useState<FeaturedRace | null>(null);
   const [savingFeatured, setSavingFeatured] = useState(false);
+  const [loadingRaces, setLoadingRaces] = useState(false);
+  const [raceError, setRaceError] = useState<string | null>(null);
   // Per-cell inline editing state
   const [cellEditing, setCellEditing] = useState<CellEditingState>({});
   const [cellDrafts, setCellDrafts] = useState<CellDraftsState>({});
@@ -67,14 +69,28 @@ export default function AdminForm() {
 
   useEffect(() => {
     // Versenyek lekérése
-    supabase
-      .from('races')
-      .select('id, name')
-      .then(({ data }) => {
-        if (data) {
-          setRaces(data);
+    const fetchRaces = async () => {
+      setLoadingRaces(true);
+      setRaceError(null);
+      try {
+        const { data, error } = await supabase.from('races').select('id, name');
+        if (error) {
+          console.error('Races fetch error:', error);
+          setRaces([]);
+          setRaceError('Nem sikerült betölteni a versenyeket');
+        } else {
+          setRaces(data || []);
+          setRaceError(null);
         }
-      });
+      } catch (err) {
+        console.error('Races fetch exception:', err);
+        setRaces([]);
+        setRaceError('Hálózati hiba az adatok betöltésekor');
+      } finally {
+        setLoadingRaces(false);
+      }
+    };
+    fetchRaces();
   }, []);
 
   useEffect(() => {
@@ -103,14 +119,25 @@ export default function AdminForm() {
 
   useEffect(() => {
     if (featuredRaceId) {
-      supabase
-        .from('races')
-        .select('*')
-        .eq('id', featuredRaceId)
-        .single()
-        .then(({ data }) => {
-          setFeaturedRace(data || null);
-        });
+      const fetchFeaturedRace = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('races')
+            .select('*')
+            .eq('id', featuredRaceId)
+            .single();
+          if (error) {
+            console.error('Featured race fetch error:', error);
+            setFeaturedRace(null);
+          } else {
+            setFeaturedRace(data || null);
+          }
+        } catch (err) {
+          console.error('Featured race fetch exception:', err);
+          setFeaturedRace(null);
+        }
+      };
+      fetchFeaturedRace();
     } else {
       setFeaturedRace(null);
     }
@@ -118,16 +145,22 @@ export default function AdminForm() {
 
   // Az admin oldal betöltésekor lekérjük a site_settings.featured_race_id-t, hogy a select-ben is az aktuális kiemelt verseny legyen kiválasztva
   useEffect(() => {
-    async function fetchFeaturedRaceId() {
-      const { data } = await supabase
-        .from('site_settings')
-        .select('featured_race_id')
-        .eq('id', 1)
-        .single();
-      if (data?.featured_race_id) {
-        setFeaturedRaceId(data.featured_race_id);
+    const fetchFeaturedRaceId = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('site_settings')
+          .select('featured_race_id')
+          .eq('id', 1)
+          .single();
+        if (error) {
+          console.error('Featured race ID fetch error:', error);
+        } else if (data?.featured_race_id) {
+          setFeaturedRaceId(data.featured_race_id);
+        }
+      } catch (err) {
+        console.error('Featured race ID fetch exception:', err);
       }
-    }
+    };
     fetchFeaturedRaceId();
   }, []);
 
@@ -142,7 +175,7 @@ export default function AdminForm() {
       upsert: true,
     });
     if (error) {
-      setMessage(t('img_upload_error') + ': ' + error.message);
+      setMessage(t('img_upload_error') + ': ' + (error?.message || 'Ismeretlen hiba'));
     } else {
       const publicUrl = supabase.storage.from('images').getPublicUrl(filePath).data.publicUrl;
       if (publicUrl) {
@@ -246,7 +279,7 @@ export default function AdminForm() {
         .eq('race_id', selectedRaceId);
       if (error) {
         console.error('Refetch error:', error);
-        setMessage(t('refresh_error') + ': ' + error.message);
+        setMessage(t('refresh_error') + ': ' + (error?.message || 'Ismeretlen hiba'));
         setRegistrations([]);
         setRegistrationCount(0);
       } else {
@@ -360,7 +393,7 @@ export default function AdminForm() {
         .eq('race_id', selectedRaceId);
       if (error) {
         console.error('Refetch error:', error);
-        setMessage(t('refresh_error') + ': ' + error.message);
+        setMessage(t('refresh_error') + ': ' + (error?.message || 'Ismeretlen hiba'));
       } else {
         setRegistrations((data as RegistrationRow[]) || []);
         setRegistrationCount(data ? data.length : 0);
@@ -371,14 +404,44 @@ export default function AdminForm() {
 
   return (
     <>
+      {raceError && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 flex justify-between items-center">
+          <span>{raceError}</span>
+          <button
+            onClick={() => {
+              const fetchRaces = async () => {
+                setLoadingRaces(true);
+                try {
+                  const { data, error } = await supabase.from('races').select('id, name');
+                  if (error) {
+                    setRaces([]);
+                  } else {
+                    setRaces(data || []);
+                    setRaceError(null);
+                  }
+                } catch {
+                  setRaces([]);
+                } finally {
+                  setLoadingRaces(false);
+                }
+              };
+              fetchRaces();
+            }}
+            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Újra próbál
+          </button>
+        </div>
+      )}
       <label className="font-semibold" htmlFor="raceSelect">
-        {t('select_race')}
+        {t('select_race')} {loadingRaces && <span className="text-gray-500">(betöltés...)</span>}
       </label>
       <select
         id="raceSelect"
         className="select mb-4 max-w-xs"
         value={selectedRaceId}
         onChange={(e) => setSelectedRaceId(e.target.value)}
+        disabled={loadingRaces}
       >
         <option value="">{t('select_placeholder')}</option>
         {races.map((r) => (
@@ -396,6 +459,7 @@ export default function AdminForm() {
         className="select mb-2 max-w-xs"
         value={featuredRaceId}
         onChange={(e) => setFeaturedRaceId(e.target.value)}
+        disabled={loadingRaces}
       >
         <option value="">{t('select_placeholder')}</option>
         {races.map((r) => (
