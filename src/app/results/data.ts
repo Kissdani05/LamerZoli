@@ -125,7 +125,7 @@ export const races: RaceResult[] = [
       },
       {
         categoryId: 'endurance',
-        categoryName: 'Endurance',
+        categoryName: 'Csapatverseny',
         results: [
           { position: 1, driverName: 'Kovács Marcell - Ádám Kristóf', entryOrder: 0, points: 219 },
           { position: 2, driverName: 'Forgács Dávid - Tóth Tamás', entryOrder: 81, points: 138 },
