@@ -244,7 +244,7 @@ export default function Home() {
             {/* Blur háttérkép: firstgp */}
             <div className="absolute inset-0 -z-10">
               <Image
-                src="/firstgp.jpg"
+                src="/secondgp.jpg"
                 alt="Következő verseny háttérkép"
                 fill
                 className="object-cover blur-lg brightness-60"
@@ -346,7 +346,7 @@ export default function Home() {
           <div className="flex-1 flex items-center justify-center">
             <div className="w-full h-[600px] relative rounded-xl overflow-hidden shadow-2xl">
               <Image
-                src="/firstgp.jpg"
+                src="/secondgp.jpg"
                 alt="Gokart verseny"
                 fill
                 className="object-contain"
