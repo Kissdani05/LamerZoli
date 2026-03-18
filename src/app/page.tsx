@@ -387,7 +387,7 @@ export default function Home() {
                       <div className="rounded-full overflow-hidden border-4 border-white shadow-lg w-32 h-32 flex items-center justify-center bg-black">
                         <Image
                           src="/zoli_a.png"
-                          alt="Lámer Zoltán arc"
+                          alt="Lamer Zoltán arc"
                           width={128}
                           height={128}
                           className="object-cover w-full h-full"
