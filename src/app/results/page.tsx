@@ -7,6 +7,7 @@ export default function ResultsPage() {
   const [selectedYear, setSelectedYear] = useState<number>(2026);
   const [selectedRaceId, setSelectedRaceId] = useState<string>('');
   const [activeCategoryId, setActiveCategoryId] = useState<string>('');
+  const [absoluteSubTab, setAbsoluteSubTab] = useState<'race' | 'timed'>('race');
 
   // Szűrd meg az évnek megfelelő versenyeket
   const filteredRaces = useMemo(() => {
@@ -138,39 +139,305 @@ export default function ResultsPage() {
           </div>
         </div>
       )}
-      {/* Eredmény tábla */}
+      {/* Eredmény terület */}
       {selectedRace && activeCategory && (
-        <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl bg-[#0f1012]">
-          <div className="grid grid-cols-12 bg-[#181a1d] text-[11px] md:text-xs uppercase tracking-wide font-semibold text-white/80">
-            <div className="col-span-1 px-3 py-2">Pos</div>
-            <div className="col-span-4 md:col-span-5 px-3 py-2">Pilóta</div>
-            <div className="col-span-2 px-3 py-2 md:col-span-2">Pontok</div>
-            <div className="col-span-2 px-3 py-2 hidden md:block">Lemaradás</div>
-            <div className="col-span-3 md:col-span-2 px-3 py-2">Kategória</div>
-          </div>
-          <div className="divide-y divide-white/5">
-            {activeCategory.results.map((res) => (
-              <div
-                key={res.position + res.driverName}
-                className="grid grid-cols-12 text-sm md:text-[15px] items-center hover:bg-white/5 transition"
-              >
-                <div className="col-span-1 px-3 py-2 font-bold text-[#e4eb34]">{res.position}</div>
-                <div className="col-span-4 md:col-span-5 px-3 py-2 font-medium">
-                  {res.driverName}
+        <>
+          {/* OVERALL: komplex táblázat fordulónkénti eredményekkel */}
+          {activeCategory.displayMode === 'overall' &&
+            activeCategory.overallResults &&
+            activeCategory.overallResults.length > 0 &&
+            (() => {
+              const topPoints = activeCategory.overallResults![0].totalPoints;
+              return (
+                <div className="overflow-x-auto rounded-xl border border-white/10 shadow-xl bg-[#0f1012]">
+                  <table className="min-w-full text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-[#181a1d] text-[11px] uppercase tracking-wide font-semibold text-white/80">
+                        <th className="px-3 py-2 text-left w-8 sticky left-0 bg-[#181a1d]">#</th>
+                        <th className="px-3 py-2 text-left min-w-[160px] sticky left-8 bg-[#181a1d]">
+                          Név
+                        </th>
+                        {activeCategory.roundLabels?.map((label) => (
+                          <th key={label} className="px-3 py-2 text-center w-16">
+                            {label}
+                          </th>
+                        ))}
+                        <th className="px-3 py-2 text-center w-16">Pont</th>
+                        <th className="px-3 py-2 text-center w-20">Lemaradás</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                      {activeCategory.overallResults.map((entry) => (
+                        <tr key={entry.position} className="hover:bg-white/5 transition">
+                          <td className="px-3 py-2 font-bold text-[#e4eb34] sticky left-0 bg-[#0f1012]">
+                            {entry.position}
+                          </td>
+                          <td className="px-3 py-2 font-medium sticky left-8 bg-[#0f1012] whitespace-nowrap">
+                            {entry.driverName}
+                          </td>
+                          {activeCategory.roundLabels?.map((_, i) => (
+                            <td
+                              key={i}
+                              className="px-3 py-2 text-center text-white/60 font-mono text-xs whitespace-nowrap"
+                            >
+                              {entry.rounds[i]?.detail || '–'}
+                            </td>
+                          ))}
+                          <td className="px-3 py-2 text-center font-semibold text-[#e4eb34]">
+                            {entry.totalPoints}
+                          </td>
+                          <td className="px-3 py-2 text-center font-mono text-white/60 text-xs">
+                            {entry.totalPoints === topPoints
+                              ? '–'
+                              : `-${topPoints - entry.totalPoints} pt`}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="col-span-2 px-3 py-2 md:col-span-2 font-semibold text-[#e4eb34]">
-                  {res.points}
+              );
+            })()}
+
+          {/* ABSZOLÚT: időmérő / verseny alftabok */}
+          {activeCategory.displayMode === 'absolute' && (
+            <div>
+              {/* Alftab választó: Időmérő csak akkor, ha van adat */}
+              <div className="flex gap-2 mb-5">
+                <button
+                  onClick={() => setAbsoluteSubTab('race')}
+                  className={`px-5 py-2 rounded-full text-sm font-bold tracking-wide transition border ${
+                    absoluteSubTab === 'race'
+                      ? 'bg-[#e4eb34] text-black border-[#e4eb34]'
+                      : 'bg-[#1f2023] text-white border-white/10 hover:border-[#e4eb34]/60'
+                  }`}
+                >
+                  Verseny
+                </button>
+                {activeCategory.timedResults && activeCategory.timedResults.length > 0 && (
+                  <button
+                    onClick={() => setAbsoluteSubTab('timed')}
+                    className={`px-5 py-2 rounded-full text-sm font-bold tracking-wide transition border ${
+                      absoluteSubTab === 'timed'
+                        ? 'bg-[#e4eb34] text-black border-[#e4eb34]'
+                        : 'bg-[#1f2023] text-white border-white/10 hover:border-[#e4eb34]/60'
+                    }`}
+                  >
+                    Időmérő
+                  </button>
+                )}
+              </div>
+
+              {/* Verseny eredmények */}
+              {absoluteSubTab === 'race' &&
+                activeCategory.raceResults &&
+                activeCategory.raceResults.length > 0 && (
+                  <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl bg-[#0f1012]">
+                    <div className="grid grid-cols-12 bg-[#181a1d] text-[11px] md:text-xs uppercase tracking-wide font-semibold text-white/80">
+                      <div className="col-span-1 px-3 py-2">Pos</div>
+                      <div className="col-span-4 md:col-span-5 px-3 py-2">Pilóta</div>
+                      <div className="col-span-2 px-3 py-2">Pontok</div>
+                      <div className="col-span-2 px-3 py-2 hidden md:block">Lemaradás</div>
+                      <div className="col-span-3 md:col-span-2 px-3 py-2">Poz. váltás</div>
+                    </div>
+                    <div className="divide-y divide-white/5">
+                      {activeCategory.raceResults.map((res) => (
+                        <div
+                          key={res.position}
+                          className="grid grid-cols-12 text-sm md:text-[15px] items-center hover:bg-white/5 transition"
+                        >
+                          <div className="col-span-1 px-3 py-2 font-bold text-[#e4eb34]">
+                            {res.position}
+                          </div>
+                          <div className="col-span-4 md:col-span-5 px-3 py-2 font-medium">
+                            {res.driverName}
+                          </div>
+                          <div className="col-span-2 px-3 py-2 font-semibold text-[#e4eb34]">
+                            {res.points}
+                          </div>
+                          <div className="col-span-2 px-3 py-2 hidden md:block text-white/60 font-mono">
+                            {res.gap || '—'}
+                          </div>
+                          <div className="col-span-3 md:col-span-2 px-3 py-2">
+                            {res.positionChange > 0 && (
+                              <span className="inline-flex items-center gap-1 text-emerald-400 font-bold">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                  className="w-4 h-4"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                {res.positionChange}
+                              </span>
+                            )}
+                            {res.positionChange < 0 && (
+                              <span className="inline-flex items-center gap-1 text-red-400 font-bold">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                  className="w-4 h-4"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                {Math.abs(res.positionChange)}
+                              </span>
+                            )}
+                            {res.positionChange === 0 && (
+                              <span className="text-white/40 font-bold">—</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+              {/* Időmérő eredmények */}
+              {absoluteSubTab === 'timed' &&
+                activeCategory.timedResults &&
+                activeCategory.timedResults.length > 0 && (
+                  <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl bg-[#0f1012]">
+                    <div className="grid grid-cols-12 bg-[#181a1d] text-[11px] md:text-xs uppercase tracking-wide font-semibold text-white/80">
+                      <div className="col-span-1 px-3 py-2">Pos</div>
+                      <div className="col-span-5 md:col-span-6 px-3 py-2">Pilóta</div>
+                      <div className="col-span-3 px-3 py-2">Idő</div>
+                      <div className="col-span-3 md:col-span-2 px-3 py-2">Lemaradás</div>
+                    </div>
+                    <div className="divide-y divide-white/5">
+                      {activeCategory.timedResults.map((res) => (
+                        <div
+                          key={res.position}
+                          className="grid grid-cols-12 text-sm md:text-[15px] items-center hover:bg-white/5 transition"
+                        >
+                          <div className="col-span-1 px-3 py-2 font-bold text-[#e4eb34]">
+                            {res.position}
+                          </div>
+                          <div className="col-span-5 md:col-span-6 px-3 py-2 font-medium">
+                            {res.driverName}
+                          </div>
+                          <div className="col-span-3 px-3 py-2 font-mono font-semibold text-white">
+                            {res.time}
+                          </div>
+                          <div
+                            className={`col-span-3 md:col-span-2 px-3 py-2 font-mono ${res.gap === '-' ? 'text-[#e4eb34] font-bold' : 'text-white/60'}`}
+                          >
+                            {res.gap}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+            </div>
+          )}
+
+          {/* POINTS: pos + pilóta + pontok + lemaradás */}
+          {activeCategory.displayMode === 'points' && activeCategory.results.length > 0 && (
+            <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl bg-[#0f1012]">
+              <div className="grid grid-cols-12 bg-[#181a1d] text-[11px] md:text-xs uppercase tracking-wide font-semibold text-white/80">
+                <div className="col-span-1 px-3 py-2">Pos</div>
+                <div className="col-span-5 md:col-span-7 px-3 py-2">Pilóta</div>
+                <div className="col-span-3 md:col-span-2 px-3 py-2">Pontok</div>
+                <div className="col-span-3 md:col-span-2 px-3 py-2">Lemaradás</div>
+              </div>
+              <div className="divide-y divide-white/5">
+                {activeCategory.results.map((res) => (
+                  <div
+                    key={res.position + res.driverName}
+                    className="grid grid-cols-12 text-sm md:text-[15px] items-center hover:bg-white/5 transition"
+                  >
+                    <div className="col-span-1 px-3 py-2 font-bold text-[#e4eb34]">
+                      {res.position}
+                    </div>
+                    <div className="col-span-5 md:col-span-7 px-3 py-2 font-medium">
+                      {res.driverName}
+                    </div>
+                    <div className="col-span-3 md:col-span-2 px-3 py-2 font-semibold text-[#e4eb34]">
+                      {res.points}
+                    </div>
+                    <div className="col-span-3 md:col-span-2 px-3 py-2 text-white/60 font-mono">
+                      {res.entryOrder === 0 ? '–' : `-${res.entryOrder} pt`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* SIMPLE: csak helyezés + név */}
+          {activeCategory.displayMode === 'simple' && activeCategory.results.length > 0 && (
+            <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl bg-[#0f1012]">
+              <div className="grid grid-cols-12 bg-[#181a1d] text-[11px] md:text-xs uppercase tracking-wide font-semibold text-white/80">
+                <div className="col-span-2 md:col-span-1 px-3 py-2">Pos</div>
+                <div className="col-span-10 md:col-span-11 px-3 py-2">Pilóta</div>
+              </div>
+              <div className="divide-y divide-white/5">
+                {activeCategory.results.map((res) => (
+                  <div
+                    key={res.position + res.driverName}
+                    className="grid grid-cols-12 text-sm md:text-[15px] items-center hover:bg-white/5 transition"
+                  >
+                    <div className="col-span-2 md:col-span-1 px-3 py-3 font-bold text-[#e4eb34]">
+                      {res.position}
+                    </div>
+                    <div className="col-span-10 md:col-span-11 px-3 py-3 font-medium">
+                      {res.driverName}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* FULL: teljes táblázat pontokkal */}
+          {(!activeCategory.displayMode || activeCategory.displayMode === 'full') &&
+            activeCategory.results.length > 0 && (
+              <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl bg-[#0f1012]">
+                <div className="grid grid-cols-12 bg-[#181a1d] text-[11px] md:text-xs uppercase tracking-wide font-semibold text-white/80">
+                  <div className="col-span-1 px-3 py-2">Pos</div>
+                  <div className="col-span-4 md:col-span-5 px-3 py-2">Pilóta</div>
+                  <div className="col-span-2 px-3 py-2 md:col-span-2">Pontok</div>
+                  <div className="col-span-2 px-3 py-2 hidden md:block">Lemaradás</div>
+                  <div className="col-span-3 md:col-span-2 px-3 py-2">Kategória</div>
                 </div>
-                <div className="col-span-2 px-3 py-2 hidden md:block text-white/70">
-                  -{res.entryOrder}
-                </div>
-                <div className="col-span-3 md:col-span-2 px-3 py-2 text-white/70">
-                  {activeCategory.categoryName}
+                <div className="divide-y divide-white/5">
+                  {activeCategory.results.map((res) => (
+                    <div
+                      key={res.position + res.driverName}
+                      className="grid grid-cols-12 text-sm md:text-[15px] items-center hover:bg-white/5 transition"
+                    >
+                      <div className="col-span-1 px-3 py-2 font-bold text-[#e4eb34]">
+                        {res.position}
+                      </div>
+                      <div className="col-span-4 md:col-span-5 px-3 py-2 font-medium">
+                        {res.driverName}
+                      </div>
+                      <div className="col-span-2 px-3 py-2 md:col-span-2 font-semibold text-[#e4eb34]">
+                        {res.points}
+                      </div>
+                      <div className="col-span-2 px-3 py-2 hidden md:block text-white/70">
+                        -{res.entryOrder}
+                      </div>
+                      <div className="col-span-3 md:col-span-2 px-3 py-2 text-white/70">
+                        {activeCategory.categoryName}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+            )}
+        </>
       )}
       {/* SEO strukturált adatok */}
       {selectedRace && (
