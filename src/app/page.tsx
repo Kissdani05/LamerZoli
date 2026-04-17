@@ -241,10 +241,10 @@ export default function Home() {
         <div className="container w-full max-w-full flex flex-col md:flex-row items-stretch gap-8">
           {/* Bal oldal: csak a kért adatok, BLUR kép háttérrel */}
           <div className="flex-1 flex flex-col justify-center rounded-xl p-10 md:p-12 shadow-xl relative overflow-hidden min-h-[600px]">
-            {/* Blur háttérkép: firstgp */}
+            {/* Blur háttérkép: thirdgp */}
             <div className="absolute inset-0 -z-10">
               <Image
-                src="/secondgp.jpg"
+                src="/thirdgp.png"
                 alt="Következő verseny háttérkép"
                 fill
                 className="object-cover blur-lg brightness-60"
@@ -342,11 +342,11 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {/* Jobb oldal: firstgp kép */}
+          {/* Jobb oldal: thirdgp kép */}
           <div className="flex-1 flex items-center justify-center">
             <div className="w-full h-[600px] relative rounded-xl overflow-hidden shadow-2xl">
               <Image
-                src="/secondgp.jpg"
+                src="/thirdgp.png"
                 alt="Gokart verseny"
                 fill
                 className="object-contain"
