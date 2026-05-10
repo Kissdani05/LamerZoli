@@ -1,13 +1,13 @@
 'use client';
 // F1 stílusú eredmény nézet statikus teszt adatokkal
 import { useState, useMemo } from 'react';
-import { races } from './data';
+import { races, type RaceEntry, type TimedResult } from './data';
 
 export default function ResultsPage() {
   const [selectedYear, setSelectedYear] = useState<number>(2026);
   const [selectedRaceId, setSelectedRaceId] = useState<string>('');
   const [activeCategoryId, setActiveCategoryId] = useState<string>('');
-  const [absoluteSubTab, setAbsoluteSubTab] = useState<'race' | 'timed'>('race');
+  const [selectedSubTabIndex, setSelectedSubTabIndex] = useState<number>(0);
 
   // Szűrd meg az évnek megfelelő versenyeket
   const filteredRaces = useMemo(() => {
@@ -34,6 +34,30 @@ export default function ResultsPage() {
       selectedRace?.categories[0],
     [selectedRace, activeCategoryId],
   );
+
+  const hasDualSubTabs = !!activeCategory?.raceTabs && activeCategory.raceTabs.length === 2;
+  const hasAbsoluteTabs = !!activeCategory?.absoluteTabs && activeCategory.absoluteTabs.length > 0;
+  const legacyAbsoluteTabs =
+    activeCategory?.displayMode === 'absolute' && !hasAbsoluteTabs
+      ? [
+          ...(activeCategory.raceResults?.length
+            ? [{ label: 'Verseny', kind: 'race' as const, results: activeCategory.raceResults }]
+            : []),
+          ...(activeCategory.timedResults?.length
+            ? [{ label: 'Időmérő', kind: 'timed' as const, results: activeCategory.timedResults }]
+            : []),
+        ]
+      : [];
+  const categoryTabs =
+    activeCategory?.absoluteTabs ||
+    activeCategory?.raceTabs?.map((tab) => ({ ...tab, kind: 'race' as const })) ||
+    legacyAbsoluteTabs;
+  const activeSubTabIndex = Math.min(selectedSubTabIndex, Math.max(categoryTabs.length - 1, 0));
+  const activeTab = categoryTabs[activeSubTabIndex];
+  const hidePositionChangeColumn =
+    selectedRace?.id === 'gokart-gp-2026-3' &&
+    ['semipro', 'junior', 'rookie'].includes(activeCategory?.categoryId || '') &&
+    activeTab?.kind === 'race';
 
   if (selectedRace && !selectedRace.categories.some((c) => c.categoryId === activeCategoryId)) {
     setActiveCategoryId(selectedRace.categories[0].categoryId);
@@ -199,65 +223,57 @@ export default function ResultsPage() {
               );
             })()}
 
-          {/* ABSZOLÚT: időmérő / verseny alftabok */}
-          {activeCategory.displayMode === 'absolute' && (
+          {/* ABSZOLÚT / kétfutamos: alftabok */}
+          {(activeCategory.displayMode === 'absolute' || hasDualSubTabs || hasAbsoluteTabs) && (
             <div>
-              {/* Alftab választó: Időmérő csak akkor, ha van adat */}
-              <div className="flex gap-2 mb-5">
-                <button
-                  onClick={() => setAbsoluteSubTab('race')}
-                  className={`px-5 py-2 rounded-full text-sm font-bold tracking-wide transition border ${
-                    absoluteSubTab === 'race'
-                      ? 'bg-[#e4eb34] text-black border-[#e4eb34]'
-                      : 'bg-[#1f2023] text-white border-white/10 hover:border-[#e4eb34]/60'
-                  }`}
-                >
-                  Verseny
-                </button>
-                {activeCategory.timedResults && activeCategory.timedResults.length > 0 && (
+              {/* Alftab választó */}
+              <div className="flex flex-wrap gap-2 mb-5">
+                {categoryTabs.map((tab, index) => (
                   <button
-                    onClick={() => setAbsoluteSubTab('timed')}
+                    key={tab.label}
+                    onClick={() => setSelectedSubTabIndex(index)}
                     className={`px-5 py-2 rounded-full text-sm font-bold tracking-wide transition border ${
-                      absoluteSubTab === 'timed'
+                      activeSubTabIndex === index
                         ? 'bg-[#e4eb34] text-black border-[#e4eb34]'
                         : 'bg-[#1f2023] text-white border-white/10 hover:border-[#e4eb34]/60'
                     }`}
                   >
-                    Időmérő
+                    {tab.label}
                   </button>
-                )}
+                ))}
               </div>
 
               {/* Verseny eredmények */}
-              {absoluteSubTab === 'race' &&
-                activeCategory.raceResults &&
-                activeCategory.raceResults.length > 0 && (
-                  <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl bg-[#0f1012]">
-                    <div className="grid grid-cols-12 bg-[#181a1d] text-[11px] md:text-xs uppercase tracking-wide font-semibold text-white/80">
-                      <div className="col-span-1 px-3 py-2">Pos</div>
-                      <div className="col-span-4 md:col-span-5 px-3 py-2">Pilóta</div>
-                      <div className="col-span-2 px-3 py-2">Pontok</div>
-                      <div className="col-span-2 px-3 py-2 hidden md:block">Lemaradás</div>
+              {activeTab?.kind === 'race' && (
+                <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl bg-[#0f1012]">
+                  <div
+                    className={`grid bg-[#181a1d] text-[11px] md:text-xs uppercase tracking-wide font-semibold text-white/80 ${hidePositionChangeColumn ? 'grid-cols-10' : 'grid-cols-12'}`}
+                  >
+                    <div className="col-span-1 px-3 py-2">Pos</div>
+                    <div className="col-span-5 px-3 py-2">Pilóta</div>
+                    <div className="col-span-2 px-3 py-2">Pontok</div>
+                    <div className="col-span-2 px-3 py-2 hidden md:block">Lemaradás</div>
+                    {!hidePositionChangeColumn && (
                       <div className="col-span-3 md:col-span-2 px-3 py-2">Poz. váltás</div>
-                    </div>
-                    <div className="divide-y divide-white/5">
-                      {activeCategory.raceResults.map((res) => (
-                        <div
-                          key={res.position}
-                          className="grid grid-cols-12 text-sm md:text-[15px] items-center hover:bg-white/5 transition"
-                        >
-                          <div className="col-span-1 px-3 py-2 font-bold text-[#e4eb34]">
-                            {res.position}
-                          </div>
-                          <div className="col-span-4 md:col-span-5 px-3 py-2 font-medium">
-                            {res.driverName}
-                          </div>
-                          <div className="col-span-2 px-3 py-2 font-semibold text-[#e4eb34]">
-                            {res.points}
-                          </div>
-                          <div className="col-span-2 px-3 py-2 hidden md:block text-white/60 font-mono">
-                            {res.gap || '—'}
-                          </div>
+                    )}
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    {(activeTab.results as RaceEntry[]).map((res) => (
+                      <div
+                        key={`${res.position}-${res.driverName}-${activeSubTabIndex}`}
+                        className={`grid text-sm md:text-[15px] items-center hover:bg-white/5 transition ${hidePositionChangeColumn ? 'grid-cols-10' : 'grid-cols-12'}`}
+                      >
+                        <div className="col-span-1 px-3 py-2 font-bold text-[#e4eb34]">
+                          {res.position}
+                        </div>
+                        <div className="col-span-5 px-3 py-2 font-medium">{res.driverName}</div>
+                        <div className="col-span-2 px-3 py-2 font-semibold text-[#e4eb34]">
+                          {res.points}
+                        </div>
+                        <div className="col-span-2 px-3 py-2 hidden md:block text-white/60 font-mono">
+                          {res.gap || '—'}
+                        </div>
+                        {!hidePositionChangeColumn && (
                           <div className="col-span-3 md:col-span-2 px-3 py-2">
                             {res.positionChange > 0 && (
                               <span className="inline-flex items-center gap-1 text-emerald-400 font-bold">
@@ -297,48 +313,47 @@ export default function ResultsPage() {
                               <span className="text-white/40 font-bold">—</span>
                             )}
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                )}
+                </div>
+              )}
 
               {/* Időmérő eredmények */}
-              {absoluteSubTab === 'timed' &&
-                activeCategory.timedResults &&
-                activeCategory.timedResults.length > 0 && (
-                  <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl bg-[#0f1012]">
-                    <div className="grid grid-cols-12 bg-[#181a1d] text-[11px] md:text-xs uppercase tracking-wide font-semibold text-white/80">
-                      <div className="col-span-1 px-3 py-2">Pos</div>
-                      <div className="col-span-5 md:col-span-6 px-3 py-2">Pilóta</div>
-                      <div className="col-span-3 px-3 py-2">Idő</div>
-                      <div className="col-span-3 md:col-span-2 px-3 py-2">Lemaradás</div>
-                    </div>
-                    <div className="divide-y divide-white/5">
-                      {activeCategory.timedResults.map((res) => (
-                        <div
-                          key={res.position}
-                          className="grid grid-cols-12 text-sm md:text-[15px] items-center hover:bg-white/5 transition"
-                        >
-                          <div className="col-span-1 px-3 py-2 font-bold text-[#e4eb34]">
-                            {res.position}
-                          </div>
-                          <div className="col-span-5 md:col-span-6 px-3 py-2 font-medium">
-                            {res.driverName}
-                          </div>
-                          <div className="col-span-3 px-3 py-2 font-mono font-semibold text-white">
-                            {res.time}
-                          </div>
-                          <div
-                            className={`col-span-3 md:col-span-2 px-3 py-2 font-mono ${res.gap === '-' ? 'text-[#e4eb34] font-bold' : 'text-white/60'}`}
-                          >
-                            {res.gap}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+              {activeTab?.kind === 'timed' && (
+                <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl bg-[#0f1012]">
+                  <div className="grid grid-cols-12 bg-[#181a1d] text-[11px] md:text-xs uppercase tracking-wide font-semibold text-white/80">
+                    <div className="col-span-1 px-3 py-2">Pos</div>
+                    <div className="col-span-5 md:col-span-6 px-3 py-2">Pilóta</div>
+                    <div className="col-span-3 px-3 py-2">Idő</div>
+                    <div className="col-span-3 md:col-span-2 px-3 py-2">Lemaradás</div>
                   </div>
-                )}
+                  <div className="divide-y divide-white/5">
+                    {(activeTab.results as TimedResult[]).map((res) => (
+                      <div
+                        key={res.position}
+                        className="grid grid-cols-12 text-sm md:text-[15px] items-center hover:bg-white/5 transition"
+                      >
+                        <div className="col-span-1 px-3 py-2 font-bold text-[#e4eb34]">
+                          {res.position}
+                        </div>
+                        <div className="col-span-5 md:col-span-6 px-3 py-2 font-medium">
+                          {res.driverName}
+                        </div>
+                        <div className="col-span-3 px-3 py-2 font-mono font-semibold text-white">
+                          {res.time}
+                        </div>
+                        <div
+                          className={`col-span-3 md:col-span-2 px-3 py-2 font-mono ${res.gap === '-' ? 'text-[#e4eb34] font-bold' : 'text-white/60'}`}
+                        >
+                          {res.gap}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
