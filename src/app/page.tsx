@@ -217,14 +217,14 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {/* Jobb oldal: zoli.png teljes kép, blur háttérrel csak desktopon */}
+          {/* Jobb oldal: ejszakai kép, blur háttérrel csak desktopon */}
           <div className="hidden md:flex flex-1 items-center justify-center relative">
             <div className="absolute inset-0 w-full h-full -z-10">
-              <Image src="/zoli.png" alt="" fill className="object-cover blur-2xl" />
+              <Image src="/Ejszakai.webp" alt="" fill className="object-cover blur-2xl" />
             </div>
             <Image
-              src="/zoli.png"
-              alt="Lámer Zoltán portré"
+              src="/Ejszakai.webp"
+              alt="Következő verseny plakát"
               width={320}
               height={420}
               className="rounded-xl shadow-2xl object-cover z-10"
@@ -241,10 +241,10 @@ export default function Home() {
         <div className="container w-full max-w-full flex flex-col md:flex-row items-stretch gap-8">
           {/* Bal oldal: csak a kért adatok, BLUR kép háttérrel */}
           <div className="flex-1 flex flex-col justify-center rounded-xl p-10 md:p-12 shadow-xl relative overflow-hidden min-h-[600px]">
-            {/* Blur háttérkép: lamerkart4 */}
+            {/* Blur háttérkép: ejszakai */}
             <div className="absolute inset-0 -z-10">
               <Image
-                src="/lamerkart4.png"
+                src="/Ejszakai.webp"
                 alt="Következő verseny háttérkép"
                 fill
                 className="object-cover blur-lg brightness-60"
@@ -342,11 +342,11 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {/* Jobb oldal: lamerkart4 kép */}
+          {/* Jobb oldal: ejszakai kép */}
           <div className="flex-1 flex items-center justify-center">
             <div className="w-full h-[600px] relative rounded-xl overflow-hidden shadow-2xl">
               <Image
-                src="/lamerkart4.png"
+                src="/ejszakai.webp"
                 alt="Gokart verseny"
                 fill
                 className="object-contain"
