@@ -217,14 +217,14 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {/* Jobb oldal: ejszakai kép, blur háttérrel csak desktopon */}
+          {/* Jobb oldal: zoli.png teljes kép, blur háttérrel csak desktopon */}
           <div className="hidden md:flex flex-1 items-center justify-center relative">
             <div className="absolute inset-0 w-full h-full -z-10">
-              <Image src="/Ejszakai.webp" alt="" fill className="object-cover blur-2xl" />
+              <Image src="/zoli.png" alt="" fill className="object-cover blur-2xl" />
             </div>
             <Image
-              src="/Ejszakai.webp"
-              alt="Következő verseny plakát"
+              src="/zoli.png"
+              alt="Lámer Zoltán portré"
               width={320}
               height={420}
               className="rounded-xl shadow-2xl object-cover z-10"
@@ -244,7 +244,7 @@ export default function Home() {
             {/* Blur háttérkép: ejszakai */}
             <div className="absolute inset-0 -z-10">
               <Image
-                src="/Ejszakai.webp"
+                src="/ejszakai.webp"
                 alt="Következő verseny háttérkép"
                 fill
                 className="object-cover blur-lg brightness-60"
@@ -342,7 +342,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {/* Jobb oldal: ejszakai kép */}
+          {/* Jobb oldal: lamerkart4 kép */}
           <div className="flex-1 flex items-center justify-center">
             <div className="w-full h-[600px] relative rounded-xl overflow-hidden shadow-2xl">
               <Image
