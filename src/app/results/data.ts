@@ -372,12 +372,17 @@ const round4JuniorUpdateEntries: RaceEntry[] = [
 ];
 
 const round4RookieUpdateEntries: RaceEntry[] = [
-  { position: 1, driverName: 'Vígh György', points: 10, gap: '-', positionChange: 0 },
-  { position: 2, driverName: 'Kiss Dániel', points: 8, gap: '-2 pt', positionChange: 0 },
-  { position: 3, driverName: 'Zsigri Márton', points: 6, gap: '-4 pt', positionChange: 0 },
-  { position: 4, driverName: 'Mészáros Ákos', points: 5, gap: '-5 pt', positionChange: 0 },
-  { position: 5, driverName: 'Vígh Levente', points: 4, gap: '-6 pt', positionChange: 0 },
-  { position: 6, driverName: 'Kalányos Kristóf', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 1, driverName: 'Kiss Pál Csanád', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Mészáros Zoltán', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Kőrösi Dávid', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Vígh György', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Kovács Máté2', points: 4, gap: '-6 pt', positionChange: 0 },
+  { position: 6, driverName: 'Kiss Dániel', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 7, driverName: 'Zsigri Márton', points: 2, gap: '-8 pt', positionChange: 0 },
+  { position: 8, driverName: 'Mészáros Ákos', points: 1, gap: '-9 pt', positionChange: 0 },
+  { position: 9, driverName: 'Vígh Levente', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 10, driverName: 'Kalányos Kristóf', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 11, driverName: 'Szathmáry Koppány', points: 0, gap: '-10 pt', positionChange: 0 },
 ];
 
 const round4AbsoluteRaceResults: RaceEntry[] = [
@@ -2076,12 +2081,17 @@ export const races: RaceResult[] = [
         categoryName: 'Rookie',
         displayMode: 'points',
         results: [
-          { position: 1, driverName: 'Vígh György', points: 10, entryOrder: 0 },
-          { position: 2, driverName: 'Kiss Dániel', points: 8, entryOrder: 2 },
-          { position: 3, driverName: 'Zsigri Márton', points: 6, entryOrder: 4 },
-          { position: 4, driverName: 'Mészáros Ákos', points: 5, entryOrder: 5 },
-          { position: 5, driverName: 'Vígh Levente', points: 4, entryOrder: 6 },
-          { position: 6, driverName: 'Kalányos Kristóf', points: 3, entryOrder: 7 },
+          { position: 1, driverName: 'Kiss Pál Csanád', points: 10, entryOrder: 0 },
+          { position: 2, driverName: 'Mészáros Zoltán', points: 8, entryOrder: 2 },
+          { position: 3, driverName: 'Kőrösi Dávid', points: 6, entryOrder: 4 },
+          { position: 4, driverName: 'Vígh György', points: 5, entryOrder: 5 },
+          { position: 5, driverName: 'Kovács Máté2', points: 4, entryOrder: 6 },
+          { position: 6, driverName: 'Kiss Dániel', points: 3, entryOrder: 7 },
+          { position: 7, driverName: 'Zsigri Márton', points: 2, entryOrder: 8 },
+          { position: 8, driverName: 'Mészáros Ákos', points: 1, entryOrder: 9 },
+          { position: 9, driverName: 'Vígh Levente', points: 0, entryOrder: 10 },
+          { position: 10, driverName: 'Kalányos Kristóf', points: 0, entryOrder: 10 },
+          { position: 11, driverName: 'Szathmáry Koppány', points: 0, entryOrder: 10 },
         ],
       },
       {
