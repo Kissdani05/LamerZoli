@@ -418,6 +418,65 @@ const round4AbsoluteRaceResults: RaceEntry[] = [
   { position: 30, driverName: 'Antal Marcell', points: 0, gap: '-25 pt', positionChange: -11 },
 ];
 
+const round5SemiProUpdateEntries: RaceEntry[] = [
+  { position: 1, driverName: 'Halmágyi Péter', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Szabó József', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Halmágyi Dávid', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Ádám Kristóf', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Kovács Máté', points: 4, gap: '-6 pt', positionChange: 0 },
+  { position: 6, driverName: 'Dóró Soma', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 7, driverName: 'Lámer Richárd', points: 2, gap: '-8 pt', positionChange: 0 },
+  { position: 8, driverName: 'Nagy Bálint', points: 1, gap: '-9 pt', positionChange: 0 },
+  { position: 9, driverName: 'Vincze Tibor', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 10, driverName: 'Kvasz Richárd', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 11, driverName: 'Turcsán János', points: 0, gap: '-10 pt', positionChange: 0 },
+];
+
+const round5JuniorUpdateEntries: RaceEntry[] = [
+  { position: 1, driverName: 'Halmágyi Péter', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Szabó József', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Halmágyi Dávid', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Dóró Soma', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Nagy Bálint', points: 4, gap: '-6 pt', positionChange: 0 },
+];
+
+const round5RookieUpdateEntries: RaceEntry[] = [
+  { position: 1, driverName: 'Sajgó Soós Tibor', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Kiss Pál Csanád', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Kőrösi Dávid', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Rostás Gábor', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Kalányos Kristóf', points: 4, gap: '-6 pt', positionChange: 0 },
+  { position: 6, driverName: 'Dömötör Patrik', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 7, driverName: 'Mészáros Ákos', points: 2, gap: '-8 pt', positionChange: 0 },
+  { position: 8, driverName: 'Zoványi Bence', points: 1, gap: '-9 pt', positionChange: 0 },
+  { position: 9, driverName: 'Brázik Bence', points: 0, gap: '-10 pt', positionChange: 0 },
+];
+
+const round5AbsoluteRaceResults: RaceEntry[] = [
+  { position: 1, driverName: 'Petruska Milán', points: 25, gap: '-', positionChange: 3 },
+  { position: 2, driverName: 'Sajgó Soós Tibor', points: 20, gap: '-5 pt', positionChange: 0 },
+  { position: 3, driverName: 'Halmágyi Péter', points: 16, gap: '-9 pt', positionChange: -2 },
+  { position: 4, driverName: 'Kiss Pál Csanád', points: 13, gap: '-12 pt', positionChange: -1 },
+  { position: 5, driverName: 'Szabó József', points: 11, gap: '-14 pt', positionChange: 2 },
+  { position: 6, driverName: 'Kőrösi Dávid', points: 10, gap: '-15 pt', positionChange: -1 },
+  { position: 7, driverName: 'Halmágyi Dávid', points: 9, gap: '-16 pt', positionChange: 3 },
+  { position: 8, driverName: 'Ádám Kristóf', points: 8, gap: '-17 pt', positionChange: -2 },
+  { position: 9, driverName: 'Lámer Zoltán', points: 7, gap: '-18 pt', positionChange: 2 },
+  { position: 10, driverName: 'Kovács Máté', points: 6, gap: '-19 pt', positionChange: -1 },
+  { position: 11, driverName: 'Dóró Soma', points: 5, gap: '-20 pt', positionChange: 3 },
+  { position: 12, driverName: 'Lámer Richárd', points: 4, gap: '-21 pt', positionChange: 0 },
+  { position: 13, driverName: 'Rostás Gábor', points: 3, gap: '-22 pt', positionChange: 0 },
+  { position: 14, driverName: 'Nagy Bálint', points: 2, gap: '-23 pt', positionChange: -6 },
+  { position: 15, driverName: 'Kalányos Kristóf', points: 1, gap: '-24 pt', positionChange: 2 },
+  { position: 16, driverName: 'Dömötör Patrik', points: 0, gap: '-25 pt', positionChange: 2 },
+  { position: 17, driverName: 'Vincze Tibor', points: 0, gap: '-25 pt', positionChange: 3 },
+  { position: 18, driverName: 'Kvasz Richárd', points: 0, gap: '-25 pt', positionChange: -3 },
+  { position: 19, driverName: 'Turcsán János', points: 0, gap: '-25 pt', positionChange: 0 },
+  { position: 20, driverName: 'Mészáros Ákos', points: 0, gap: '-25 pt', positionChange: -4 },
+  { position: 21, driverName: 'Zoványi Bence', points: 0, gap: '-25 pt', positionChange: 0 },
+  { position: 22, driverName: 'Brázik Bence', points: 0, gap: '-25 pt', positionChange: 0 },
+];
+
 export const races: RaceResult[] = [
   {
     id: 'gokart-gp-2026-overall',
@@ -2110,6 +2169,91 @@ export const races: RaceResult[] = [
     ],
   },
   {
+    id: 'gokart-gp-2026-5',
+    name: 'Téglás Gokart GP 2026 5. Forduló',
+    date: '2026-07-12T10:00:00+02:00',
+    location: 'Téglás F1 Gokartpálya',
+    categories: [
+      {
+        categoryId: 'abszolut',
+        categoryName: 'Abszolút',
+        displayMode: 'absolute',
+        results: [],
+        timedResults: [
+          { position: 1, driverName: 'Halmágyi Péter', time: '37,235', gap: '-' },
+          { position: 2, driverName: 'Sajgó Soós Tibor', time: '37,347', gap: '+0,112' },
+          { position: 3, driverName: 'Kiss Pál Csanád', time: '37,396', gap: '+0,161' },
+          { position: 4, driverName: 'Petruska Milán', time: '37,474', gap: '+0,239' },
+          { position: 5, driverName: 'Kőrösi Dávid', time: '37,494', gap: '+0,259' },
+          { position: 6, driverName: 'Ádám Kristóf', time: '37,640', gap: '+0,405' },
+          { position: 7, driverName: 'Szabó József', time: '37,643', gap: '+0,408' },
+          { position: 8, driverName: 'Nagy Bálint', time: '37,644', gap: '+0,409' },
+          { position: 9, driverName: 'Kovács Máté', time: '37,657', gap: '+0,422' },
+          { position: 10, driverName: 'Halmágyi Dávid', time: '37,664', gap: '+0,429' },
+          { position: 11, driverName: 'Lámer Zoltán', time: '37,671', gap: '+0,436' },
+          { position: 12, driverName: 'Lámer Richárd', time: '37,706', gap: '+0,471' },
+          { position: 13, driverName: 'Rostás Gábor', time: '37,721', gap: '+0,486' },
+          { position: 14, driverName: 'Dóró Soma', time: '37,771', gap: '+0,536' },
+          { position: 15, driverName: 'Kvasz Richárd', time: '37,777', gap: '+0,542' },
+          { position: 16, driverName: 'Mészáros Ákos', time: '37,785', gap: '+0,550' },
+          { position: 17, driverName: 'Kalányos Kristóf', time: '37,789', gap: '+0,554' },
+          { position: 18, driverName: 'Dömötör Patrik', time: '37,835', gap: '+0,600' },
+          { position: 19, driverName: 'Turcsán János', time: '38,144', gap: '+0,909' },
+          { position: 20, driverName: 'Vincze Tibor', time: '38,227', gap: '+0,992' },
+          { position: 21, driverName: 'Zoványi Bence', time: '38,550', gap: '+1,315' },
+          { position: 22, driverName: 'Brázik Bence', time: '39,184', gap: '+1,949' },
+        ],
+        raceResults: round5AbsoluteRaceResults,
+      },
+      {
+        categoryId: 'semipro',
+        categoryName: 'Semi-Pro',
+        displayMode: 'points',
+        results: [
+          { position: 1, driverName: 'Halmágyi Péter', points: 10, entryOrder: 0 },
+          { position: 2, driverName: 'Szabó József', points: 8, entryOrder: 2 },
+          { position: 3, driverName: 'Halmágyi Dávid', points: 6, entryOrder: 4 },
+          { position: 4, driverName: 'Ádám Kristóf', points: 5, entryOrder: 5 },
+          { position: 5, driverName: 'Kovács Máté', points: 4, entryOrder: 6 },
+          { position: 6, driverName: 'Dóró Soma', points: 3, entryOrder: 7 },
+          { position: 7, driverName: 'Lámer Richárd', points: 2, entryOrder: 8 },
+          { position: 8, driverName: 'Nagy Bálint', points: 1, entryOrder: 9 },
+          { position: 9, driverName: 'Vincze Tibor', points: 0, entryOrder: 10 },
+          { position: 10, driverName: 'Kvasz Richárd', points: 0, entryOrder: 10 },
+          { position: 11, driverName: 'Turcsán János', points: 0, entryOrder: 10 },
+        ],
+      },
+      {
+        categoryId: 'junior',
+        categoryName: 'Junior',
+        displayMode: 'points',
+        results: [
+          { position: 1, driverName: 'Halmágyi Péter', points: 10, entryOrder: 0 },
+          { position: 2, driverName: 'Szabó József', points: 8, entryOrder: 2 },
+          { position: 3, driverName: 'Halmágyi Dávid', points: 6, entryOrder: 4 },
+          { position: 4, driverName: 'Dóró Soma', points: 5, entryOrder: 5 },
+          { position: 5, driverName: 'Nagy Bálint', points: 4, entryOrder: 6 },
+        ],
+      },
+      {
+        categoryId: 'rookie',
+        categoryName: 'Rookie',
+        displayMode: 'points',
+        results: [
+          { position: 1, driverName: 'Sajgó Soós Tibor', points: 10, entryOrder: 0 },
+          { position: 2, driverName: 'Kiss Pál Csanád', points: 8, entryOrder: 2 },
+          { position: 3, driverName: 'Kőrösi Dávid', points: 6, entryOrder: 4 },
+          { position: 4, driverName: 'Rostás Gábor', points: 5, entryOrder: 5 },
+          { position: 5, driverName: 'Kalányos Kristóf', points: 4, entryOrder: 6 },
+          { position: 6, driverName: 'Dömötör Patrik', points: 3, entryOrder: 7 },
+          { position: 7, driverName: 'Mészáros Ákos', points: 2, entryOrder: 8 },
+          { position: 8, driverName: 'Zoványi Bence', points: 1, entryOrder: 9 },
+          { position: 9, driverName: 'Brázik Bence', points: 0, entryOrder: 10 },
+        ],
+      },
+    ],
+  },
+  {
     id: 'gokart-gp-2025-overall',
     name: 'Összesített Eredmények',
     date: '2025-01-01T12:00:00+02:00',
@@ -2277,3 +2421,7 @@ updateOverallCategory('abszolut', 4, round4AbsoluteRaceResults);
 updateOverallCategory('semipro', 4, round4SemiProUpdateEntries);
 updateOverallCategory('junior', 4, round4JuniorUpdateEntries);
 updateOverallCategory('rookie', 4, round4RookieUpdateEntries);
+updateOverallCategory('abszolut', 5, round5AbsoluteRaceResults);
+updateOverallCategory('semipro', 5, round5SemiProUpdateEntries);
+updateOverallCategory('junior', 5, round5JuniorUpdateEntries);
+updateOverallCategory('rookie', 5, round5RookieUpdateEntries);
