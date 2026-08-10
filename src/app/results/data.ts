@@ -477,6 +477,243 @@ const round5AbsoluteRaceResults: RaceEntry[] = [
   { position: 22, driverName: 'Brázik Bence', points: 0, gap: '-25 pt', positionChange: 0 },
 ];
 
+const round6AbsoluteTimed1Results: TimedResult[] = [
+  { position: 1, driverName: 'Petruska Milán', time: '37,803', gap: '-' },
+  { position: 2, driverName: 'Lámer Zoltán', time: '37,916', gap: '+0,113' },
+  { position: 3, driverName: 'Kiss Csaba', time: '37,939', gap: '+0,136' },
+  { position: 4, driverName: 'Kőrösi Dávid', time: '37,948', gap: '+0,145' },
+  { position: 5, driverName: 'Halmágyi Péter (J)', time: '37,972', gap: '+0,169' },
+  { position: 6, driverName: 'Dömötör Patrik', time: '38,015', gap: '+0,212' },
+  { position: 7, driverName: 'Kókai Kristóf', time: '38,143', gap: '+0,340' },
+  { position: 8, driverName: 'Antal Marcell', time: '38,190', gap: '+0,387' },
+  { position: 9, driverName: 'Szoták Mihály', time: '38,319', gap: '+0,516' },
+  { position: 10, driverName: 'Dóró Soma (J)', time: '38,392', gap: '+0,589' },
+  { position: 11, driverName: 'Alexander Barton', time: '38,496', gap: '+0,693' },
+  { position: 12, driverName: 'Gyeskó Csongor', time: '38,518', gap: '+0,715' },
+  { position: 13, driverName: 'Mezey Bálint', time: '38,520', gap: '+0,717' },
+  { position: 14, driverName: 'Szabó József (J)', time: '38,576', gap: '+0,773' },
+  { position: 15, driverName: 'Mészáros Ákos', time: '38,631', gap: '+0,828' },
+  { position: 16, driverName: 'Pétervári Tamás', time: '38,760', gap: '+0,957' },
+  { position: 17, driverName: 'Halmágyi Dávid (J)', time: '38,834', gap: '+1,031' },
+  { position: 18, driverName: 'Lámer Richárd', time: '38,901', gap: '+1,098' },
+  { position: 19, driverName: 'Ádám Kristóf', time: '38,949', gap: '+1,146' },
+  { position: 20, driverName: 'Ungvári Bálint', time: '38,957', gap: '+1,154' },
+  { position: 21, driverName: 'Fésűs Roland', time: '39,072', gap: '+1,269' },
+  { position: 22, driverName: 'Vígh Levente (J)', time: '39,592', gap: '+1,789' },
+  { position: 23, driverName: 'Vaszlavik Dániel', time: '39,937', gap: '+2,134' },
+  { position: 24, driverName: 'Oláh Attila', time: '40,186', gap: '+2,383' },
+  { position: 25, driverName: 'Kálmán Kristóf (J)', time: '40,847', gap: '+3,044' },
+  { position: 26, driverName: 'Svintek Mihály', time: '41,905', gap: '+4,102' },
+  { position: 27, driverName: 'Komódi Gábor (J)', time: '42,476', gap: '+4,673' },
+  { position: 28, driverName: 'Kovács Máté', time: '100,000', gap: '+62,197' },
+  { position: 29, driverName: 'Oláh Roland', time: '100,000', gap: '+62,197' },
+];
+
+const round6AbsoluteTimed2Results: TimedResult[] = [
+  { position: 1, driverName: 'Halmágyi Dávid (J)', time: '37,920', gap: '-' },
+  { position: 2, driverName: 'Halmágyi Péter (J)', time: '37,928', gap: '+0,008' },
+  { position: 3, driverName: 'Dömötör Patrik', time: '37,934', gap: '+0,014' },
+  { position: 4, driverName: 'Lámer Zoltán', time: '37,997', gap: '+0,077' },
+  { position: 5, driverName: 'Kiss Csaba', time: '38,098', gap: '+0,178' },
+  { position: 6, driverName: 'Szabó József (J)', time: '38,136', gap: '+0,216' },
+  { position: 7, driverName: 'Gyeskó Csongor', time: '38,270', gap: '+0,350' },
+  { position: 8, driverName: 'Kőrösi Dávid', time: '38,301', gap: '+0,381' },
+  { position: 9, driverName: 'Mezey Bálint', time: '38,359', gap: '+0,439' },
+  { position: 10, driverName: 'Petruska Milán', time: '38,390', gap: '+0,470' },
+  { position: 11, driverName: 'Kókai Kristóf', time: '38,471', gap: '+0,551' },
+  { position: 12, driverName: 'Kovács Máté', time: '38,504', gap: '+0,584' },
+  { position: 13, driverName: 'Pétervári Tamás', time: '38,673', gap: '+0,753' },
+  { position: 14, driverName: 'Antal Marcell', time: '38,696', gap: '+0,776' },
+  { position: 15, driverName: 'Lámer Richárd', time: '38,822', gap: '+0,902' },
+  { position: 16, driverName: 'Ádám Kristóf', time: '38,826', gap: '+0,906' },
+  { position: 17, driverName: 'Dóró Soma (J)', time: '38,950', gap: '+1,030' },
+  { position: 18, driverName: 'Szoták Mihály', time: '38,974', gap: '+1,054' },
+  { position: 19, driverName: 'Alexander Barton', time: '38,994', gap: '+1,074' },
+  { position: 20, driverName: 'Mészáros Ákos', time: '39,025', gap: '+1,105' },
+  { position: 21, driverName: 'Fésűs Roland', time: '39,045', gap: '+1,125' },
+  { position: 22, driverName: 'Vígh Levente (J)', time: '39,319', gap: '+1,399' },
+  { position: 23, driverName: 'Oláh Attila', time: '39,333', gap: '+1,413' },
+  { position: 24, driverName: 'Ungvári Bálint', time: '39,551', gap: '+1,631' },
+  { position: 25, driverName: 'Komódi Gábor (J)', time: '40,702', gap: '+2,782' },
+  { position: 26, driverName: 'Vaszlavik Dániel', time: '41,014', gap: '+3,094' },
+  { position: 27, driverName: 'Kálmán Kristóf (J)', time: '41,077', gap: '+3,157' },
+  { position: 28, driverName: 'Svintek Mihály', time: '41,428', gap: '+3,508' },
+  { position: 29, driverName: 'Oláh Roland', time: '100,000', gap: '+62,080' },
+];
+
+const round6Timed1PosMap = new Map<string, number>(
+  round6AbsoluteTimed1Results.map((r) => [normalizeName(r.driverName), r.position]),
+);
+const round6Timed2PosMap = new Map<string, number>(
+  round6AbsoluteTimed2Results.map((r) => [normalizeName(r.driverName), r.position]),
+);
+
+const round6AbsoluteRace1Names = [
+  'Petruska Milán',
+  'Kőrösi Dávid',
+  'Kókai Kristóf',
+  'Kiss Csaba',
+  'Halmágyi Péter',
+  'Dömötör Patrik',
+  'Lámer Zoltán',
+  'Szoták Mihály',
+  'Antal Marcell',
+  'Ádám Kristóf',
+  'Gyeskó Csongor',
+  'Szabó József',
+  'Alexander Barton',
+  'Dóró Soma',
+  'Mezey Bálint',
+  'Lámer Richárd',
+  'Kovács Máté',
+  'Halmágyi Dávid',
+  'Mészáros Ákos',
+  'Ungvári Bálint',
+  'Fésűs Roland',
+  'Pétervári Tamás',
+  'Vígh Levente',
+  'Svintek Mihály',
+  'Oláh Attila',
+  'Vaszlavik Dániel',
+  'Oláh Roland',
+  'Kálmán Kristóf',
+  'Komódi Gábor',
+];
+
+const round6AbsoluteRace1PositionChanges = round6AbsoluteRace1Names.map((name, idx) => {
+  const grid = round6Timed1PosMap.get(normalizeName(name));
+  return grid != null ? grid - (idx + 1) : 0;
+});
+
+const round6AbsoluteRace1Results: RaceEntry[] = buildRaceResults(
+  round6AbsoluteRace1Names,
+  round6AbsoluteRace1PositionChanges,
+);
+
+const round6AbsoluteRace2Names = [
+  'Halmágyi Dávid',
+  'Halmágyi Péter',
+  'Lámer Zoltán',
+  'Gyeskó Csongor',
+  'Dömötör Patrik',
+  'Kőrösi Dávid',
+  'Kiss Csaba',
+  'Szabó József',
+  'Petruska Milán',
+  'Kókai Kristóf',
+  'Ádám Kristóf',
+  'Mezey Bálint',
+  'Antal Marcell',
+  'Kovács Máté',
+  'Pétervári Tamás',
+  'Dóró Soma',
+  'Lámer Richárd',
+  'Mészáros Ákos',
+  'Ungvári Bálint',
+  'Szoták Mihály',
+  'Alexander Barton',
+  'Fésűs Roland',
+  'Vígh Levente',
+  'Vaszlavik Dániel',
+  'Oláh Attila',
+  'Oláh Roland',
+  'Svintek Mihály',
+  'Kálmán Kristóf',
+  'Komódi Gábor',
+];
+
+const round6AbsoluteRace2PositionChanges = round6AbsoluteRace2Names.map((name, idx) => {
+  const grid = round6Timed2PosMap.get(normalizeName(name));
+  return grid != null ? grid - (idx + 1) : 0;
+});
+
+const round6AbsoluteRace2Results: RaceEntry[] = buildRaceResults(
+  round6AbsoluteRace2Names,
+  round6AbsoluteRace2PositionChanges,
+);
+
+const round6SemiProRace1Results: RaceEntry[] = [
+  { position: 1, driverName: 'Halmágyi Péter', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Szoták Mihály', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Antal Marcell', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Ádám Kristóf', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Szabó József', points: 4, gap: '-6 pt', positionChange: 0 },
+  { position: 6, driverName: 'Dóró Soma', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 7, driverName: 'Mezey Bálint', points: 2, gap: '-8 pt', positionChange: 0 },
+  { position: 8, driverName: 'Lámer Richárd', points: 1, gap: '-9 pt', positionChange: 0 },
+  { position: 9, driverName: 'Kovács Máté', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 10, driverName: 'Halmágyi Dávid', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 11, driverName: 'Ungvári Bálint', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 12, driverName: 'Vaszlavik Dániel', points: 0, gap: '-10 pt', positionChange: 0 },
+];
+
+const round6SemiProRace2Results: RaceEntry[] = [
+  { position: 1, driverName: 'Halmágyi Dávid', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Halmágyi Péter', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Szabó József', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Ádám Kristóf', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Mezey Bálint', points: 4, gap: '-6 pt', positionChange: 0 },
+  { position: 6, driverName: 'Antal Marcell', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 7, driverName: 'Kovács Máté', points: 2, gap: '-8 pt', positionChange: 0 },
+  { position: 8, driverName: 'Dóró Soma', points: 1, gap: '-9 pt', positionChange: 0 },
+  { position: 9, driverName: 'Lámer Richárd', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 10, driverName: 'Ungvári Bálint', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 11, driverName: 'Szoták Mihály', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 12, driverName: 'Vaszlavik Dániel', points: 0, gap: '-10 pt', positionChange: 0 },
+];
+
+const round6JuniorRace1Results: RaceEntry[] = [
+  { position: 1, driverName: 'Halmágyi Péter', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Szabó József', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Dóró Soma', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Halmágyi Dávid', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Vígh Levente', points: 4, gap: '-6 pt', positionChange: 0 },
+  { position: 6, driverName: 'Kálmán Kristóf', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 7, driverName: 'Komódi Gábor', points: 2, gap: '-8 pt', positionChange: 0 },
+];
+
+const round6JuniorRace2Results: RaceEntry[] = [
+  { position: 1, driverName: 'Halmágyi Dávid', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Halmágyi Péter', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Szabó József', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Dóró Soma', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Vígh Levente', points: 4, gap: '-6 pt', positionChange: 0 },
+  { position: 6, driverName: 'Kálmán Kristóf', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 7, driverName: 'Komódi Gábor', points: 2, gap: '-8 pt', positionChange: 0 },
+];
+
+const round6RookieRace1Results: RaceEntry[] = [
+  { position: 1, driverName: 'Kőrösi Dávid', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Kókai Kristóf', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Dömötör Patrik', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Alexander Barton', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Mészáros Ákos', points: 4, gap: '-6 pt', positionChange: 0 },
+  { position: 6, driverName: 'Fésűs Roland', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 7, driverName: 'Pétervári Tamás', points: 2, gap: '-8 pt', positionChange: 0 },
+  { position: 8, driverName: 'Vígh Levente', points: 1, gap: '-9 pt', positionChange: 0 },
+  { position: 9, driverName: 'Svintek Mihály', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 10, driverName: 'Oláh Attila', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 11, driverName: 'Oláh Roland', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 12, driverName: 'Kálmán Kristóf', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 13, driverName: 'Komódi Gábor', points: 0, gap: '-10 pt', positionChange: 0 },
+];
+
+const round6RookieRace2Results: RaceEntry[] = [
+  { position: 1, driverName: 'Dömötör Patrik', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Kőrösi Dávid', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Kókai Kristóf', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Pétervári Tamás', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Mészáros Ákos', points: 4, gap: '-6 pt', positionChange: 0 },
+  { position: 6, driverName: 'Alexander Barton', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 7, driverName: 'Fésűs Roland', points: 2, gap: '-8 pt', positionChange: 0 },
+  { position: 8, driverName: 'Vígh Levente', points: 1, gap: '-9 pt', positionChange: 0 },
+  { position: 9, driverName: 'Oláh Attila', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 10, driverName: 'Oláh Roland', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 11, driverName: 'Svintek Mihály', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 12, driverName: 'Kálmán Kristóf', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 13, driverName: 'Komódi Gábor', points: 0, gap: '-10 pt', positionChange: 0 },
+];
+
 export const races: RaceResult[] = [
   {
     id: 'gokart-gp-2026-overall',
@@ -489,7 +726,20 @@ export const races: RaceResult[] = [
         categoryName: 'Abszolút',
         displayMode: 'overall',
         results: [],
-        roundLabels: ['R1', 'R2', 'R3/1', 'R3/2', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10'],
+        roundLabels: [
+          'R1',
+          'R2',
+          'R3/1',
+          'R3/2',
+          'R4',
+          'R5',
+          'R6/1',
+          'R6/2',
+          'R7',
+          'R8',
+          'R9',
+          'R10',
+        ],
         overallResults: [
           {
             position: 1,
@@ -889,7 +1139,20 @@ export const races: RaceResult[] = [
         categoryName: 'Semi-Pro',
         displayMode: 'overall',
         results: [],
-        roundLabels: ['R1', 'R2', 'R3/1', 'R3/2', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10'],
+        roundLabels: [
+          'R1',
+          'R2',
+          'R3/1',
+          'R3/2',
+          'R4',
+          'R5',
+          'R6/1',
+          'R6/2',
+          'R7',
+          'R8',
+          'R9',
+          'R10',
+        ],
         overallResults: [
           {
             position: 1,
@@ -1082,7 +1345,20 @@ export const races: RaceResult[] = [
         categoryName: 'Junior',
         displayMode: 'overall',
         results: [],
-        roundLabels: ['R1', 'R2', 'R3/1', 'R3/2', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10'],
+        roundLabels: [
+          'R1',
+          'R2',
+          'R3/1',
+          'R3/2',
+          'R4',
+          'R5',
+          'R6/1',
+          'R6/2',
+          'R7',
+          'R8',
+          'R9',
+          'R10',
+        ],
         overallResults: [
           {
             position: 1,
@@ -1213,7 +1489,20 @@ export const races: RaceResult[] = [
         categoryName: 'Rookie',
         displayMode: 'overall',
         results: [],
-        roundLabels: ['R1', 'R2', 'R3/1', 'R3/2', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10'],
+        roundLabels: [
+          'R1',
+          'R2',
+          'R3/1',
+          'R3/2',
+          'R4',
+          'R5',
+          'R6/1',
+          'R6/2',
+          'R7',
+          'R8',
+          'R9',
+          'R10',
+        ],
         overallResults: [
           {
             position: 1,
@@ -2344,6 +2633,56 @@ export const races: RaceResult[] = [
       },
     ],
   },
+  {
+    id: 'gokart-gp-2026-6',
+    name: 'Téglás Gokart GP 2026 6. Forduló',
+    date: '2026-08-02T10:00:00+02:00',
+    location: 'Téglás F1 Gokartpálya',
+    categories: [
+      {
+        categoryId: 'abszolut',
+        categoryName: 'Abszolút',
+        displayMode: 'absolute',
+        results: [],
+        absoluteTabs: [
+          { label: '1. Verseny', kind: 'race', results: round6AbsoluteRace1Results },
+          { label: '2. Verseny', kind: 'race', results: round6AbsoluteRace2Results },
+          { label: '1. Időmérő', kind: 'timed', results: round6AbsoluteTimed1Results },
+          { label: '2. Időmérő', kind: 'timed', results: round6AbsoluteTimed2Results },
+        ],
+      },
+      {
+        categoryId: 'semipro',
+        categoryName: 'Semi-Pro',
+        displayMode: 'points',
+        results: [],
+        raceTabs: [
+          { label: '1. Verseny', results: round6SemiProRace1Results },
+          { label: '2. Verseny', results: round6SemiProRace2Results },
+        ],
+      },
+      {
+        categoryId: 'junior',
+        categoryName: 'Junior',
+        displayMode: 'points',
+        results: [],
+        raceTabs: [
+          { label: '1. Verseny', results: round6JuniorRace1Results },
+          { label: '2. Verseny', results: round6JuniorRace2Results },
+        ],
+      },
+      {
+        categoryId: 'rookie',
+        categoryName: 'Rookie',
+        displayMode: 'points',
+        results: [],
+        raceTabs: [
+          { label: '1. Verseny', results: round6RookieRace1Results },
+          { label: '2. Verseny', results: round6RookieRace2Results },
+        ],
+      },
+    ],
+  },
 ];
 
 // Recompute and insert R3/2 (2. verseny) into the 2026 overall Abszolút table,
@@ -2353,11 +2692,11 @@ type OverallStandingRow = OverallEntry & { rounds: OverallRoundResult[] };
 
 type OverallCategoryKey = 'abszolut' | 'junior' | 'rookie' | 'semipro';
 
-const ensureOverallRounds = (row: OverallStandingRow, len = 11) => {
+const ensureOverallRounds = (row: OverallStandingRow, len = 12) => {
   while (row.rounds.length < len) row.rounds.push({ detail: '', points: 0 });
 };
 
-const buildOverallStandingRow = (driverName: string, len = 11): OverallStandingRow => ({
+const buildOverallStandingRow = (driverName: string, len = 12): OverallStandingRow => ({
   position: 0,
   driverName,
   totalPoints: 0,
@@ -2425,3 +2764,11 @@ updateOverallCategory('abszolut', 5, round5AbsoluteRaceResults);
 updateOverallCategory('semipro', 5, round5SemiProUpdateEntries);
 updateOverallCategory('junior', 5, round5JuniorUpdateEntries);
 updateOverallCategory('rookie', 5, round5RookieUpdateEntries);
+updateOverallCategory('abszolut', 6, round6AbsoluteRace1Results);
+updateOverallCategory('abszolut', 7, round6AbsoluteRace2Results);
+updateOverallCategory('semipro', 6, round6SemiProRace1Results);
+updateOverallCategory('semipro', 7, round6SemiProRace2Results);
+updateOverallCategory('junior', 6, round6JuniorRace1Results);
+updateOverallCategory('junior', 7, round6JuniorRace2Results);
+updateOverallCategory('rookie', 6, round6RookieRace1Results);
+updateOverallCategory('rookie', 7, round6RookieRace2Results);
