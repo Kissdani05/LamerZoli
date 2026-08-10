@@ -1656,25 +1656,29 @@ export const races: RaceResult[] = [
           {
             position: 1,
             driverName: 'Tri-V Motorsport',
-            totalPoints: 38,
+            totalPoints: 46,
             rounds: [
               { detail: '10', points: 10 },
               { detail: '8', points: 8 },
               { detail: '10', points: 10 },
               { detail: '10', points: 10 },
-              ...Array(6).fill({ detail: '', points: 0 }),
+              { detail: '', points: 0 },
+              { detail: '8', points: 8 },
+              ...Array(4).fill({ detail: '', points: 0 }),
             ],
           },
           {
             position: 2,
             driverName: 'Lámer Kart',
-            totalPoints: 28,
+            totalPoints: 34,
             rounds: [
               { detail: '5', points: 5 },
               { detail: '10', points: 10 },
               { detail: '5', points: 5 },
               { detail: '8', points: 8 },
-              ...Array(6).fill({ detail: '', points: 0 }),
+              { detail: '', points: 0 },
+              { detail: '6', points: 6 },
+              ...Array(4).fill({ detail: '', points: 0 }),
             ],
           },
           {
@@ -1703,16 +1707,47 @@ export const races: RaceResult[] = [
           {
             position: 5,
             driverName: 'Oakley',
-            totalPoints: 9,
+            totalPoints: 14,
             rounds: [
               { detail: '', points: 0 },
               { detail: '5', points: 5 },
               { detail: '4', points: 4 },
-              ...Array(7).fill({ detail: '', points: 0 }),
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '5', points: 5 },
+              ...Array(4).fill({ detail: '', points: 0 }),
             ],
           },
           {
             position: 6,
+            driverName: 'Tri-V International',
+            totalPoints: 10,
+            rounds: [
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '10', points: 10 },
+              ...Array(4).fill({ detail: '', points: 0 }),
+            ],
+          },
+          {
+            position: 7,
+            driverName: 'Lámer Rally Team',
+            totalPoints: 7,
+            rounds: [
+              { detail: '4', points: 4 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '3', points: 3 },
+              ...Array(4).fill({ detail: '', points: 0 }),
+            ],
+          },
+          {
+            position: 8,
             driverName: 'Teszt1',
             totalPoints: 7,
             rounds: [
@@ -1723,7 +1758,7 @@ export const races: RaceResult[] = [
             ],
           },
           {
-            position: 7,
+            position: 9,
             driverName: 'Tri-V Junior',
             totalPoints: 6,
             rounds: [
@@ -1735,7 +1770,21 @@ export const races: RaceResult[] = [
             ],
           },
           {
-            position: 8,
+            position: 10,
+            driverName: 'HSH',
+            totalPoints: 4,
+            rounds: [
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '4', points: 4 },
+              ...Array(4).fill({ detail: '', points: 0 }),
+            ],
+          },
+          {
+            position: 11,
             driverName: 'KT Motorsport',
             totalPoints: 4,
             rounds: [
@@ -1747,18 +1796,7 @@ export const races: RaceResult[] = [
             ],
           },
           {
-            position: 9,
-            driverName: 'Lámer Rally Team',
-            totalPoints: 4,
-            rounds: [
-              { detail: '4', points: 4 },
-              { detail: '', points: 0 },
-              { detail: '', points: 0 },
-              ...Array(7).fill({ detail: '', points: 0 }),
-            ],
-          },
-          {
-            position: 10,
+            position: 12,
             driverName: 'Diesel Power',
             totalPoints: 3,
             rounds: [
@@ -1770,7 +1808,7 @@ export const races: RaceResult[] = [
             ],
           },
           {
-            position: 11,
+            position: 13,
             driverName: 'Teszt2',
             totalPoints: 3,
             rounds: [
@@ -1778,6 +1816,20 @@ export const races: RaceResult[] = [
               { detail: '3', points: 3 },
               { detail: '', points: 0 },
               ...Array(7).fill({ detail: '', points: 0 }),
+            ],
+          },
+          {
+            position: 14,
+            driverName: 'UngBar Team',
+            totalPoints: 2,
+            rounds: [
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '', points: 0 },
+              { detail: '2', points: 2 },
+              ...Array(4).fill({ detail: '', points: 0 }),
             ],
           },
         ],
@@ -2679,6 +2731,20 @@ export const races: RaceResult[] = [
         raceTabs: [
           { label: '1. Verseny', results: round6RookieRace1Results },
           { label: '2. Verseny', results: round6RookieRace2Results },
+        ],
+      },
+      {
+        categoryId: 'endurance',
+        categoryName: 'Endurance',
+        displayMode: 'points',
+        results: [
+          { position: 1, driverName: 'Tri-V International', points: 10, entryOrder: 0 },
+          { position: 2, driverName: 'Tri-V Motorsport', points: 8, entryOrder: 2 },
+          { position: 3, driverName: 'Lámer Kart', points: 6, entryOrder: 4 },
+          { position: 4, driverName: 'Oakley', points: 5, entryOrder: 5 },
+          { position: 5, driverName: 'HSH', points: 4, entryOrder: 6 },
+          { position: 6, driverName: 'Lámer Rally Team', points: 3, entryOrder: 7 },
+          { position: 7, driverName: 'UngBar Team', points: 2, entryOrder: 8 },
         ],
       },
     ],
