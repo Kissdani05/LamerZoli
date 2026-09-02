@@ -714,6 +714,32 @@ const round6RookieRace2Results: RaceEntry[] = [
   { position: 13, driverName: 'Komódi Gábor', points: 0, gap: '-10 pt', positionChange: 0 },
 ];
 
+const round7AbsoluteTimedResults: TimedResult[] = [
+  { position: 1, driverName: 'Kiss Csaba', time: '42,112', gap: '-' },
+  { position: 2, driverName: 'Gyeskó Csongor', time: '42,174', gap: '+0,062' },
+  { position: 3, driverName: 'Lámer Richárd', time: '42,225', gap: '+0,113' },
+  { position: 4, driverName: 'Szoták Mihály', time: '42,523', gap: '+0,411' },
+  { position: 5, driverName: 'Halmágyi Péter', time: '42,577', gap: '+0,465' },
+  { position: 6, driverName: 'Petruska Milán', time: '42,617', gap: '+0,505' },
+  { position: 7, driverName: 'Antal Marcell', time: '42,644', gap: '+0,532' },
+  { position: 8, driverName: 'Dömötör Patrik', time: '42,709', gap: '+0,597' },
+  { position: 9, driverName: 'Ádám Kristóf', time: '42,711', gap: '+0,599' },
+  { position: 10, driverName: 'Lámer Zoltán', time: '42,788', gap: '+0,676' },
+  { position: 11, driverName: 'Dóró Soma', time: '42,992', gap: '+0,880' },
+  { position: 12, driverName: 'Mészáros Ákos', time: '43,166', gap: '+1,054' },
+  { position: 13, driverName: 'Halmágyi Dávid', time: '43,241', gap: '+1,129' },
+  { position: 14, driverName: 'Turcsán János', time: '43,325', gap: '+1,213' },
+  { position: 15, driverName: 'Kőrösi Dávid', time: '43,573', gap: '+1,461' },
+  { position: 16, driverName: 'Nagy Bálint', time: '43,611', gap: '+1,499' },
+  { position: 17, driverName: 'Imre Dávid', time: '43,614', gap: '+1,502' },
+  { position: 18, driverName: 'Zolopovics Zoltán', time: '43,623', gap: '+1,511' },
+  { position: 19, driverName: 'Kalányos Kristóf', time: '43,705', gap: '+1,593' },
+  { position: 20, driverName: 'Kondás Kristóf', time: '44,059', gap: '+1,947' },
+  { position: 21, driverName: 'Szabó Csaba', time: '44,882', gap: '+2,770' },
+  { position: 22, driverName: 'Csordás-Szerafin Péter', time: '45,241', gap: '+3,129' },
+  { position: 23, driverName: 'Tóth Béci', time: '46,712', gap: '+4,600' },
+];
+
 export const races: RaceResult[] = [
   {
     id: 'gokart-gp-2026-overall',
@@ -2746,6 +2772,21 @@ export const races: RaceResult[] = [
           { position: 6, driverName: 'Lámer Rally Team', points: 3, entryOrder: 7 },
           { position: 7, driverName: 'UngBar Team', points: 2, entryOrder: 8 },
         ],
+      },
+    ],
+  },
+  {
+    id: 'gokart-gp-2026-7',
+    name: 'Téglás Gokart GP 2026 7. Forduló',
+    date: '2026-08-23T10:00:00+02:00',
+    location: 'Téglás F1 Gokartpálya',
+    categories: [
+      {
+        categoryId: 'abszolut',
+        categoryName: 'Abszolút',
+        displayMode: 'absolute',
+        results: [],
+        absoluteTabs: [{ label: 'Időmérő', kind: 'timed', results: round7AbsoluteTimedResults }],
       },
     ],
   },
