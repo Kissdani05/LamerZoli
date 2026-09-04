@@ -732,12 +732,100 @@ const round7AbsoluteTimedResults: TimedResult[] = [
   { position: 15, driverName: 'Kőrösi Dávid', time: '43,573', gap: '+1,461' },
   { position: 16, driverName: 'Nagy Bálint', time: '43,611', gap: '+1,499' },
   { position: 17, driverName: 'Imre Dávid', time: '43,614', gap: '+1,502' },
-  { position: 18, driverName: 'Zolopovics Zoltán', time: '43,623', gap: '+1,511' },
+  { position: 18, driverName: 'Holopovics Zoltán', time: '43,623', gap: '+1,511' },
   { position: 19, driverName: 'Kalányos Kristóf', time: '43,705', gap: '+1,593' },
   { position: 20, driverName: 'Kondás Kristóf', time: '44,059', gap: '+1,947' },
   { position: 21, driverName: 'Szabó Csaba', time: '44,882', gap: '+2,770' },
   { position: 22, driverName: 'Csordás-Szerafin Péter', time: '45,241', gap: '+3,129' },
   { position: 23, driverName: 'Tóth Béci', time: '46,712', gap: '+4,600' },
+];
+
+// Az időmérőn néhány név más alakban szerepel, mint a verseny végeredményében.
+const round7TimedNameAliases: Record<string, string> = {
+  [normalizeName('Szerafin Péter')]: normalizeName('Csordás-Szerafin Péter'),
+  [normalizeName('Tóth Béla')]: normalizeName('Tóth Béci'),
+};
+
+const round7TimedPosMap = new Map<string, number>(
+  round7AbsoluteTimedResults.map((r) => [normalizeName(r.driverName), r.position]),
+);
+
+const round7AbsoluteRaceNames = [
+  'Kiss Csaba',
+  'Gyeskó Csongor',
+  'Szoták Mihály',
+  'Halmágyi Péter',
+  'Antal Marcell',
+  'Ádám Kristóf',
+  'Dömötör Patrik',
+  'Lámer Zoltán',
+  'Halmágyi Dávid',
+  'Dóró Soma',
+  'Petruska Milán',
+  'Lámer Richárd',
+  'Kőrösi Dávid',
+  'Mészáros Ákos',
+  'Kondás Kristóf',
+  'Kalányos Kristóf',
+  'Imre Dávid',
+  'Holopovics Zoltán',
+  'Nagy Bálint',
+  'Szerafin Péter',
+  'Tóth Béla',
+  'Szabó Csaba',
+  'Turcsán János',
+];
+
+const round7AbsoluteRacePositionChanges = round7AbsoluteRaceNames.map((name, idx) => {
+  const key = normalizeName(name);
+  const grid = round7TimedPosMap.get(key) ?? round7TimedPosMap.get(round7TimedNameAliases[key]);
+  return grid != null ? grid - (idx + 1) : 0;
+});
+
+const round7AbsoluteRaceResults: RaceEntry[] = buildRaceResults(
+  round7AbsoluteRaceNames,
+  round7AbsoluteRacePositionChanges,
+);
+
+const round7SemiProRaceResults: RaceEntry[] = [
+  { position: 1, driverName: 'Szoták Mihály', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Halmágyi Péter', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Antal Marcell', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Ádám Kristóf', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Halmágyi Dávid', points: 4, gap: '-6 pt', positionChange: 0 },
+  { position: 6, driverName: 'Dóró Soma', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 7, driverName: 'Lámer Richárd', points: 2, gap: '-8 pt', positionChange: 0 },
+  { position: 8, driverName: 'Nagy Bálint', points: 1, gap: '-9 pt', positionChange: 0 },
+  { position: 9, driverName: 'Szabó Csaba', points: 0, gap: '-10 pt', positionChange: 0 },
+  { position: 10, driverName: 'Turcsán János', points: 0, gap: '-10 pt', positionChange: 0 },
+];
+
+const round7JuniorRaceResults: RaceEntry[] = [
+  { position: 1, driverName: 'Halmágyi Péter', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Halmágyi Dávid', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Dóró Soma', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Nagy Bálint', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Szerafin Péter', points: 4, gap: '-6 pt', positionChange: 0 },
+];
+
+const round7EnduranceResults: DriverResult[] = [
+  { position: 1, driverName: 'Tri-V International', points: 10, entryOrder: 0 },
+  { position: 2, driverName: 'Tri-V Motorsport', points: 8, entryOrder: 2 },
+  { position: 3, driverName: 'Lámer Kart', points: 6, entryOrder: 4 },
+  { position: 4, driverName: 'Lámer Rally Team', points: 5, entryOrder: 5 },
+  { position: 5, driverName: 'Team L.S.L.', points: 4, entryOrder: 6 },
+  { position: 6, driverName: 'Strici Kft', points: 3, entryOrder: 7 },
+  { position: 7, driverName: 'FRT', points: 2, entryOrder: 8 },
+];
+
+const round7RookieRaceResults: RaceEntry[] = [
+  { position: 1, driverName: 'Dömötör Patrik', points: 10, gap: '-', positionChange: 0 },
+  { position: 2, driverName: 'Kőrösi Dávid', points: 8, gap: '-2 pt', positionChange: 0 },
+  { position: 3, driverName: 'Mészáros Ákos', points: 6, gap: '-4 pt', positionChange: 0 },
+  { position: 4, driverName: 'Kondás Kristóf', points: 5, gap: '-5 pt', positionChange: 0 },
+  { position: 5, driverName: 'Kalányos Kristóf', points: 4, gap: '-6 pt', positionChange: 0 },
+  { position: 6, driverName: 'Imre Dávid', points: 3, gap: '-7 pt', positionChange: 0 },
+  { position: 7, driverName: 'Holopovics Zoltán', points: 2, gap: '-8 pt', positionChange: 0 },
 ];
 
 export const races: RaceResult[] = [
@@ -2786,7 +2874,37 @@ export const races: RaceResult[] = [
         categoryName: 'Abszolút',
         displayMode: 'absolute',
         results: [],
-        absoluteTabs: [{ label: 'Időmérő', kind: 'timed', results: round7AbsoluteTimedResults }],
+        absoluteTabs: [
+          { label: 'Verseny', kind: 'race', results: round7AbsoluteRaceResults },
+          { label: 'Időmérő', kind: 'timed', results: round7AbsoluteTimedResults },
+        ],
+      },
+      {
+        categoryId: 'semipro',
+        categoryName: 'Semi-Pro',
+        displayMode: 'points',
+        results: [],
+        raceTabs: [{ label: 'Verseny', results: round7SemiProRaceResults }],
+      },
+      {
+        categoryId: 'junior',
+        categoryName: 'Junior',
+        displayMode: 'points',
+        results: [],
+        raceTabs: [{ label: 'Verseny', results: round7JuniorRaceResults }],
+      },
+      {
+        categoryId: 'rookie',
+        categoryName: 'Rookie',
+        displayMode: 'points',
+        results: [],
+        raceTabs: [{ label: 'Verseny', results: round7RookieRaceResults }],
+      },
+      {
+        categoryId: 'endurance',
+        categoryName: 'Endurance',
+        displayMode: 'points',
+        results: round7EnduranceResults,
       },
     ],
   },
@@ -2797,7 +2915,7 @@ export const races: RaceResult[] = [
 type OverallRoundResult = { detail: string; points: number };
 type OverallStandingRow = OverallEntry & { rounds: OverallRoundResult[] };
 
-type OverallCategoryKey = 'abszolut' | 'junior' | 'rookie' | 'semipro';
+type OverallCategoryKey = 'abszolut' | 'junior' | 'rookie' | 'semipro' | 'endurance';
 
 const ensureOverallRounds = (row: OverallStandingRow, len = 12) => {
   while (row.rounds.length < len) row.rounds.push({ detail: '', points: 0 });
@@ -2814,6 +2932,7 @@ const updateOverallCategory = (
   categoryId: OverallCategoryKey,
   roundIndex: number,
   results: RaceEntry[],
+  roundCount = 12,
 ) => {
   const overallRace = races.find((race) => race.id === 'gokart-gp-2026-overall');
   if (!overallRace) return;
@@ -2827,7 +2946,7 @@ const updateOverallCategory = (
   const existing = new Map<string, OverallStandingRow>();
 
   for (const row of standingRows) {
-    ensureOverallRounds(row);
+    ensureOverallRounds(row, roundCount);
     existing.set(row.driverName, row);
   }
 
@@ -2836,7 +2955,7 @@ const updateOverallCategory = (
     const points = result.points ?? 0;
     let entry = existing.get(name);
     if (!entry) {
-      entry = buildOverallStandingRow(name);
+      entry = buildOverallStandingRow(name, roundCount);
       standingRows.push(entry);
       existing.set(name, entry);
     }
@@ -2879,3 +2998,19 @@ updateOverallCategory('junior', 6, round6JuniorRace1Results);
 updateOverallCategory('junior', 7, round6JuniorRace2Results);
 updateOverallCategory('rookie', 6, round6RookieRace1Results);
 updateOverallCategory('rookie', 7, round6RookieRace2Results);
+updateOverallCategory('abszolut', 8, round7AbsoluteRaceResults);
+updateOverallCategory('semipro', 8, round7SemiProRaceResults);
+updateOverallCategory('junior', 8, round7JuniorRaceResults);
+updateOverallCategory('rookie', 8, round7RookieRaceResults);
+updateOverallCategory(
+  'endurance',
+  6,
+  round7EnduranceResults.map((r) => ({
+    position: r.position,
+    driverName: r.driverName,
+    points: r.points,
+    gap: '',
+    positionChange: 0,
+  })),
+  10,
+);

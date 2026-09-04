@@ -35,7 +35,7 @@ export default function ResultsPage() {
     [selectedRace, activeCategoryId],
   );
 
-  const hasDualSubTabs = !!activeCategory?.raceTabs && activeCategory.raceTabs.length === 2;
+  const hasDualSubTabs = !!activeCategory?.raceTabs && activeCategory.raceTabs.length > 0;
   const hasAbsoluteTabs = !!activeCategory?.absoluteTabs && activeCategory.absoluteTabs.length > 0;
   const legacyAbsoluteTabs =
     activeCategory?.displayMode === 'absolute' && !hasAbsoluteTabs
